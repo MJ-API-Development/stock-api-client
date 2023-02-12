@@ -18,8 +18,14 @@ class EmailSettings(BaseSettings):
 
 
 class CelerySettings(BaseSettings):
-    CELERY_BROKER_URL: str = Field(..., env="CELERY_BROKER_URL")
-    CELERY_BACKEND: str = Field(..., env="CELERY_BACKEND")
+    CELERY_RESULT_ENGINE_OPTIONS: dict[str, bool] = {"echo": True}
+    CELERY_RESULT_BACKEND: str = "database"
+    BROKER_TRANSPORT: str = Field(default="sqlakombu.transport.Transport")
+    BROKER_URL: str = Field(..., env="CELERY_BROKER_URL")
+    CELERY_RESULT_DBURI: str = Field(..., env="CELERY_BROKER_URL")
+    CELERY_ACCEPT_CONTENT: list[str] = Field(default=['application/json'])
+    CELERY_TASK_SERIALIZER: str = Field(default='json')
+    CELERY_RESULT_SERIALIZER: str = Field(default='json')
 
     class Config:
         case_sensitive = True
