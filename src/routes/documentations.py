@@ -21,7 +21,8 @@ def documentations_routes(path: str) -> dict:
         'financial-news': render_template('docs/financial_news.html', BASE_URL="eod-stock-api.site"),
         'sentiment': render_template('docs/sentiment.html', BASE_URL="eod-stock-api.site"),
         'stocks': render_template('docs/stocks.html', BASE_URL="eod-stock-api.site"),
-        'options': render_template('docs/options.html', BASE_URL="eod-stock-api.site")
+        'options': render_template('docs/options.html', BASE_URL="eod-stock-api.site"),
+        'playground': render_template('docs/playground.html', BASE_URL="eod-stock-api.site")
     }
     return _routes[path]
 

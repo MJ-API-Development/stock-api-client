@@ -12,7 +12,7 @@ def home():
 
 @home_route.route('/login')
 def login():
-    return render_template('index.html', BASE_URL="eod-stock-api.site")
+    return render_template('login.html', BASE_URL="eod-stock-api.site")
 
 
 @home_route.route('/account')

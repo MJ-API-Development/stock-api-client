@@ -21,9 +21,11 @@
                     <li><a href="{{ url_for('docs.documentations', path='options')}}">Options</a></li>
                     </ul>
                   </li>
-                  <li><a><i class="fa fa-external-link"></i> API Status <span class="fa fa-chevron-down"></span></a>
+                  <li><a><i class="fa fa-external-link"></i> API <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{ url_for('home.status') }}">Status</a></li>
+                      <li><a href="{{ url_for('docs.documentations', path="playground") }}">Play Ground</a></li>
+
                     </ul>
                   </li>
                 </ul>
