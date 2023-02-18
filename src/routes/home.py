@@ -24,6 +24,10 @@ def account():
 def status():
     return render_template('index.html', BASE_URL="eod-stock-api.site")
 
+@home_route.route('/pricing')
+def pricing():
+    return render_template('index.html', BASE_URL="eod-stock-api.site")
+
 
 @home_route.route('/feedback', methods=['GET', 'POST'])
 def form_handler():
