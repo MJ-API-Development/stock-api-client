@@ -1,0 +1,10 @@
+Dockerfile
+initial_data/
+external notes/
+tests/
+.github/
+.git/
+.idea/
+*.map
+*.docx
+*.bat

@@ -10,6 +10,21 @@ def home():
     return render_template('index.html', BASE_URL="eod-stock-api.site")
 
 
+@home_route.route('/login')
+def login():
+    return render_template('index.html', BASE_URL="eod-stock-api.site")
+
+
+@home_route.route('/account')
+def account():
+    return render_template('index.html', BASE_URL="eod-stock-api.site")
+
+
+@home_route.route('/status')
+def status():
+    return render_template('index.html', BASE_URL="eod-stock-api.site")
+
+
 @home_route.route('/feedback', methods=['GET', 'POST'])
 def form_handler():
     """

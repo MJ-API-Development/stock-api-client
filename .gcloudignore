@@ -1,0 +1,6 @@
+/deploy_commands.md
+venv/
+*.bat
+.idea
+*.map
+*.docx

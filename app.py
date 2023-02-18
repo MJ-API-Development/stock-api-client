@@ -1,11 +1,12 @@
 from flask import Flask
 
 from src.config.config import config_instance
-from src.mail.send_emails import celery
+
 from src.main import create_app
 
 
 app: Flask = create_app(config=config_instance())
+
 
 
 if __name__ == '__main__':
