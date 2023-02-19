@@ -2,7 +2,7 @@
 {% block content %}
           <div class="right_col" role="main">
 <div class="col-md-12">
-        <h2>EOD Stock API - Features and Benefits</h2>
+        <h2>EOD Stock API - Intelligent Stock Market API</h2>
 
 <div class="row why-use-api">
   <div class="col-md-12">
@@ -13,7 +13,7 @@
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-clock-o"></i></div>
       <div class="count">81 ms</div>
-      <h4>Fast &amp; Reliable</h4>
+      <h4 class="heading">Fast &amp; Reliable</h4>
       <p>Our API provides fast and reliable access to stock market data with an average latency of 81 ms.</p>
     </div>
   </div>
@@ -22,7 +22,7 @@
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-line-chart"></i></div>
       <div class="count">150 K +</div>
-      <h4>Fundamentals</h4>
+      <h4 class="title">Fundamentals</h4>
       <p>Access a wide range of company fundamentals data for more informed investment decisions.</p>
     </div>
   </div>
@@ -31,7 +31,7 @@
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-newspaper-o"></i></div>
       <div class="count">1 K +</div>
-      <h4>Financial News</h4>
+      <h4 class="title">Financial News</h4>
 <p>Stay up-to-date with the latest financial news with access to a comprehensive collection of daily articles.</p>    </div>
   </div>
 
@@ -39,10 +39,13 @@
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-bar-chart"></i></div>
       <div class="count">150 K +</div>
-        <h3>Real-time Social Trends</h3>
+        <h4 class="title">Real-time Social Trends</h4>
         <p>Track stock trends and social media sentiment for more accurate analysis of market behavior.</p>    </div>
   </div>
 </div>
+    </div>
+    <div class="col-md-12">
+        <hr/>
     </div>
 
 <div class="col-md-12">
@@ -60,39 +63,55 @@
     </div>
   </form>
 </div>
+    <div class="col-md-12">
+        <hr/>
+    </div>
 
     <div class="col-md-12">
       <div class="tile_header">
-        <h3 class="title">Pricing</h3>
+          <h3 class="title"><i class="fa fa-paypal"> </i> Pricing</h3>
       </div>
       <div class="tile-content">
         Our Prices are affordable starting from $10.00 for a development account, with minimal features to $120.00 for a production account.
         <br>
         <br>
-        <a href="#" class="btn btn-lg btn-primary">Pricing ...</a>
+          <a href="#" class="btn btn-lg btn-primary"><i class="fa fa-paypal"> </i> Pricing ...</a>
       </div>
     </div>
-
+    <div class="col-md-12">
+        <hr/>
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-md-6">
           <div class="tile">
             <div class="tile-header">
-              <h3 class="title">SDKs</h3>
+              <h3 class="title"><i class="fa fa-brands fa-github"> </i> SDKs</h3>
             </div>
             <div class="tile-content">
               <p>We offer SDKs in multiple programming languages to make integrating with our API a breeze. Our SDKs are available on GitHub, making it easy to get started.</p>
-              <ul>
-                <li><a href="https://github.com/MJ-API-Development/stock-api-pythonsdk">Python SDK</a></li>
-                <li><a href="https://github.com/MJ-API-Development/stock-api-nodesdk">Node.js SDK</a></li>
-              </ul>
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk">
+                      <i class="fa fa-brands fa-python"></i>
+                      Python
+                    </a>
+                  </li>
+                  <li class="list-group-item">
+                    <a href="https://github.com/MJ-API-Development/stock-api-nodesdk">
+                      <i class="fa fa-brands fa-node-js mr-2"> </i>
+                      Node.js
+                    </a>
+                  </li>
+                </ul>
+
             </div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="tile">
             <div class="tile-header">
-              <h3 class="title">Documentations</h3>
+                <h3 class="title"><i class="fa fa-brands fa-file-text"> </i> Documentations</h3>
             </div>
             <div class="tile-content">
               <p>Our API documentation is comprehensive and easy to follow. It includes code samples, detailed explanations, and examples of use cases. You can access our documentation at the following link:</p>
@@ -110,6 +129,54 @@
         </div>
       </div>
     </div>
+
+          <div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Sample Code in Python</h5>
+        </div>
+        <div class="card-body">
+          <pre class="bg-dark text-light p-3"><code class="language-python">
+  import requests
+  url = 'https://www.eod-stock-api.site/api/v1/exchanges'
+  headers = {
+      'Content-Type': 'application/json',
+      'API-KEY': 'YOUR_API_KEY'
+  }
+  params = {}
+  response = requests.get(url, headers=headers, params=params)
+  print(response.json())
+
+  # Response
+{
+    "message": "Exchange listings returned",
+    "payload": [
+        {
+            "code": "BA",
+            "country": "Argentina",
+            "currency_symbol": "ARS",
+            "exchange_id": "RP5zfbmYel63f0Wc",
+            "name": "Buenos Aires Exchange",
+            "operating_mic": "XBUE"
+        },
+        {
+            "code": "AU",
+            "country": "Australia",
+            "currency_symbol": "AUD",
+            "exchange_id": "Tl2hlbpejIQflm94",
+            "name": "Australia Exchange",
+            "operating_mic": "XASX"
+        }]
+    "status": True
+}
+          </code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
         </div>
           <!-- /page content -->
