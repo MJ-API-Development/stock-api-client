@@ -9,7 +9,11 @@
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/template" />
+        <option value="$MODULE_DIR$/src/template" />
+        <option value="$MODULE_DIR$/src/template/dashboard" />
+        <option value="$MODULE_DIR$/src/template/docs" />
+        <option value="$MODULE_DIR$/src/template/emails" />
+        <option value="$MODULE_DIR$/src/template/layouts" />
       </list>
     </option>
   </component>

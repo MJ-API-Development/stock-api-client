@@ -1,8 +1,6 @@
 import functools
 
-from flask import Blueprint, render_template, request, jsonify
-
-from src.mail.send_emails import schedule_mail
+from flask import Blueprint, render_template
 
 docs_route = Blueprint('docs', __name__)
 
@@ -14,6 +12,7 @@ def documentations_routes(path: str) -> dict:
     :param path:
     :return:
     """
+    _index = render_template('docs/docs.html', BASE_URL="eod-stock-api.site")
     _routes = {
         'eod': render_template('docs/eod.html', BASE_URL="eod-stock-api.site"),
         'exchanges': render_template('docs/exchanges.html', BASE_URL="eod-stock-api.site"),
@@ -24,7 +23,7 @@ def documentations_routes(path: str) -> dict:
         'options': render_template('docs/options.html', BASE_URL="eod-stock-api.site"),
         'playground': render_template('docs/playground.html', BASE_URL="eod-stock-api.site")
     }
-    return _routes[path]
+    return _routes.get(path, _index)
 
 
 @docs_route.route('/docs/<string:path>', methods=['GET', 'POST'])
