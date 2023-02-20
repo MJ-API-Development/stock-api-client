@@ -36,6 +36,7 @@ class CelerySettings(BaseSettings):
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
     CELERY_SETTINGS = CelerySettings()
+    SECRET_KEY: str = Field(..., env="SECRET_TOKEN")
 
     class Config:
         case_sensitive = True
