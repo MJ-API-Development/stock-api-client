@@ -17,7 +17,7 @@ def login():
 
 @home_route.route('/account')
 def account():
-    return render_template('index.html', BASE_URL="eod-stock-api.site")
+    return render_template('dashboard/account.html', BASE_URL="eod-stock-api.site")
 
 
 @home_route.route('/status')
@@ -28,6 +28,11 @@ def status():
 @home_route.route('/pricing')
 def pricing():
     return render_template('index.html', BASE_URL="eod-stock-api.site")
+
+@home_route.route('/contact')
+def contact():
+    return render_template('dashboard/contact.html', BASE_URL="eod-stock-api.site")
+
 
 
 @home_route.route('/feedback', methods=['GET', 'POST'])
