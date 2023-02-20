@@ -5,7 +5,7 @@ from flask import Blueprint, render_template
 docs_route = Blueprint('docs', __name__)
 
 
-@functools.cache
+# @functools.cache
 def documentations_routes(path: str) -> dict:
     """
         will return a map of paths
