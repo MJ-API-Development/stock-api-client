@@ -44,9 +44,12 @@
   </div>
 </div>
 </div>
-    <div class="col-md-12">
-        <hr/>
-    </div>
+
+{# Section Divider #}
+<div class="col-md-12">
+    <hr/>
+</div>
+{#    DATA API'S          #}
 <div class="col-md-12">
     <div class="tile_header">
         <h3 class="tile_info"> <i class="fa fa-line-chart"> </i> Available Financial Data API's</h3>
@@ -76,40 +79,121 @@
     </div>
 
 </div>
-<div class="col-md-12">
-  <form class="form-horizontal">
-    <div class="form-group">
-      <label for="searchbar" class="control-label col-sm-2">Search Tickers:</label>
-      <div class="col-sm-10">
-        <div class="input-group">
-          <input type="text" class="form-control" id="searchbar" placeholder="Type Ticker Symbol E.G MSFT">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
-    <div class="col-md-12">
-        <hr/>
-    </div>
 
-    <div class="col-md-12">
-      <div class="tile_header">
-          <h3 class="title"><i class="fa fa-paypal"> </i> Pricing</h3>
-      </div>
-      <div class="tile-content">
-        Our Prices are affordable starting from $10.00 for a development account, with minimal features to $120.00 for a production account.
-        <br>
-        <br>
-          <a href="#" class="btn btn-lg btn-primary"><i class="fa fa-paypal"> </i> Pricing ...</a>
-      </div>
-    </div>
-    <div class="col-md-12">
-        <hr/>
-    </div>
-    <div class="container">
+{#              Search #}
+
+              <div class="col-md-12">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label for="searchbar" class="control-label col-sm-2">Search Tickers:</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="searchbar" placeholder="Type Ticker Symbol E.G MSFT">
+                      <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+              <div class="col-md-12">
+                <hr/>
+              </div>
+
+
+
+              <div class="container">
+                  <div class="tile tile_header">
+                      <h3 class="title-decor"><i class="fa fa-money"> </i> Subscription Plans</h3>
+                  </div>
+                <div class="col-md-12">
+                      <div class="col-md-3">
+                        <h3>Basic</h3>
+                        <p>Get started with our basic plan.</p>
+                        <ul>
+                          <li>500 requests per month</li>
+                          <li>10,000 records per request</li>
+                          <li>Limited email support</li>
+                          <li>API documentation access</li>
+                          <li>Exchanges</li>
+                          <li>Stock Tickers</li>
+                          <li>EOD Data</li>
+                        </ul>
+                        <button class="btn btn-dark"><i class="fa fa-dollar"> </i> 19.99/month </button>
+                      </div>
+                      <div class="col-md-3">
+                        <h3>Professional</h3>
+                        <p>Upgrade to our professional plan.</p>
+                        <ul>
+                          <li>1,000 requests per month</li>
+                          <li>50,000 records per request</li>
+                          <li>Priority email support</li>
+                          <li>API documentation access</li>
+                          <li>Exchanges</li>
+                          <li>Stock Tickers</li>
+                          <li>EOD Data</li>
+                          <li>Fundamentals</li>
+                          <li>Financial News</li>
+                          <li>Options Data</li>
+                          <li>Technical Data</li>
+                          <li>Sentiment Analysis</li>
+                        </ul>
+                        <button class="btn btn-dark"><i class="fa fa-dollar"> </i> 49.99/month</button>
+                      </div>
+                      <div class="col-md-3">
+                        <h3>Business</h3>
+                        <p>Upgrade to our business plan.</p>
+                        <ul>
+                          <li>5,000 requests per month</li>
+                          <li>200,000 records per request</li>
+                          <li>24/7 email and phone support</li>
+                          <li>API documentation access</li>
+                          <li>Dedicated account manager</li>
+                          <li>Exchanges</li>
+                          <li>Stock Tickers</li>
+                          <li>EOD Data</li>
+                          <li>Fundamentals</li>
+                          <li>Financial News</li>
+                          <li>Options Data</li>
+                          <li>Technical Data</li>
+                          <li>Sentiment Analysis</li>
+
+                        </ul>
+                        <button class="btn btn-dark"><i class="fa fa-dollar"> </i> 199.99/month</button>
+                      </div>
+                      <div class="col-md-3">
+                        <h3>Enterprise</h3>
+                        <p>Contact us for a custom enterprise plan.</p>
+                        <ul>
+                          <li>Custom request limits</li>
+                          <li>Custom records per request</li>
+                          <li>24/7 email and phone support</li>
+                          <li>API documentation access</li>
+                          <li>Dedicated account manager</li>
+                          <li>SLA-backed uptime guarantee</li>
+                          <li>Exchanges</li>
+                          <li>Stock Tickers</li>
+                          <li>EOD Data</li>
+                          <li>Fundamentals</li>
+                          <li>Financial News</li>
+                          <li>Options Data</li>
+                          <li>Technical Data</li>
+                          <li>Sentiment Analysis</li>
+
+                        </ul>
+                        <button class="btn btn-dark"><i class="fa fa-envelope"> </i> Contact Us</button>
+                      </div>
+                </div>
+
+                </div>
+
+              <div class="col-md-12">
+                  <hr/>
+              </div>
+
+              <div class="container">
       <div class="row">
         <div class="col-md-6">
           <div class="tile">
@@ -158,7 +242,8 @@
       </div>
     </div>
 
-          <div class="container">
+
+              <div class="container">
   <div class="row">
     <div class="col-md-12">
       <div class="card">
