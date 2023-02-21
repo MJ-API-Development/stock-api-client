@@ -1,9 +1,16 @@
 import random
 import string
+from datetime import datetime
+
 from flask import Blueprint, render_template, request, jsonify, session, abort, current_app
 
+from src.databases.models.sql import mysql_instance
+from src.databases.models.sql.contact import Contacts
+from src.logger import init_logger
 from src.mail.send_emails import schedule_mail
 from secrets import token_hex
+
+home_logger = init_logger("home_route")
 
 
 class CSRFProtect:
@@ -77,15 +84,22 @@ def pricing():
 
 @home_route.route('/contact', methods=['GET', 'POST'])
 def contact():
-
     if request.method == 'GET':
         context = dict(csrf_token=csrf.generate_csrf_token(), BASE_URL="eod-stock-api.site")
         return render_template('dashboard/contact.html', **context)
     else:
         data = request.get_json()
-        print(data)
+        home_logger.info(data)
+        name = data.get("name")
+        email = data.get("email")
+        message = data.get("message")
+        contact_dict = dict(name=name, email=email, message=message, contact_id=create_id())
+        with mysql_instance.get_session() as _session:
+            Contacts.create_if_not_exists()
+            _session.add(Contacts(**{**contact_dict, "timestamp": datetime.now().timestamp()}))
+            _session.commit()
 
-        return jsonify(request.get_json())
+        return jsonify(dict(status=True, message="We have received your message and will get back to you soon..."))
 
 
 @home_route.route('/feedback', methods=['GET', 'POST'])

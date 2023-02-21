@@ -42,11 +42,22 @@ class DatabaseSettings(BaseSettings):
         env_file_encoding = 'utf-8'
 
 
+class Logging(BaseSettings):
+    filename: str = Field(default="eod_stock_api.logs")
+
+    class Config:
+        env_file = '.env.development'
+        env_file_encoding = 'utf-8'
+
+
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
     CELERY_SETTINGS = CelerySettings()
     SECRET_KEY: str = Field(..., env="SECRET_TOKEN")
     DATABASE_SETTINGS: DatabaseSettings = DatabaseSettings()
+    DEVELOPMENT_SERVER_NAME: str = Field(default="DESKTOP-T9V7F59")
+    LOGGING: Logging = Logging()
+    DEBUG: bool = True
 
     class Config:
         case_sensitive = True

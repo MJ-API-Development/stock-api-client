@@ -5,6 +5,7 @@ const emailInput = document.getElementById('email');
 const messageInput = document.getElementById('message');
 const submitButton = document.querySelector('button[type="submit"]');
 const resetButton = document.querySelector('button[type="reset"]');
+const success_message = document.getElementById('success_message');
 
 // Add an event listener for when the form is submitted
 form.addEventListener('submit', (event) => {
@@ -15,6 +16,7 @@ form.addEventListener('submit', (event) => {
   const name = nameInput.value;
   const email = emailInput.value;
   const message = messageInput.value;
+
 
   // Send the form data to the server using Fetch API
   fetch(form.action, {
@@ -34,6 +36,7 @@ form.addEventListener('submit', (event) => {
     // Handle the server response
     form.reset();
     console.log(data);
+    success_message.innerHTML = data.message;
   })
   .catch(error => {
     console.error(error);
