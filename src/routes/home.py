@@ -1,7 +1,6 @@
 import random
 import string
 from datetime import datetime
-
 from flask import Blueprint, render_template, request, jsonify, session, abort, current_app
 
 from src.databases.models.sql import mysql_instance
@@ -11,6 +10,17 @@ from src.mail.send_emails import schedule_mail
 from secrets import token_hex
 
 home_logger = init_logger("home_route")
+
+def get_api_key():
+    return create_id(64)
+
+
+def get_paypal_address():
+    return "addrress@example.com"
+
+
+def generate_key_api():
+    return create_id(64)
 
 
 class CSRFProtect:
@@ -67,9 +77,17 @@ def login():
     return render_template('login.html', BASE_URL="eod-stock-api.site")
 
 
+
 @home_route.route('/account')
 def account():
-    return render_template('dashboard/account.html', BASE_URL="eod-stock-api.site")
+    api_key = get_api_key()
+    paypal_address = get_paypal_address()
+    return render_template('dashboard/account.html', api_key=api_key, BASE_URL="eod-stock-api.site")
+
+
+@home_route.route('/regenerate_api_key')
+def regenerate_api_key():
+    pass
 
 
 @home_route.route('/status')
@@ -89,10 +107,10 @@ def contact():
         return render_template('dashboard/contact.html', **context)
     else:
         data = request.get_json()
-        home_logger.info(data)
         name = data.get("name")
         email = data.get("email")
         message = data.get("message")
+        # TODO handle the issue where the user has logged in
         contact_dict = dict(name=name, email=email, message=message, contact_id=create_id())
         with mysql_instance.get_session() as _session:
             Contacts.create_if_not_exists()
