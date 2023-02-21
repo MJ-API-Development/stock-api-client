@@ -84,6 +84,7 @@ def contact():
     else:
         data = request.get_json()
         print(data)
+
         return jsonify(request.get_json())
 
 

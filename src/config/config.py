@@ -33,10 +33,20 @@ class CelerySettings(BaseSettings):
         env_file_encoding = 'utf-8'
 
 
+class DatabaseSettings(BaseSettings):
+    SQL_DB_URL: str = Field(..., env='SQL_DB_URL')
+    TOTAL_CONNECTIONS: int = Field(default=1000)
+
+    class Config:
+        env_file = '.env.development'
+        env_file_encoding = 'utf-8'
+
+
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
     CELERY_SETTINGS = CelerySettings()
     SECRET_KEY: str = Field(..., env="SECRET_TOKEN")
+    DATABASE_SETTINGS: DatabaseSettings = DatabaseSettings()
 
     class Config:
         case_sensitive = True
