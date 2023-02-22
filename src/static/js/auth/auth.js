@@ -43,16 +43,112 @@ submit_btn.addEventListener( 'click', (event) => {
     login(event);
 });
 
+
+// create a function to validate a single field
+function validateField(value, rules) {
+  if (rules.required && !value.trim()) {
+    return 'This field is required';
+  }
+
+  if (rules.minLength && value.length < rules.minLength) {
+    return `This field must be at least ${rules.minLength} characters`;
+  }
+
+  if (rules.maxLength && value.length > rules.maxLength) {
+    return `This field must be no more than ${rules.maxLength} characters`;
+  }
+
+  if (rules.email && !isValidEmail(value)) {
+    return 'Please enter a valid email address';
+  }
+
+  return null;
+}
+
+// create a function to validate all fields
+function validateForm() {
+  let isValid = true;
+
+  // iterate over the validation rules and validate each field
+  Object.keys(validationRules).forEach(fieldName => {
+    const value = document.getElementById(fieldName).value;
+    const rules = validationRules[fieldName];
+    const errorMessage = validateField(value, rules);
+    const errorElement = document.getElementById(`${fieldName}_error`);
+
+    if (errorMessage) {
+      errorElement.innerHTML = errorMessage;
+      isValid = false;
+    } else {
+      errorElement.innerHTML = '';
+    }
+  });
+
+  return isValid;
+}
+
+// get the input fields
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('r_password');
+
+// create an object to store the validation rules for each field
+const validationRules = {
+  name: {
+    required: true,
+    minLength: 2,
+    maxLength: 50
+  },
+  email: {
+    required: true,
+    email: true
+  },
+  password: {
+    required: true,
+    minLength: 6,
+    maxLength: 50
+  }
+};
+
+// attach a validation function to the form's submit event
+const registrationForm = document.getElementById('registration_form');
+
+registrationForm.addEventListener('submit', event => {
+  event.preventDefault();
+
+  if (validateForm()) {
+    // form is valid, submit it
+    const name = nameInput.value;
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    fetch(registrationForm.action, {
+      method: registrationForm.method,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status && data.account && data.account.uuid) {
+        window.location.href = '/account/' + data.account.uuid;
+      } else {
+        message_elem.innerHTML = data.message;
+      }
+    });
+  }
+});
+
 // user registration form
 register_button.addEventListener('click', (event) => {
     event.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('r_password').value;
-    const form = document.getElementById('registration_form');
-
-    fetch(form.action, {
-        method: form.method,
+    alert(" working >>>");
+    fetch(registrationForm.action, {
+        method: registrationForm.method,
         headers: {
             'Content-Type': 'application/json'
         },
@@ -66,4 +162,4 @@ register_button.addEventListener('click', (event) => {
             }
         }
     })
-})
+});
