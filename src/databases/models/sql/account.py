@@ -67,6 +67,10 @@ class Account(Base):
         return session.query(cls).filter(cls.uuid == uuid).first()
 
     @classmethod
+    async def get_by_email(cls, email: str, session: sessionType) -> Self:
+        return session.query(cls).filter(cls.email == email).first()
+
+    @classmethod
     async def login(cls, username: str, password: str, session: sessionType) -> Self:
         # Get the user with the specified email address
         user = session.query(cls).filter(cls.email == username).first()

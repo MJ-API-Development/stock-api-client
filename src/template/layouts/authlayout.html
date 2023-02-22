@@ -42,8 +42,8 @@
                 <input type="password" id="password" class="form-control" placeholder="Enter Password" required="" />
               </div>
               <div>
-                <a class="btn btn-default submit" type="submit" id="submit_login">Log in</a>
-                <a class="btn btn-default" href="#signup">Lost your password?</a>
+                <a class="btn btn-default submit" type="submit" href="{{ url_for('account.auth') }}" id="submit_login">Log in</a>
+                <a class="btn btn-default" href="#signup">Create Account?</a>
                 <div class="clearfix"></div>
                 <span class="title" id="message"></span>
               </div>
@@ -67,29 +67,36 @@
 
         <div id="register" class="animate form registration_form">
           <section class="login_content">
-            <form>
-              <h1>Lost Password</h1>
-              <div>
-                  <label class="label" for="recover_email">Recovery Email</label>
-                <input id="recover_email" type="email" class="form-control" placeholder="Email" required="" />
-              </div>
-              <div>
-                <button class="btn btn-default" id="submit_recover">Recover</button>
-              </div>
+          <form id="registration_form" method="POST" action="{{ url_for('account.create_account') }}">
+            <h1>Registration Form</h1>
+            <div>
+              <label class="label" for="first_name">Name</label>
+              <input type="text" id="first_name" class="form-control" placeholder="Enter Name" required="" />
+            </div>
+            <div>
+              <label class="label" for="email">Email</label>
+              <input type="email" id="email" class="form-control" placeholder="Enter Email" required="" />
+            </div>
+            <div>
+              <label class="label" for="cell">Cell</label>
+              <input type="tel" id="cell" class="form-control" placeholder="Enter Cell" required="" />
+            </div>
+            <div>
+              <label class="label" for="password">Password</label>
+              <input type="password" id="r_password" class="form-control" placeholder="Enter Password" required="" />
+            </div>
+            <div>
+              <input type="password" id="repeat_password" class="form-control" placeholder="Repeat Password" required="" />
+            </div>
 
+            <div>
+              <a class="btn btn-default" type="btn" id="submit_registration">Register</a>
+              <a class="btn btn-default" href="#signin">Already have an account?</a>
               <div class="clearfix"></div>
-              <div class="separator">
-                <div class="clearfix"></div>
-                <br />
-                  <a href="{{ url_for('account.login') }}" class="btn btn-default"> Back to Login </a>
-                <div>
-                  <a href="/">
-                    <h1><i class="fa fa-paw"></i> EOD Stock API</h1>
-                  </a>
-                  <p>©2023 All Rights Reserved. EOD Stock API . Privacy and Terms</p>
-                </div>
-              </div>
-            </form>
+              <span class="title" id="message"></span>
+            </div>
+          </form>
+
           </section>
         </div>
       </div>

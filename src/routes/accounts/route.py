@@ -39,6 +39,42 @@ async def get_account(uuid: str):
     return render_template('dashboard/account.html', **context)
 
 
+@account_bp.route('/account', methods=["POST"])
+async def create_account():
+    """
+        user authentication
+    :return:
+    """
+    data = request.get_data(parse_form_data=True)
+    data = json.loads(data)
+    Account.create_if_not_exists()
+    with mysql_instance.get_session() as _session:
+        email = data.get('email')
+        password = data.get('password')
+        first_name = data.get('first_name')
+        surname = data.get('surname')
+        cell = data.get('cell')
+
+        user_exist = await Account.get_by_email(email=email, session=_session)
+        if user_exist:
+            message: str = "This account already exists"
+            return render_template('dashboard/create_account.html', message=message, BASE_URL="eod-stock-api.site")
+
+        account_dict = dict(email=email, password=password, first_name=first_name, surname=surname, cell=cell)
+        account_inst = Account(**account_dict)
+        _session.add(account_inst)
+        _session.commit()
+
+
+
+    message: str = "Successfully logged in"
+    account_inst = Account()
+    context = dict(account=account_inst.to_dict(),
+                   message=message,
+                   BASE_URL="eod-stock-api.site")
+    return render_template('dashboard/account.html', **context)
+
+
 @account_bp.route('/auth/login', methods=["POST"])
 async def auth():
     """
