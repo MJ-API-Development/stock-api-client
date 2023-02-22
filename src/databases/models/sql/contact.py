@@ -1,7 +1,8 @@
 
 from datetime import datetime
-from sqlalchemy import Column, String, inspect, Integer, Float
+from sqlalchemy import Column, String, inspect, Integer, Float, ForeignKey
 
+from src.databases.const import UUID_LEN, NAME_LEN, EMAIL_LEN, STR_LEN
 from src.databases.models.sql import Base, mysql_instance
 from src.utils import date_from_timestamp
 
@@ -11,11 +12,11 @@ class Contacts(Base):
         ORM Model for Contacts
     """
     __tablename__ = 'contact_messages'
-    uuid = Column(String(16), index=True, nullable=True)
-    contact_id = Column(String(16), primary_key=True, index=True)
-    name = Column(String(128), index=True)
-    email = Column(String(255), index=True)
-    message = Column(String(255))
+    uuid = Column(String(UUID_LEN), index=True, nullable=True)
+    contact_id = Column(String(UUID_LEN), primary_key=True, index=True)
+    name = Column(String(NAME_LEN), index=True)
+    email = Column(String(EMAIL_LEN), ForeignKey("accounts.email"), index=True)
+    message = Column(String(STR_LEN))
     timestamp = Column(Float, index=True)
 
     @property

@@ -30,16 +30,18 @@
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
-            <form>
+            <form id="auth_form" method="post" action="{{ url_for('account.auth') }}">
               <h1>Login Form</h1>
               <div>
-                <input type="text" class="form-control" placeholder="Username" required="" />
+                <label class="label" for="username">Username</label>
+                <input type="text" id="username" class="form-control" placeholder="Enter Username" required="" />
               </div>
               <div>
-                <input type="password" class="form-control" placeholder="Password" required="" />
+                <label class="label" for="password">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter Password" required="" />
               </div>
               <div>
-                <a class="btn btn-default submit" href="#" id="submit-login">Log in</a>
+                <a class="btn btn-default submit" type="submit" href="{{ url_for('account.auth') }}" id="submit_login">Log in</a>
                 <a class="btn btn-default" href="#signup">Lost your password?</a>
               </div>
 
@@ -65,18 +67,15 @@
             <form>
               <h1>Lost Password</h1>
               <div>
-                <input type="email" class="form-control" placeholder="Email" required="" />
+                  <label class="label" for="recover_email">Recovery Email</label>
+                <input id="recover_email" type="email" class="form-control" placeholder="Email" required="" />
               </div>
               <div>
-                <button class="btn btn-default" id="submit-recover">Recover</button>
-
-
+                <button class="btn btn-default" id="submit_recover">Recover</button>
               </div>
 
               <div class="clearfix"></div>
-
               <div class="separator">
-
                 <div class="clearfix"></div>
                 <br />
                   <a href="{{ url_for('home.login') }}" class="btn btn-default"> Back to Login </a>
