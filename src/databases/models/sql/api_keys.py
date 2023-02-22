@@ -16,3 +16,8 @@ class APIKeys(Base):
     api_key: str = Column(String(API_KEY_LEN), primary_key=True, index=True)
     subscription_id: str = Column(String(UUID_LEN))
 
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "uuid": self.uuid,
+            "api_key": self.api_key,
+            "subscription_id": self.subscription_id}

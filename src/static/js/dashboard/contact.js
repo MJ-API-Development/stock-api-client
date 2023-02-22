@@ -27,8 +27,7 @@ form.addEventListener('submit', (event) => {
     body: JSON.stringify({
       name: name,
       email: email,
-      message: message,
-      csrf_token: csrf_token.value
+      message: message
     })
   })
   .then(response => response.json())
