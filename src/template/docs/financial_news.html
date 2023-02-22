@@ -2,10 +2,55 @@
 
 {% block content %}
 <div class="right_col" role="main">
-<div class="col-md-12">
-        <h2>EOD Stock API - Documentations - Financial News</h2>
+  <div class="col-md-12">
+    <h2>EOD Stock API - Documentations - Financial News</h2>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">API Endpoint</h5>
+          <p class="card-text">The API endpoint for retrieving financial news is <code>https://eodhistoricaldata.com/api/news</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Parameters</h5>
+          <p class="card-text">The financial news API endpoint accepts the following parameters:</p>
+          <ul class="card-text">
+            <li><code>symbols</code> (required) - A comma-separated list of stock symbols to retrieve news for.</li>
+            <li><code>from</code> (optional) - A date string in the format <code>YYYY-MM-DD</code> specifying the start of the date range to retrieve news for.</li>
+            <li><code>to</code> (optional) - A date string in the format <code>YYYY-MM-DD</code> specifying the end of the date range to retrieve news for.</li>
+            <li><code>sources</code> (optional) - A comma-separated list of news sources to retrieve news from.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Response</h5>
+          <p class="card-text">The financial news API endpoint returns an array of news articles, where each article is represented as a JSON object with the following fields:</p>
+          <ul class="card-text">
+            <li><code>id</code> - The unique identifier of the news article.</li>
+            <li><code>title</code> - The title of the news article.</li>
+            <li><code>description</code> - A short description of the news article.</li>
+            <li><code>url</code> - The URL of the news article.</li>
+            <li><code>source</code> - The source of the news article.</li>
+            <li><code>date</code> - The date the news article was published.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
-</div>
-
 {% endblock %}

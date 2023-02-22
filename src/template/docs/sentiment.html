@@ -2,10 +2,76 @@
 
 {% block content %}
 <div class="right_col" role="main">
-<div class="col-md-12">
-        <h2>EOD Stock API - Documentations - Sentiment Analysis</h2>
+    <div class="col-md-12">
+        <h2>EOD Stock API - Sentiment Analysis Endpoints</h2>
 
-</div>
-</div>
+        <p>The Sentiment Analysis endpoints allow you to retrieve sentiment-related data for a specific stock. Currently, there are three endpoints available:</p>
 
+        <div class="card-deck">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Trend Setters</h5>
+                </div>
+                <div class="card-body">
+
+                    <p class="card-text">Get a list of Twitter handles that are currently driving sentiment for a given stock.</p>
+                    <pre><code>GET /api/v1/sentiment/trend-setters/stock/{stock_code}</code></pre>
+                    <p class="card-text">The <code>{stock_code}</code> parameter in the endpoint should be replaced with the stock's symbol, such as AAPL for Apple Inc.</p>
+                    <p class="card-text">Example Response:</p>
+                    <pre><code>[
+    {
+        "user_handle": "@elonmusk",
+        "score": 0.85
+    },
+    {
+        "user_handle": "@CathieDWood",
+        "score": 0.7
+    }
+]</code></pre>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Trending Tweets</h5>
+                </div>
+                <div class="card-body">
+
+                    <p class="card-text">Get a list of the top tweets that are currently driving sentiment for a given stock.</p>
+                    <pre><code>GET /api/v1/sentiment/trending/stock/{stock_code}</code></pre>
+                    <p class="card-text">The <code>{stock_code}</code> parameter in the endpoint should be replaced with the stock's symbol, such as AAPL for Apple Inc.</p>
+                    <p class="card-text">Example Response:</p>
+                    <pre><code>[
+    {
+        "text": "Great news for Tesla today!",
+        "user_handle": "@elonmusk",
+        "score": 0.8
+    },
+    {
+        "text": "Just bought some AAPL shares, excited to see where this goes.",
+        "user_handle": "@investor123",
+        "score": 0.5
+    }
+]</code></pre>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Single Tweet</h5>
+                </div>
+                <div class="card-body">
+
+                    <p class="card-text">Get sentiment analysis for a single tweet related to a given stock.</p>
+                    <pre><code>GET /api/v1/sentiment/tweet/stock/{stock_code}</code></pre>
+                    <p class="card-text">The <code>{stock_code}</code> parameter in the endpoint should be replaced with the stock's symbol, such as AAPL for Apple Inc.</p>
+                    <p class="card-text">Example Response:</p>
+                    <pre><code>{
+    "text": "Great news for Tesla today!",
+    "user_handle": "@elonmusk",
+    "score": 0.8
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

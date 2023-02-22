@@ -3,7 +3,78 @@
 {% block content %}
 <div class="right_col" role="main">
 <div class="col-md-12">
-        <h2>EOD Stock API - Documentations - Stocks</h2>
+        <h2>EOD Stock API - Stocks Endpoints</h2>
+<p>The Stocks endpoints allow you to retrieve data related to stocks. Currently, there are several endpoints available:</p>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Single Stock</h5>
+                <p class="card-text">Get details for a specific stock given its code.</p>
+                <p class="card-text">Endpoint URL: <code>/api/v1/stock/code/{stock_code}</code></p>
+                <p class="card-text">Params:  <code> stock_code (string) </code> - the code of the stock to retrieve details for.</p>
+                <a href="/api/v1/stock/code/{stock_code}" class="btn btn-primary">Try it out</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">All Stocks</h5>
+                <p class="card-text">Get a complete list of all stocks available.</p>
+                <p class="card-text">Endpoint URL: <code>/api/v1/stocks</code></p>
+                <p class="card-text">Params: None</p>
+                <a href="/api/v1/stocks" class="btn btn-primary">Try it out</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Stocks by Country</h5>
+                <p class="card-text">Get a list of stocks listed in a certain country.</p>
+                <p class="card-text">Endpoint URL: <code>/api/v1/stocks/country/{country}</code></p>
+                <p class="card-text">Input: country (string) - the name of the country to retrieve stocks for.</p>
+                <a href="/api/v1/stocks/country/{country}" class="btn btn-primary">Try it out</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Stocks by Currency</h5>
+                    <p class="card-text">Get a list of stocks traded in a certain currency.</p>
+                    <a href="/api/v1/stocks/currency/{currency}" class="btn btn-primary">Try it out</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Stocks by Exchange Code</h5>
+                    <p class="card-text">Get a list of stocks listed on a certain exchange given its code.</p>
+                    <a href="/api/v1/stocks/exchange/code/{exchange_code}" class="btn btn-primary">Try it out</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Stocks by Exchange ID</h5>
+                <p class="card-text">Get a list of stocks listed on a certain exchange given its ID.</p>
+                <a href="/api/v1/stocks/exchange/id/{exchange_id}" class="btn btn-primary">Try it out</a>
+            </div>
+        </div>
+
+        </div>
+
+    </div>
 
 </div>
 </div>

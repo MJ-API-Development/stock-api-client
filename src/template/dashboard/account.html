@@ -1,47 +1,55 @@
 {% extends "layouts/layout.html" %}
 
 {% block content %}
-<div class="right_col" role="main">
-<div class="col-md-12">
-        <h2>EOD Stock API - Account</h2>
 
-<div class="col-md-6">
-    <h3>Payment Method</h3>
-    <p>You are currently using PayPal as your payment method. To update your payment method, please go to your PayPal account settings.</p>
-</div>
+  <div class="right_col" role="main">
+  <div class="row">
+      <div class="container-fluid mt-3">
+    <h1 class="display-4">Account Settings</h1>
 
-
-<div class="col-md-6">
-    <h3>API Keys</h3>
-    <div class="form-group">
-        <div class="input-group">
-            <input type="password" id="api_key" class="form-control" value="{{ api_key }}" disabled>
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button" id="show_api_key">
-                    <i class="fa fa-eye"></i>
-                </button>
-                <button class="btn btn-default" type="button" id="copy_api_key">
-                    <i class="fa fa-copy"></i>
-                </button>
-            </span>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Payment Method</h3>
+          </div>
+          <div class="card-body">
+            <p>You are currently using PayPal as your payment method. To update your payment method, please go to your PayPal account settings.</p>
+          </div>
         </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">API Keys</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="password" id="api_key" class="form-control" value="{{ api_key }}" disabled>
+                <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="button" id="show_api_key">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button class="btn btn-secondary" type="button" id="copy_api_key">
+                    <i class="fa fa-copy"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <form method="POST" action="{{ url_for('home.regenerate_api_key') }}">
+              <button type="submit" class="btn btn-primary">Regenerate API Key</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <form method="POST" action="{{ url_for('home.regenerate_api_key') }}">
-        <button type="submit" class="btn btn-primary">Regenerate API Key</button>
-    </form>
-</div>
-
-
-</div>
-</div>
-
-
-
-
-
+  </div>
+  </div>
+  </div>
 {% endblock %}
 
-
 {% block scripts %}
-    <script src="{{ url_for('static', filename='js/dashboard/apikeys.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard/apikeys.js') }}"></script>
 {% endblock %}
