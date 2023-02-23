@@ -98,10 +98,7 @@
               </form>
             </div>
 
-              <div class="col-md-12">
-                <hr/>
-              </div>
-
+<div class="clearfix"><hr/></div>
 
 
               <div class="container">
@@ -189,11 +186,10 @@
 
                 </div>
 
-              <div class="col-md-12">
-                  <hr/>
-              </div>
+<div class="clearfix"><hr/></div>
 
-              <div class="container">
+
+      <div class="container">
       <div class="row">
         <div class="col-md-6">
           <div class="tile">
@@ -205,13 +201,13 @@
                 <ul class="list-group">
                   <li class="list-group-item">
                     <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk">
-                      <i class="fa fa-brands fa-python"></i>
+                      <i class="fa fa-github-alt"></i>
                       Python
                     </a>
                   </li>
                   <li class="list-group-item">
                     <a href="https://github.com/MJ-API-Development/stock-api-nodesdk">
-                      <i class="fa fa-brands fa-node-js mr-2"> </i>
+                      <i class="fa fa-github-alt"> </i>
                       Node.js
                     </a>
                   </li>
@@ -228,22 +224,39 @@
             <div class="tile-content">
               <p>Our API documentation is comprehensive and easy to follow. It includes code samples, detailed explanations, and examples of use cases. You can access our documentation at the following link:</p>
             <ul class="list-group">
-                <li class="list-group-item-action"><a href="{{ url_for('docs.documentations', path='exchanges')}}">Exchanges</a></li>
-                <li class="list-group-item-action"><a href="{{ url_for('docs.documentations', path='eod')}}">EOD</a></li>
-                <li class="list-group-item-action"><a href="{{ url_for('docs.documentations', path='stocks')}}">Stocks</a></li>
-                <li class="list-group-item-action"><a href="{{ url_for('docs.documentations', path='stocks')}}">Options</a></li>
-                <li class="list-group-item-action"><a href="{{ url_for('docs.documentations', path='fundamentals')}}">Fundamentals</a></li>
-                <li class="list-group-item-action"><a href="{{ url_for('docs.documentations', path='financial-news')}}">Financial News</a></li>
-                <li class="list-group-item-action"><a href="{{ url_for('docs.documentations', path='sentiment')}}">Sentiment Analysis</a></li>
+                <li class="list-group-item tooltip"><a href="{{ url_for('docs.documentations', path='exchanges')}}">Exchanges <span class="tooltiptext">Exchange API Documentations</span> </a></li>
+                <li class="list-group-item"><a href="{{ url_for('docs.documentations', path='eod')}}">EOD</a></li>
+                <li class="list-group-item"><a href="{{ url_for('docs.documentations', path='stocks')}}">Stocks</a></li>
+                <li class="list-group-item"><a href="{{ url_for('docs.documentations', path='stocks')}}">Options</a></li>
+                <li class="list-group-item"><a href="{{ url_for('docs.documentations', path='fundamentals')}}">Fundamentals</a></li>
+                <li class="list-group-item"><a href="{{ url_for('docs.documentations', path='financial-news')}}">Financial News</a></li>
+                <li class="list-group-item"><a href="{{ url_for('docs.documentations', path='sentiment')}}">Sentiment Analysis</a></li>
             </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
+<div class="clearfix"><hr/></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"> Swagger Documentations</h3>
+                </div>
+                <div class="card-body">
+                    <a href="{{ BASE_URL }}/swagger-documentations"> Swagger Open API Documentations for our API can be accessed here, so if you are
+                        interested in learning exactly how our API Works click here </a>
+                </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"><hr/></div>
 
-              <div class="container">
+<div class="container">
   <div class="row">
     <div class="col-md-12">
       <div class="card">
