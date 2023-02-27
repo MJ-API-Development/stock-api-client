@@ -11,6 +11,11 @@ class Subscriptions(Base):
     screen_name: str = Column(String(NAME_LEN))
     plan: str = Column(String(NAME_LEN))
     _resource_list: str = Column(Text)
+    duration: int = Column(Integer)
+    rate_limit: int = Column(Integer)
+    plan_limit: int = Column(Integer)
+    plan_limit_type: int = Column(String(8))  # Hard or Soft Limit
+    rate_per_request: int = Column(Integer)  # in Cents
 
     @property
     def resource_list(self) -> list[str]:

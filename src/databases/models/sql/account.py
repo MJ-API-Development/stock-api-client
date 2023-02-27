@@ -4,7 +4,9 @@ import secrets
 from datetime import datetime
 from typing import Self
 
-from sqlalchemy import Column, String, inspect, Integer, Float
+from sqlalchemy import Column, String, inspect, Integer, Float, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
+
 from src.databases.const import UUID_LEN, NAME_LEN, EMAIL_LEN, STR_LEN, CELL_LEN
 from src.databases.models.sql import Base, mysql_instance, sessionType
 from src.utils import date_from_timestamp
@@ -16,23 +18,23 @@ class Account(Base):
     """
     __tablename__ = "accounts"
     uuid: str = Column(String(UUID_LEN), primary_key=True, index=True)
+    api_key: str = Column(String(UUID_LEN), ForeignKey("eod_api_keys.api_key"))
     first_name: str = Column(String(NAME_LEN), index=True)
     second_name: str = Column(String(NAME_LEN), index=True)
     surname: str = Column(String(NAME_LEN), index=True)
     email: str = Column(String(EMAIL_LEN), index=True, unique=True)
     cell: str = Column(String(CELL_LEN), index=True, unique=True)
     password_hash: str = Column(String(STR_LEN), index=True)
-
+    is_admin: bool = Column(Boolean, default=False)
 
     @classmethod
     def create_if_not_exists(cls):
         if not inspect(mysql_instance.engine).has_table(cls.__tablename__):
             Base.metadata.create_all(bind=mysql_instance.engine)
 
-
     @property
     def names(self) -> str:
-        return f"{self.first_name} {self.second_name} {self.surname}"
+        return f"{self.first_name}, {self.second_name}, {self.surname}"
 
     @property
     def contact_details(self) -> str:
@@ -59,8 +61,9 @@ class Account(Base):
             "second_name": self.second_name,
             "surname": self.surname,
             "email": self.email,
-            "password": self.password,
-            "cell": self.cell}
+            "cell": self.cell,
+            "is_admin": self.is_admin
+        }
 
     @classmethod
     async def get_by_uuid(cls, uuid: str, session: sessionType) -> Self:
