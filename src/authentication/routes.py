@@ -19,13 +19,13 @@ class InvalidSignatureError(HTTPException):
 def create_header(secret_key: str, user_data: dict) -> str:
     data_str = ','.join([str(user_data[k]) for k in sorted(user_data.keys())])
     signature = hmac.new(secret_key.encode(), data_str.encode(), hashlib.sha256).hexdigest()
-    return f"{data_str},{signature}"
+    return f"{data_str}|{signature}"
 
 
 def get_headers(user_data: dict) -> dict[str, str]:
     secret_key = config_instance().SECRET_KEY
     signature = create_header(secret_key, user_data)
-    return {'X-SECRET-KEY': signature, 'Content-Type': 'application/json'}
+    return {'X-SIGNATURE': signature, 'Content-Type': 'application/json'}
 
 
 @auth_handler.route('/register', methods=['GET', 'POST'])
@@ -54,9 +54,9 @@ def login():
         password = request.form['password']
 
         # Check user credentials using API endpoint
-        _url = "https://gateway.eod-stock-api.site/_admin/users/login"
         user_data = {'email': email, 'password': password}
         _headers = get_headers(user_data)
+        _url = f"https://gateway.eod-stock-api.site/_admin/user/login"
         response = requests.post(url=_url, data=user_data, headers=_headers)
         if not verify_signature(response=response):
             raise InvalidSignatureError()
@@ -64,7 +64,7 @@ def login():
         response_data = response.json()
 
         if response_data and response_data.get('status', False):
-            session['uuid'] = response_data['data']['uuid']
+            session['uuid'] = response_data['payload']['uuid']
             flash('Login successful.', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -81,6 +81,11 @@ def logout():
 
 
 def auth_required(func):
+    """
+        checks if the user is logged in and also if the user is authorized to access a certain path
+    :param func:
+    :return:
+    """
     @wraps(func)
     def wrapper(*args, **kwargs):
         if 'uuid' not in session:
@@ -88,7 +93,7 @@ def auth_required(func):
 
         # Call the API to check if the user is authorized to access this resource
         _url = "https://gateway.eod-stock-api.site/_admin/users/check_authorization"
-        user_data = {'uuid': session['uuid'], 'path': request.path}
+        user_data = {'uuid': session['uuid'], 'path': request.path, 'method': request.method}
         _headers = get_headers(user_data)
         response = requests.post(url=_url, data=user_data, headers=_headers)
 
@@ -111,6 +116,7 @@ def auth_required(func):
 
 def verify_signature(response):
     secret_key = config_instance().SECRET_KEY
-    signature_header = response.headers.get('X-SIGNATURE', '')
-    signature = hmac.new(secret_key.encode(), response.content, hashlib.sha256).hexdigest()
-    return signature_header == signature
+    data_header = response.headers.get('X-SIGNATURE', '')
+    data_str, signature_header = data_header.split('|')
+    _signature = hmac.new(secret_key.encode(), data_str, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(signature_header, _signature)
