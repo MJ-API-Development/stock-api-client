@@ -1,4 +1,5 @@
 import requests
+from werkzeug.exceptions import HTTPException
 from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort
 from functools import wraps
 import hmac
@@ -6,9 +7,7 @@ import hashlib
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountBase
 
-auth_handler = Blueprint(__name__, "auth")
-
-from werkzeug.exceptions import HTTPException
+auth_handler = Blueprint("auth", __name__)
 
 
 class InvalidSignatureError(HTTPException):
@@ -33,7 +32,7 @@ def register():
     if request.method == 'POST':
         user_data = request.json()
         account_base = AccountBase(**user_data)
-        _url = "https://gateway.eod-stock-api.site/_admin/users/create"
+        _url = config_instance().GATEWAY_SETTINGS.CREATE_USER_URL
         _headers = get_headers(user_data=account_base.dict())
         response = requests.post(url=_url, data=account_base.json(), headers=_headers)
         if not verify_signature(response=response):
@@ -50,13 +49,15 @@ def register():
 @auth_handler.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        request_data = request.get_json()
+        print(request_data)
+        email = request_data['username']
+        password = request_data['password']
 
         # Check user credentials using API endpoint
         user_data = {'email': email, 'password': password}
         _headers = get_headers(user_data)
-        _url = f"https://gateway.eod-stock-api.site/_admin/user/login"
+        _url = config_instance().GATEWAY_SETTINGS.LOGIN_URL
         response = requests.post(url=_url, data=user_data, headers=_headers)
         if not verify_signature(response=response):
             raise InvalidSignatureError()
@@ -92,7 +93,7 @@ def auth_required(func):
             return redirect('/login')
 
         # Call the API to check if the user is authorized to access this resource
-        _url = "https://gateway.eod-stock-api.site/_admin/users/check_authorization"
+        _url = config_instance().GATEWAY_SETTINGS.AUTHORIZE_URL
         user_data = {'uuid': session['uuid'], 'path': request.path, 'method': request.method}
         _headers = get_headers(user_data)
         response = requests.post(url=_url, data=user_data, headers=_headers)

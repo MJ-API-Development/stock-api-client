@@ -30,7 +30,7 @@
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
-            <form id="auth_form" method="POST" action="{{ url_for('account.auth') }}">
+            <form id="auth_form" method="POST" action="{{ url_for('auth.login') }}">
               <input type="hidden" id="csrf_token" value="{{ csrf_token }}"/>
               <h1>Login Form</h1>
               <div>
@@ -42,7 +42,7 @@
                 <input type="password" id="password" class="form-control" placeholder="Enter Password" required="" />
               </div>
               <div>
-                <a class="btn btn-default submit" type="submit" href="{{ url_for('account.auth') }}" id="submit_login">Log in</a>
+                <a class="btn btn-default submit" type="submit" href="{{ url_for('auth.login') }}" id="submit_login">Log in</a>
                 <a class="btn btn-default" href="#signup">Create Account?</a>
                 <div class="clearfix"></div>
                 <span class="title" id="message"></span>
@@ -67,7 +67,7 @@
 
         <div id="register" class="animate form registration_form">
           <section class="login_content">
-          <form id="registration_form" method="POST" action="{{ url_for('account.create_account') }}">
+          <form id="registration_form" method="POST" action="{{ url_for('auth.register') }}">
             <h1>Registration Form</h1>
             <div>
               <label class="label" for="first_name">Name</label>

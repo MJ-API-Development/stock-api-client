@@ -50,6 +50,16 @@ class Logging(BaseSettings):
         env_file_encoding = 'utf-8'
 
 
+class GatewaySettings(BaseSettings):
+    LOGIN_URL: str = Field(..., env="GATEWAY_LOGIN_URL")
+    CREATE_USER_URL: str = Field(..., env="GATEWAY_CREATE_USER_URL")
+    AUTHORIZE_URL: str = Field(..., env="GATEWAY_AUTHORIZE_USER_URL")
+
+    class Config:
+        env_file = '.env.development'
+        env_file_encoding = 'utf-8'
+
+
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
     CELERY_SETTINGS = CelerySettings()
@@ -58,6 +68,7 @@ class Settings(BaseSettings):
     DEVELOPMENT_SERVER_NAME: str = Field(default="DESKTOP-T9V7F59")
     LOGGING: Logging = Logging()
     DEBUG: bool = True
+    GATEWAY_SETTINGS: GatewaySettings = GatewaySettings()
 
     class Config:
         case_sensitive = True
