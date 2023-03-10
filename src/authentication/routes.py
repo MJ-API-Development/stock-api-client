@@ -8,6 +8,13 @@ from src.databases.models.schemas.account import AccountBase
 
 auth_handler = Blueprint(__name__, "auth")
 
+from werkzeug.exceptions import HTTPException
+
+
+class InvalidSignatureError(HTTPException):
+    code = 400
+    description = 'The signature is invalid.'
+
 
 def create_header(secret_key: str, user_data: dict) -> str:
     data_str = ','.join([str(user_data[k]) for k in sorted(user_data.keys())])
@@ -29,6 +36,9 @@ def register():
         _url = "https://gateway.eod-stock-api.site/_admin/users/create"
         _headers = get_headers(user_data=account_base.dict())
         response = requests.post(url=_url, data=account_base.json(), headers=_headers)
+        if not verify_signature(response=response):
+            raise InvalidSignatureError()
+
         response_data = response.json()
         if response_data and response_data.get('status', False):
             flash('Account created successfully. Please log in.', 'success')
@@ -48,6 +58,9 @@ def login():
         user_data = {'email': email, 'password': password}
         _headers = get_headers(user_data)
         response = requests.post(url=_url, data=user_data, headers=_headers)
+        if not verify_signature(response=response):
+            raise InvalidSignatureError()
+
         response_data = response.json()
 
         if response_data and response_data.get('status', False):
@@ -78,6 +91,10 @@ def auth_required(func):
         user_data = {'uuid': session['uuid'], 'path': request.path}
         _headers = get_headers(user_data)
         response = requests.post(url=_url, data=user_data, headers=_headers)
+
+        if not verify_signature(response=response):
+            abort(401)
+
         response_data = response.json()
 
         if response_data and response_data.get('status', False):
@@ -90,3 +107,10 @@ def auth_required(func):
             abort(401)
 
     return wrapper
+
+
+def verify_signature(response):
+    secret_key = config_instance().SECRET_KEY
+    signature_header = response.headers.get('X-SIGNATURE', '')
+    signature = hmac.new(secret_key.encode(), response.content, hashlib.sha256).hexdigest()
+    return signature_header == signature
