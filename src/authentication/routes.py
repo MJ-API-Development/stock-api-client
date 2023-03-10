@@ -105,12 +105,10 @@ def auth_required(func):
         if response_data and response_data.get('status', False):
             if response_data.get('payload').get("authorized"):
                 return func(*args, **kwargs)
-
             else:
                 abort(401)
         else:
             abort(401)
-
     return wrapper
 
 
