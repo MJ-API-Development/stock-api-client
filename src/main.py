@@ -1,8 +1,17 @@
 from celery import Celery
-from flask import Flask, url_for
+import certifi
+from flask import Flask, url_for, session
+from authlib.oauth2.rfc6749 import OAuth2Token
+from authlib.integrations.flask_client import OAuth, token_update
 from flask_mail import Mail
 from src.config import config_instance
 
+from flask import Flask, redirect, url_for
+
+
+app = Flask(__name__)
+
+oauth = OAuth(app)
 
 celery = Celery(main='EOD-MAILER')
 mail = Mail()

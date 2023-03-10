@@ -2,6 +2,7 @@
 from flask import Flask
 from src.config.config import config_instance
 from src.main import create_app
+
 app: Flask = create_app(config=config_instance())
 
 if __name__ == '__main__':
@@ -20,4 +21,5 @@ if __name__ == '__main__':
     """
     # TODO learn how to run celery
     # celery.run()
+    # uvicorn.run("app:app", host="127.0.0.1", port=8081, reload=True, workers=1)
     app.run(debug=True, use_reloader=True, host="0.0.0.0", port=8081)
