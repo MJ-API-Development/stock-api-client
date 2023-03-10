@@ -117,6 +117,9 @@ def auth_required(func):
         _headers = get_headers(user_data)
         response = requests.post(url=_url, data=user_data, headers=_headers)
 
+        if response.status_code not in [200, 201]:
+            raise UnresponsiveServer()
+
         if not verify_signature(response=response):
             abort(401)
 
