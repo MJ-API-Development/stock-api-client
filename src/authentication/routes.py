@@ -83,9 +83,12 @@ def login():
         response_data = response.json()
 
         if response_data and response_data.get('status', False):
-            session['uuid'] = response_data['payload']['uuid']
-            flash('Login successful.', 'success')
-            return redirect(url_for('dashboard'))
+            uuid = response_data.get('payload', {}).get('uuid')
+            if uuid:
+                session['uuid'] = uuid
+                flash('Login successful.', 'success')
+                return redirect(url_for('dashboard'))
+            raise ServerInternalError()
         else:
             flash('Invalid email or password.', 'error')
 
