@@ -15,6 +15,16 @@ class InvalidSignatureError(HTTPException):
     description = 'The signature is invalid.'
 
 
+class ServerInternalError(HTTPException):
+    code = 500
+    description = 'An internal server error occurred.'
+
+
+class UnresponsiveServer(HTTPException):
+    code = 503
+    description = 'The server is currently unavailable and cannot process requests.'
+
+
 def create_header(secret_key: str, user_data: dict) -> str:
     data_str = ','.join([str(user_data[k]) for k in sorted(user_data.keys())])
     signature = hmac.new(secret_key.encode(), data_str.encode(), hashlib.sha256).hexdigest()
@@ -35,6 +45,10 @@ def register():
         _url = config_instance().GATEWAY_SETTINGS.CREATE_USER_URL
         _headers = get_headers(user_data=account_base.dict())
         response = requests.post(url=_url, data=account_base.json(), headers=_headers)
+
+        if response.status_code not in [200, 201]:
+            raise UnresponsiveServer()
+
         if not verify_signature(response=response):
             raise InvalidSignatureError()
 
@@ -59,6 +73,10 @@ def login():
         _headers = get_headers(user_data)
         _url = config_instance().GATEWAY_SETTINGS.LOGIN_URL
         response = requests.post(url=_url, data=user_data, headers=_headers)
+
+        if response.status_code not in [200, 201]:
+            raise UnresponsiveServer()
+
         if not verify_signature(response=response):
             raise InvalidSignatureError()
 
@@ -87,6 +105,7 @@ def auth_required(func):
     :param func:
     :return:
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         if 'uuid' not in session:
@@ -110,6 +129,7 @@ def auth_required(func):
                 abort(401)
         else:
             abort(401)
+
     return wrapper
 
 
