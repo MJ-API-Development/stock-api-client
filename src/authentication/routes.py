@@ -60,6 +60,13 @@ def login():
     return render_template('login.html')
 
 
+@auth_handler.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
+
+
 def auth_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -74,7 +81,11 @@ def auth_required(func):
         response_data = response.json()
 
         if response_data and response_data.get('status', False):
-            return func(*args, **kwargs)
+            if response_data.get('payload').get("authorized"):
+                return func(*args, **kwargs)
+
+            else:
+                abort(401)
         else:
             abort(401)
 
