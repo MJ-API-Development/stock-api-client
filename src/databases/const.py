@@ -1,5 +1,3 @@
-
-
 UUID_LEN: int = 16
 STR_LEN: int = 255
 NAME_LEN: int = 128
