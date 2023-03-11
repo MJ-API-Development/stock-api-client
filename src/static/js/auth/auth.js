@@ -27,8 +27,11 @@ function login (event) {
             username, password
         })
     })
-        .then(response => response.json())
-        .then(data => {
+        .then(response => {
+            console.log(response);
+            return response.json();
+        }).then(data => {
+            console.log(data);
             if (data.status && data.account && data.account.uuid) {
                 window.location.href = '/account/' + data.account.uuid;
             } else {

@@ -54,6 +54,8 @@ class GatewaySettings(BaseSettings):
     LOGIN_URL: str = Field(..., env="GATEWAY_LOGIN_URL")
     CREATE_USER_URL: str = Field(..., env="GATEWAY_CREATE_USER_URL")
     AUTHORIZE_URL: str = Field(..., env="GATEWAY_AUTHORIZE_USER_URL")
+    BASE_URL: str = Field(..., env="GATEWAY_URL")
+    LOCAL_BASE_URL: str = Field(..., env="LOCAL_GATEWAY_URL")
 
     class Config:
         env_file = '.env.development'

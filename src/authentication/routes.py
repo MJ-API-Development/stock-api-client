@@ -1,6 +1,6 @@
 import requests
 from werkzeug.exceptions import HTTPException
-from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort
+from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort, jsonify
 from functools import wraps
 import hmac
 import hashlib
@@ -27,7 +27,7 @@ class UnresponsiveServer(HTTPException):
 
 def create_header(secret_key: str, user_data: dict) -> str:
     data_str = ','.join([str(user_data[k]) for k in sorted(user_data.keys())])
-    signature = hmac.new(secret_key.encode(), data_str.encode(), hashlib.sha256).hexdigest()
+    signature = hmac.new(secret_key.encode('utf-8'), data_str.encode('utf-8'), hashlib.sha256).hexdigest()
     return f"{data_str}|{signature}"
 
 
@@ -42,7 +42,9 @@ def register():
     if request.method == 'POST':
         user_data = request.json()
         account_base = AccountBase(**user_data)
-        _url = config_instance().GATEWAY_SETTINGS.CREATE_USER_URL
+        _path = config_instance().GATEWAY_SETTINGS.CREATE_USER_URL
+        _base = config_instance().GATEWAY_SETTINGS.BASE_URL
+        _url = f"{_base}{_path}"
         _headers = get_headers(user_data=account_base.dict())
         response = requests.post(url=_url, data=account_base.json(), headers=_headers)
 
@@ -64,17 +66,17 @@ def register():
 def login():
     if request.method == 'POST':
         request_data = request.get_json()
-        print(request_data)
         email = request_data['username']
         password = request_data['password']
 
         # Check user credentials using API endpoint
         user_data = {'email': email, 'password': password}
         _headers = get_headers(user_data)
-        _url = config_instance().GATEWAY_SETTINGS.LOGIN_URL
-        response = requests.post(url=_url, data=user_data, headers=_headers)
-
-        if response.status_code not in [200, 201]:
+        _path = config_instance().GATEWAY_SETTINGS.LOGIN_URL
+        _base = config_instance().GATEWAY_SETTINGS.BASE_URL
+        _url = f"{_base}{_path}"
+        response = requests.post(url=_url, json=user_data, headers=_headers)
+        if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()
 
         if not verify_signature(response=response):
@@ -86,13 +88,11 @@ def login():
             uuid = response_data.get('payload', {}).get('uuid')
             if uuid:
                 session['uuid'] = uuid
-                flash('Login successful.', 'success')
-                return redirect(url_for('dashboard'))
-            raise ServerInternalError()
-        else:
-            flash('Invalid email or password.', 'error')
 
-    return render_template('login.html')
+        return jsonify(response_data)
+
+    elif request.method == 'GET':
+        return render_template('login.html')
 
 
 @auth_handler.route('/logout')
@@ -115,12 +115,15 @@ def auth_required(func):
             return redirect('/login')
 
         # Call the API to check if the user is authorized to access this resource
-        _url = config_instance().GATEWAY_SETTINGS.AUTHORIZE_URL
+        _path = config_instance().GATEWAY_SETTINGS.AUTHORIZE_URL
+        _base = config_instance().GATEWAY_SETTINGS.BASE_URL
+
+        _url = f"{_base}{_path}"
         user_data = {'uuid': session['uuid'], 'path': request.path, 'method': request.method}
         _headers = get_headers(user_data)
         response = requests.post(url=_url, data=user_data, headers=_headers)
 
-        if response.status_code not in [200, 201]:
+        if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()
 
         if not verify_signature(response=response):
@@ -142,6 +145,7 @@ def auth_required(func):
 def verify_signature(response):
     secret_key = config_instance().SECRET_KEY
     data_header = response.headers.get('X-SIGNATURE', '')
+    print(f"data_header : {data_header}")
     data_str, signature_header = data_header.split('|')
-    _signature = hmac.new(secret_key.encode(), data_str, hashlib.sha256).hexdigest()
+    _signature = hmac.new(secret_key.encode('utf-8'), data_str.encode('utf-8'), hashlib.sha256).hexdigest()
     return hmac.compare_digest(signature_header, _signature)
