@@ -97,6 +97,10 @@ def login():
 
 @auth_handler.route('/logout')
 def logout():
+    """
+        convert to JSON based messages , the flow will be handled by the front page
+    :return:
+    """
     session.clear()
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
@@ -145,7 +149,6 @@ def auth_required(func):
 def verify_signature(response):
     secret_key = config_instance().SECRET_KEY
     data_header = response.headers.get('X-SIGNATURE', '')
-    print(f"data_header : {data_header}")
     data_str, signature_header = data_header.split('|')
     _signature = hmac.new(secret_key.encode('utf-8'), data_str.encode('utf-8'), hashlib.sha256).hexdigest()
     return hmac.compare_digest(signature_header, _signature)
