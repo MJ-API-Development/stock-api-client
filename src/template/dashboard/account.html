@@ -22,30 +22,30 @@
                     </div>
                     <div class="control-group">
                         <label for="second_name"> Second Name</label>
-                        <input class="form-control" type="text" name="second_name" value="">
+                        <input class="form-control" type="text" id="second_name" name="second_name" value="">
                     </div>
                     <div class="control-group">
                         <label for="surname"> Surname</label>
-                        <input class="form-control" type="text" name="surname" value="">
+                        <input class="form-control" type="text" id="surname" name="surname" value="">
                     </div>
                     <div class="control-group">
                         <label for="cell"> Cell</label>
-                        <input class="form-control" type="tel" name="cell" value="">
+                        <input class="form-control" type="tel" id="cell" name="cell" value="">
                     </div>
                     <div class="control-group">
                         <label for="email">Email</label>
-                        <input class="form-control" type="email" name="email" value="">
+                        <input class="form-control" type="email" id="email" name="email" value="">
                     </div>
                     <div class="control-group">
                         <label for="password">Password</label>
-                        <input class="form-control" type="password" name="Password" value="">
+                        <input class="form-control" type="password" id="password" name="Password" value="">
                     </div>
                     <div class="control-group">
                             <hr>
                     </div>
 
                     <div class="control-group">
-                        <button class="btn btn-dark" name="update"> <i class="fa fa-user-plus"> </i> Update Account Details</button>
+                        <button class="btn btn-dark" id="update_account_button" name="update"> <i class="fa fa-user-plus"> </i> Update Account Details</button>
                     </div>
 
                 </form>
@@ -59,9 +59,33 @@
        <!-- API Key and Subscription Details -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"> <i class="fa fa-key"> </i> API Keys</h3>
+            <h3 class="card-title"> <i class="fa fa-key"> </i> Subscriptions</h3>
           </div>
           <div class="card-body">
+            <div class="form-group">
+                <ol class="list-group">
+                    <li class="list-group-item"> Plan Type:  </li>
+                    <li class="list-group-item"> Date Subscribed: </li>
+                    <li class="list-group-item"> Monthly Request Limit: </li>
+                    <li class="list-group-item"> Rate Limiting: </li>
+                    <li class="list-group-item"> Monthly Payment: </li>
+                    <li class="list-group-item"> Date Last Payment: </li>
+                </ol>
+
+                <ul class="list-group-item">
+                        <li class="list-group-item"> Available Plans
+                            <select id="plans" class="form-control">
+                                   <option>Basic - $ 19.99</option>
+                                   <option>Professional- $ 49.99</option>
+                                   <option>Business - $ 199.99</option>
+                                   <option>Enterprise - $ 399.99</option>
+                            </select>
+                        </li>
+                </ul>
+                <div class="input-group">
+                    <button class="btn btn-dark"> Update Plan </button>
+                </div>
+            </div>
             <div class="form-group">
               <div class="input-group">
                 <input type="password" id="api_key" class="form-control" value="{{ api_key }}" disabled>
@@ -80,7 +104,6 @@
             </form>
           </div>
         </div>
-
 
         <!-- PAYMENT METHODS -->
         <div class="card">
@@ -104,5 +127,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ url_for('static', filename='js/dashboard/apikeys.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/eod.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard/account.js') }}"></script>
 {% endblock %}

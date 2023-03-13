@@ -31,8 +31,10 @@ function login (event) {
             console.log(response);
             return response.json();
         }).then(data => {
-            console.log(data);
+
             if (data.status && data.account && data.account.uuid) {
+                //Setting The Global Account Data Variable
+                account_data = data.account;
                 window.location.href = '/account/' + data.account.uuid;
             } else {
                 message_elem.innerHTML = data.message;

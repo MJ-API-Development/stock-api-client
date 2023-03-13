@@ -3,12 +3,10 @@
           <div class="right_col" role="main">
 <div class="col-md-12">
         <h2>EOD Stock API - Intelligent Stock Market API</h2>
-
 <div class="row why-use-api">
   <div class="col-md-12">
     <h3>Why Use Our API?</h3>
   </div>
-
   <div class="col-md-3">
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-clock-o"></i></div>
@@ -17,7 +15,6 @@
       <p>Our API provides fast and reliable access to stock market data with an average latency of 81 ms.</p>
     </div>
   </div>
-
   <div class="col-md-3">
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-line-chart"></i></div>
@@ -26,7 +23,6 @@
       <p>Access a wide range of company fundamentals data for more informed investment decisions.</p>
     </div>
   </div>
-
   <div class="col-md-3">
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-newspaper-o"></i></div>
@@ -34,7 +30,6 @@
       <h4 class="title">Financial News</h4>
 <p>Stay up-to-date with the latest financial news with access to a comprehensive collection of daily articles.</p>    </div>
   </div>
-
   <div class="col-md-3">
     <div class="tile-stats">
       <div class="icon"><i class="fa fa-bar-chart"></i></div>
@@ -44,7 +39,6 @@
   </div>
 </div>
 </div>
-
 {# Section Divider #}
 <div class="col-md-12">
     <hr/>
@@ -55,7 +49,6 @@
         <h3 class="tile_info"> <i class="fa fa-line-chart"> </i> Available Financial Data API's</h3>
     </div>
     <div class="col-md-6">
-
             <div class="blockquote">
                 <ul>
                     <li>Fundamental Data</li>
@@ -66,7 +59,6 @@
             </div>
     </div>
     <div class="col-md-6">
-
             <div class="blockquote">
                 <ul>
                     <li>Exchanges Data</li>
@@ -75,13 +67,9 @@
                     <li>Sentiment Analysis</li>
                 </ul>
             </div>
-
     </div>
-
 </div>
-
 {#  Search #}
-
               <div class="col-md-12">
               <form class="form-horizontal">
                 <div class="form-group">
@@ -97,10 +85,7 @@
                 </div>
               </form>
             </div>
-
 <div class="clearfix"><hr/></div>
-
-
               <div class="container">
                   <div class="tile tile_header">
                       <h3 class="title-decor"><i class="fa fa-money"> </i> Subscription Plans</h3>
@@ -183,12 +168,8 @@
                         <button class="btn btn-dark"><i class="fa fa-envelope"> </i> Contact Us</button>
                       </div>
                 </div>
-
                 </div>
-
 <div class="clearfix"><hr/></div>
-
-
       <div class="container">
       <div class="row">
         <div class="col-md-6">
@@ -212,7 +193,6 @@
                     </a>
                   </li>
                 </ul>
-
             </div>
           </div>
         </div>
@@ -255,7 +235,6 @@
     </div>
 </div>
 <div class="clearfix"><hr/></div>
-
 <div class="container">
   <div class="row">
     <div class="col-md-12">
@@ -266,12 +245,11 @@
         <div class="card-body">
           <pre class="bg-dark text-light p-3"><code class="language-python">
   import requests
-  url = 'https://www.eod-stock-api.site/api/v1/exchanges'
+  url = 'https://www.eod-stock-api.site/api/v1/exchanges
   headers = {
-      'Content-Type': 'application/json',
-      'API-KEY': 'YOUR_API_KEY'
+      'Content-Type': 'application/json'
   }
-  params = {}
+  params = {'api_key':'asdasdedf348ur3984uy5934hrrfn394f73fy475'}
   response = requests.get(url, headers=headers, params=params)
   print(response.json())
 
