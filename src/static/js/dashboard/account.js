@@ -1,6 +1,4 @@
 
-
-
     // APIKeys Script
     let apiKeyEl = document.getElementById('api_key');
     let showApiKeyBtn = document.getElementById('show_api_key');
@@ -26,7 +24,6 @@
         document.execCommand('copy');
         alert('API Key copied to clipboard');
     });
-
 
     //Account Script
     let update_account_button = document.getElementById('update_account_button');
@@ -61,7 +58,6 @@
             body: JSON.stringify(body),
             mode: "cors",
             credentials: "same-origin",
-
         }));
 
         //Updates Account Data depending on the return status
