@@ -1,22 +1,24 @@
 from pydantic import BaseModel
+from src.databases.models.schemas.apikeys import ApiKeysBaseModel
 
 
-class AccountBase(BaseModel):
+class AccountModel(BaseModel):
     uuid: str
     first_name: str
     second_name: str
     surname: str
     email: str
     cell: str
-    password_hash: str
-    is_admin: bool
-    is_deleted: bool
+    is_admin: bool = False
+    is_deleted: bool = False
 
 
-class AccountCreate(AccountBase):
-    pass
+class AccountCreate(AccountModel):
+    uuid: str | None
+    password: str
 
 
-class Account(AccountBase):
-    class Config:
-        orm_mode = True
+class CompleteAccountResponseModel(AccountModel):
+    apikeys: ApiKeysBaseModel
+
+
