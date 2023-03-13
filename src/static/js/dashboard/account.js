@@ -48,12 +48,13 @@
         const cell = cell_dom.value;
         const email = email_dom.value;
 
-        // TODO - find a way to obtain session data -
         let uuid = account_data.uuid;
+        let base_url = settings.base_url;
 
-        const url = `https://client.eod-stock-api.site/account/${uuid}`;
+        const url = `${base_url}/account/${uuid}`;
         let headers = {'Content-type': 'application/json'}
         let body = {first_name, second_name, surname, cell, email};
+        alert(`${base_url}`);
         let response = await fetch(new Request(url, {
             method: "put",
             headers: new Headers({...headers}),
@@ -67,7 +68,7 @@
         if (response.status === 201){
             // request successfully updated account details
             let json_data = await response.json();
-            //Setting the Glabal Account Data
+            //Setting the Global Account Data
             account_data = response.payload;
         }else{account_data = {}}
 
