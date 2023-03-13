@@ -1,12 +1,6 @@
 from flask import Flask, url_for, session
-
-
 from src.config import config_instance
-
 from flask import Flask, redirect, url_for
-
-
-app = Flask(__name__)
 
 
 def create_app(config=config_instance()) -> Flask:

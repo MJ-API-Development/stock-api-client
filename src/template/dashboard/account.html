@@ -1,28 +1,65 @@
 {% extends "layouts/layout.html" %}
-
 {% block content %}
-
   <div class="right_col" role="main">
   <div class="row">
       <div class="container-fluid mt-3">
-    <h1 class="display-4">Account Settings</h1>
+    <h1 class="display-4"><i class="fa fa-cogs"> </i> Account Settings</h1>
 
     <div class="row mt-4">
       <div class="col-md-6">
+
+        <!-- Account Data -->
+
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Payment Method</h3>
-          </div>
-          <div class="card-body">
-            <p>You are currently using PayPal as your payment method. To update your payment method, please go to your PayPal account settings.</p>
-          </div>
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-user"> </i>  Account Details</h3>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="control-group">
+                        <label for="first_name"> First Name</label>
+                        <input class="form-control" type="text" id="first_name" name="first_name" value="">
+                    </div>
+                    <div class="control-group">
+                        <label for="second_name"> Second Name</label>
+                        <input class="form-control" type="text" name="second_name" value="">
+                    </div>
+                    <div class="control-group">
+                        <label for="surname"> Surname</label>
+                        <input class="form-control" type="text" name="surname" value="">
+                    </div>
+                    <div class="control-group">
+                        <label for="cell"> Cell</label>
+                        <input class="form-control" type="tel" name="cell" value="">
+                    </div>
+                    <div class="control-group">
+                        <label for="email">Email</label>
+                        <input class="form-control" type="email" name="email" value="">
+                    </div>
+                    <div class="control-group">
+                        <label for="password">Password</label>
+                        <input class="form-control" type="password" name="Password" value="">
+                    </div>
+                    <div class="control-group">
+                            <hr>
+                    </div>
+
+                    <div class="control-group">
+                        <button class="btn btn-dark" name="update"> <i class="fa fa-user-plus"> </i> Update Account Details</button>
+                    </div>
+
+                </form>
+            </div>
         </div>
+
       </div>
 
       <div class="col-md-6">
+
+       <!-- API Key and Subscription Details -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">API Keys</h3>
+            <h3 class="card-title"> <i class="fa fa-key"> </i> API Keys</h3>
           </div>
           <div class="card-body">
             <div class="form-group">
@@ -39,8 +76,24 @@
               </div>
             </div>
             <form method="POST" action="{{ url_for('home.regenerate_api_key') }}">
-              <button type="submit" class="btn btn-primary">Regenerate API Key</button>
+              <button type="submit" class="btn btn-primary"> <i class="fa fa-key"> </i>  Regenerate API Key</button>
             </form>
+          </div>
+        </div>
+
+
+        <!-- PAYMENT METHODS -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"> <i class="fa fa-cc-paypal"> </i> Payment Method</h3>
+          </div>
+          <div class="card-body">
+              <div class="text-body">Currently We Only Support PayPal</div>
+              <hr>
+              <ol class="list-group">
+                  <li class="list-group-item"><input type="text" class="form-control" id="paypal" />  </li>
+              </ol>
+              <button class="btn btn-check btn-dark"> <i class="fa fa-paypal"> </i> Attach PayPal Account </button>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, request, jsonify, session, abort, 
 from src.databases.models.sql import mysql_instance
 from src.databases.models.sql.contact import Contacts
 from src.logger import init_logger
-from src.mail.send_emails import schedule_mail
+
 from secrets import token_hex
 
 
