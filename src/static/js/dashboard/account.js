@@ -15,7 +15,6 @@
             apiKeyEl.type = "password"
             showApiKeyBtn.innerHTML = '<i class="fa fa-eye"></i>';
         }
-
     });
 
     copyApiKeyBtn.addEventListener('click', function() {
@@ -26,18 +25,17 @@
     });
 
     //Account Script
-    let update_account_button = document.getElementById('update_account_button');
-    let password = document.getElementById('password');
+    const update_account_button = document.getElementById('update_account_button');
+    const password = document.getElementById('password');
+    const first_name_dom = document.getElementById('first_name');
+    const second_name_dom = document.getElementById("second_name");
+    const surname_dom = document.getElementById('surname');
+    const cell_dom = document.getElementById('cell');
+    const email_dom = document.getElementById('email');
 
     // Update Account Personal Data
     update_account_button.addEventListener('click', async (e) => {
         e.preventDefault();
-
-        const first_name_dom = document.getElementById('first_name');
-        const second_name_dom = document.getElementById("second_name");
-        const surname_dom = document.getElementById('surname');
-        const cell_dom = document.getElementById('cell');
-        const email_dom = document.getElementById('email');
 
         const first_name = first_name_dom.value;
         const second_name = second_name_dom.value;
@@ -53,25 +51,50 @@
         let body = {first_name, second_name, surname, cell, email};
         alert(`${base_url}`);
         let response = await fetch(new Request(url, {
-            method: "put",
+            method: "PUT",
             headers: new Headers({...headers}),
             body: JSON.stringify(body),
             mode: "cors",
             credentials: "same-origin",
         }));
-
         //Updates Account Data depending on the return status
-        if (response.status === 201){
+        await update_account_details(response);
+    });
+
+    // when document loads update account information
+    document.addEventListener('load', async (e) => {
+            //    Load all the data for this page
+
+        let uuid = account_data.uuid;
+        let base_url = settings.base_url;
+
+        const url = `${base_url}/account/${uuid}`;
+        let headers = {'Content-type': 'application/json'}
+
+        let response = await fetch(new Request(url, {
+            method: "GET",
+            headers: new Headers({...headers}),
+            mode: "cors",
+            credentials: "same-origin",
+        }));
+
+        await update_account_details(response);
+    });
+
+
+    async function update_account_details(response) {
+        if (response.status === 201) {
             // request successfully updated account details
             let json_data = await response.json();
             //Setting the Global Account Data
             account_data = response.payload;
-        }else{account_data = {}}
-
+        } else {
+            account_data = {}
+        }
         //refreshing data
         first_name_dom.value = account_data.first_name;
         second_name_dom.value = account_data.second_name;
         surname_dom.value = account_data.surname;
         cell_dom.value = account_data.cell;
         email_dom.value = account_data.email;
-    });
+    }
