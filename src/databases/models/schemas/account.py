@@ -19,6 +19,12 @@ class AccountCreate(AccountModel):
 
 
 class CompleteAccountResponseModel(AccountModel):
+
     apikeys: ApiKeysBaseModel
 
+
+class AccountResponseSchema(BaseModel):
+    status : bool
+    payload : CompleteAccountResponseModel
+    message : str
 

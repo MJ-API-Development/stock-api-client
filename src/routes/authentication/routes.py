@@ -105,7 +105,7 @@ def login():
         return render_template('login.html')
 
 
-@auth_handler.route('/logout', method=['POST'])
+@auth_handler.route('/logout', methods=['POST'])
 def logout():
     """
         convert to JSON based messages , the flow will be handled by the front page
@@ -139,7 +139,7 @@ def auth_required(func):
         _url = f"{_base}{_path}"
         user_data = {'uuid': session[uuid]['uuid'], 'path': request.path, 'method': request.method}
         _headers = get_headers(user_data)
-        response = requests.post(url=_url, data=user_data, headers=_headers)
+        response = requests.post(url=_url, json=user_data, headers=_headers)
 
         if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()
