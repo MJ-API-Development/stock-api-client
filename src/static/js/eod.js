@@ -4,18 +4,23 @@
 let account_data = {};
 
 //this event will trigger on every page load
-document.addEventListener('load', async (e) => {
-    let storage_item = localStorage.getItem('uuid');
-    // Data is available therefore lets try and refresh the data
-    if (storage_item !== null){
-        let data = JSON.parse(storage_item);
-         await refresh_account(data.uuid);
-    }else {
-        if (account_data !== {}) {
-            await refresh_account(account_data.uuid);
+self.addEventListener('load', async () => {
+        let storage_item = localStorage.getItem('uuid');
+        console.log(`storage_item: ${storage_item}`);
+        if (storage_item) {
+            let data = JSON.parse(storage_item);
+            await refresh_account(data.uuid);
+        } else {
+            console.log("storage not found")
+            account_data = {}
+            localStorage.clear();
+            console.log(`window location : ${window.location}`);
+            if (window.location.pathname === '/account'){
+                window.location = '/login'
+            }
         }
-    }
-})
+});
+
 
 
 let settings = {
@@ -43,6 +48,9 @@ async function refresh_account(uuid) {
     } else {
         account_data = {}
         localStorage.clear();
+        if (window.location.pathname === '/account'){
+            window.location = '/login'
+        }
 
     }
 

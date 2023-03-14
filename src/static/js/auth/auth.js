@@ -10,7 +10,7 @@ const message_elem = document.getElementById('message');
 //register new user button
 const register_button = document.getElementById('submit_registration')
 
-function login (event) {
+async function login (event) {
     event.preventDefault();
 
     const username = username_input.value;
@@ -18,7 +18,7 @@ function login (event) {
 
     // send form data
 
-    fetch(form.action, {
+    const response  = await fetch(form.action, {
         method: form.method,
         headers: {
             'Content-Type': 'application/json'
@@ -26,26 +26,28 @@ function login (event) {
         body: JSON.stringify({
             username, password
         })
-    })
-        .then(response => {
-            console.log(response);
-            return response.json();
-        }).then(data => {
+    });
 
-            if (data.status && data.account && data.account.uuid) {
-                //Setting The Global Account Data Variable
-                account_data = data.account;
-                window.location.href = '/account/' + data.account.uuid;
-            } else {
-                message_elem.innerHTML = data.message;
-            }
-  });
+    if (response.status === 200){
+        const data = await response.json()
+        if (data.status && data.account && data.account.uuid) {
+            account_data = data.account;
+            window.location.href = `/account/${data.account.uuid}`;
+
+        }else{
+            message_elem.innerHTML = data.message;
+        }
+    }else{
+        message_elem.innerHTML = response.statusText;
+    }
+
 }
-form.addEventListener('submit', (event) => {
-    login(event);
+
+form.addEventListener('submit', async (event) => {
+   await login(event);
 });
-submit_btn.addEventListener( 'click', (event) => {
-    login(event);
+submit_btn.addEventListener( 'click', async (event) => {
+    await login(event);
 });
 
 
@@ -115,6 +117,9 @@ const validationRules = {
   }
 };
 
+
+
+/** TODO refactor the code to create only one Method for both event listeners **/
 // attach a validation function to the form's submit event
 const registrationForm = document.getElementById('registration_form');
 
@@ -147,11 +152,15 @@ registrationForm.addEventListener('submit', event => {
 
 // user registration form
 register_button.addEventListener('click', (event) => {
+    /**
+     * Will register a new user with the just name and email
+     * User will then need to update their details on Account
+     */
     event.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('r_password').value;
-    alert(" working >>>");
+
     fetch(registrationForm.action, {
         method: registrationForm.method,
         headers: {

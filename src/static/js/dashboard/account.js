@@ -46,39 +46,55 @@
         let uuid = account_data.uuid;
         let base_url = settings.base_url;
 
-        const url = `${base_url}/account/${uuid}`;
-        let headers = {'Content-type': 'application/json'}
-        let body = {first_name, second_name, surname, cell, email};
-        alert(`${base_url}`);
-        let response = await fetch(new Request(url, {
-            method: "PUT",
-            headers: new Headers({...headers}),
-            body: JSON.stringify(body),
-            mode: "cors",
-            credentials: "same-origin",
-        }));
-        //Updates Account Data depending on the return status
-        await update_account_details(response);
+        if (uuid !== undefined){
+            const url = `${base_url}/account/${uuid}`;
+            let headers = {'Content-type': 'application/json'}
+            let body = {first_name, second_name, surname, cell, email};
+
+            let response = await fetch(new Request(url, {
+                method: "PUT",
+                headers: new Headers({...headers}),
+                body: JSON.stringify(body),
+                mode: "cors",
+                credentials: "same-origin",
+            }));
+            //Updates Account Data depending on the return status
+            await update_account_details(response);
+        }else{
+            account_data = {};
+            localStorage.clear();
+            first_name_dom.value = "";
+            second_name_dom.value = "";
+            surname_dom.value = "";
+            cell_dom.value = "";
+            email_dom.value = "";
+            window.location.href = "/login";
+
+        }
+
     });
 
     // when document loads update account information
-    document.addEventListener('load', async (e) => {
+    self.addEventListener('load', async (e) => {
             //    Load all the data for this page
-
         let uuid = account_data.uuid;
         let base_url = settings.base_url;
 
-        const url = `${base_url}/account/${uuid}`;
-        let headers = {'Content-type': 'application/json'}
+        if (uuid !== undefined) {
+            const url = `${base_url}/account/${uuid}`;
+            let headers = {'Content-type': 'application/json'}
 
-        let response = await fetch(new Request(url, {
-            method: "GET",
-            headers: new Headers({...headers}),
-            mode: "cors",
-            credentials: "same-origin",
-        }));
+            let response = await fetch(new Request(url, {
+                method: "GET",
+                headers: new Headers({...headers}),
+                mode: "cors",
+                credentials: "same-origin",
+            }));
 
-        await update_account_details(response);
+            await update_account_details(response);
+        }else{
+            window.location.href = "/login";
+        }
     });
 
 
@@ -88,13 +104,17 @@
             let json_data = await response.json();
             //Setting the Global Account Data
             account_data = response.payload;
+            localStorage.setItem('uuid', JSON.stringify(account_data))
+            //refreshing data
+            first_name_dom.value = account_data.first_name;
+            second_name_dom.value = account_data.second_name;
+            surname_dom.value = account_data.surname;
+            cell_dom.value = account_data.cell;
+            email_dom.value = account_data.email;
+
         } else {
-            account_data = {}
+            account_data = {};
+            localStorage.clear();
+            window.location.href = "/login";
         }
-        //refreshing data
-        first_name_dom.value = account_data.first_name;
-        second_name_dom.value = account_data.second_name;
-        surname_dom.value = account_data.surname;
-        cell_dom.value = account_data.cell;
-        email_dom.value = account_data.email;
     }
