@@ -245,11 +245,12 @@
         <div class="card-body">
           <pre class="bg-dark text-light p-3"><code class="language-python">
   import requests
-  url = 'https://www.eod-stock-api.site/api/v1/exchanges
+  url = 'https://gateway.eod-stock-api.site/api/v1/exchanges
   headers = {
       'Content-Type': 'application/json'
   }
-  params = {'api_key':'asdasdedf348ur3984uy5934hrrfn394f73fy475'}
+
+  params = {'api_key':'API KEY HERE'}
   response = requests.get(url, headers=headers, params=params)
   print(response.json())
 

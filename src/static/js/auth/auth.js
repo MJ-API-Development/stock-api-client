@@ -40,7 +40,6 @@ async function login (event) {
     }else{
         message_elem.innerHTML = response.statusText;
     }
-
 }
 
 form.addEventListener('submit', async (event) => {

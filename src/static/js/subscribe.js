@@ -5,7 +5,7 @@ document.getElementById("contactForm").addEventListener("submit", function(event
     event.preventDefault();
     const form = event.target;
     const emailAddress = form.elements.emailAddress.value;
-    console.log(emailAddress);
+    // console.log(emailAddress);
 
                 if (!emailAddress) {
                   const feedback = form.querySelector('[data-sb-feedback="emailAddress:required"]');

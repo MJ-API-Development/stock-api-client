@@ -1,6 +1,6 @@
-from flask import Flask, url_for, session
+from flask import Flask
+
 from src.config import config_instance
-from flask import Flask, redirect, url_for
 
 
 def create_app(config=config_instance()) -> Flask:
@@ -17,11 +17,12 @@ def create_app(config=config_instance()) -> Flask:
         from src.routes.documentations import docs_route
         from src.routes.authentication.routes import auth_handler
         from src.routes.accounts.route import account_handler
-
+        from src.routes.contacts.contact import contact_route
         # celery.config_from_object(config.CELERY_SETTINGS)
         app.register_blueprint(home_route)
         app.register_blueprint(docs_route)
         app.register_blueprint(auth_handler)
         app.register_blueprint(account_handler)
+        app.register_blueprint(contact_route)
 
     return app

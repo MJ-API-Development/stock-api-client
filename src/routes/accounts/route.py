@@ -7,8 +7,17 @@ import hashlib
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, CompleteAccountResponseModel, AccountResponseSchema
 from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature
+from src.utils import get_api_key, get_paypal_address
 
 account_handler = Blueprint("account", __name__)
+
+
+@account_handler.route('/account')
+@auth_required
+def account():
+    api_key = get_api_key()
+    paypal_address = get_paypal_address()
+    return render_template('dashboard/account.html', api_key=api_key, BASE_URL="eod-stock-api.site")
 
 
 @account_handler.route('/account/<string:uuid>', methods=['GET'])
