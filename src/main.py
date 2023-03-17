@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, make_response, jsonify
 
 from src.config import config_instance
 
@@ -27,5 +27,21 @@ def create_app(config=config_instance()) -> Flask:
         app.register_blueprint(account_handler)
         app.register_blueprint(contact_route)
         app.register_blueprint(apikeys_route)
+        # Handle API Errors, all errors are re raised as HTTPException
+        from src.exceptions import (InvalidSignatureError, ServerInternalError, UnresponsiveServer)
+
+        app.register_error_handler(InvalidSignatureError,
+                                   # Render a common error template
+                                   lambda e: make_response(jsonify({'status': False, 'message': e.description}),
+                                                           e.code))
+
+        app.register_error_handler(ServerInternalError,
+                                   lambda e: make_response(jsonify({'status': False, 'message': e.description}),
+                                                           e.code))
+
+        app.register_error_handler(UnresponsiveServer,
+                                   lambda e: make_response(jsonify({'status': False, 'message': e.description}),
+                                                           e.code))
+
 
     return app

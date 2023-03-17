@@ -6,23 +6,9 @@ import hmac
 import hashlib
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel
+from src.exceptions import UnresponsiveServer, InvalidSignatureError
 
 auth_handler = Blueprint("auth", __name__)
-
-
-class InvalidSignatureError(HTTPException):
-    code = 400
-    description = 'The signature is invalid.'
-
-
-class ServerInternalError(HTTPException):
-    code = 500
-    description = 'An internal server error occurred.'
-
-
-class UnresponsiveServer(HTTPException):
-    code = 503
-    description = 'The server is currently unavailable and cannot process requests.'
 
 
 def create_header(secret_key: str, user_data: dict) -> str:

@@ -1,3 +1,5 @@
+import time
+
 import requests
 from flask import Blueprint, render_template, request, abort, jsonify
 
@@ -16,16 +18,25 @@ def contact():
         return render_template('dashboard/contact.html', **context)
     else:
         data = request.get_json()
+        uuid = data.get("uuid", create_id())
         name = data.get("name")
         email = data.get("email")
         message = data.get("message")
         # TODO handle the issue where the user has logged in
-        contact_dict = dict(name=name, email=email, message=message, contact_id=create_id())
+        contact_dict = dict(uuid=uuid,
+                            name=name,
+                            email=email,
+                            message=message,
+                            contact_id=create_id(),
+                            timestamp=time.monotonic())
         contact_instance = Contacts(**contact_dict)
         base_url = config_instance().GATEWAY_SETTINGS.BASE_URL
         url: str = f"{base_url}/_admin/contacts"
         _headers = get_headers(user_data=contact_instance.dict())
-        response = requests.post(url=url, json=contact_instance.dict(), headers=_headers)
+        try:
+            response = requests.post(url=url, json=contact_instance.dict(), headers=_headers)
+        except requests.exceptions.ConnectionError:
+            raise UnresponsiveServer()
 
         if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()

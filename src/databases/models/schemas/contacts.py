@@ -5,7 +5,7 @@ class Contacts(BaseModel):
     """
         ORM Model for Contacts
     """
-    uuid: str
+    uuid: str | None
     contact_id: str | None
     name: str
     email: str
