@@ -3,13 +3,18 @@
 {% block content %}
 <div class="right_col" role="main">
 <div class="col-md-12">
-        <h2>EOD Stock API - API Status</h2>
+        <h2>EOD Stock API - Services Status</h2>
 
-    <ul>
-        <li>Server 1 </li>
-        <li>Server 2 </li>
+    <ul class="list-group">
+        <li class="list-group-item" id="server_1">Server 1 </li>
+        <li class="list-group-item" id="server_2">Server 2 </li>
+        <li class="list-group-item" id="gateway">Gateway </li>
     </ul>
 </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/dashboard/status.js') }}"> </script>
 {% endblock %}
