@@ -91,12 +91,20 @@
                 credentials: "same-origin",
             }));
 
-            await update_account_details(response);
+            await refresh_account_details(response);
         }else{
             window.location.href = "/login";
         }
     });
 
+    async function refresh_account_details(response){
+        if (response === 200){
+            let json_data = await response.json();
+            //Setting the Global Account Data
+            account_data = response.payload;
+            localStorage.setItem('uuid', JSON.stringify(account_data))
+        }
+    }
 
     async function update_account_details(response) {
         if (response.status === 201) {
@@ -111,7 +119,6 @@
             surname_dom.value = account_data.surname;
             cell_dom.value = account_data.cell;
             email_dom.value = account_data.email;
-
         } else {
             account_data = {};
             localStorage.clear();
