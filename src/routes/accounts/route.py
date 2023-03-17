@@ -29,7 +29,10 @@ def get_account(uuid: str):
         _url = f"{_base}/_admin/user/{uuid}"
         user_data = dict(uuid=uuid)
         _header = get_headers(user_data=user_data)
-        response = requests.get(url=_url, json=user_data, headers=_header)
+        try:
+            response = requests.get(url=_url, json=user_data, headers=_header)
+        except requests.exceptions.ConnectionError:
+            raise UnresponsiveServer()
 
         if response.status_code not in [200, 401]:
             raise UnresponsiveServer()
@@ -64,8 +67,10 @@ def update_account(uuid: str):
 
     _base = config_instance().GATEWAY_SETTINGS.BASE_URL
     _url = f"{_base}/_admin/user"
-
-    response = requests.put(url=_url, json=user_data, headers=_headers)
+    try:
+        response = requests.put(url=_url, json=user_data, headers=_headers)
+    except requests.exceptions.ConnectionError:
+        raise UnresponsiveServer()
 
     if response.status_code not in [200, 201, 401]:
         raise UnresponsiveServer()

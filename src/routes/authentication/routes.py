@@ -32,7 +32,10 @@ def register():
         _base = config_instance().GATEWAY_SETTINGS.BASE_URL
         _url = f"{_base}{_path}"
         _headers = get_headers(user_data=account_base.dict())
-        response = requests.post(url=_url, data=account_base.json(), headers=_headers)
+        try:
+            response = requests.post(url=_url, data=account_base.json(), headers=_headers)
+        except requests.exceptions.ConnectionError:
+            raise UnresponsiveServer()
 
         if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()
@@ -70,7 +73,10 @@ def login():
         _path = config_instance().GATEWAY_SETTINGS.LOGIN_URL
         _base = config_instance().GATEWAY_SETTINGS.BASE_URL
         _url = f"{_base}{_path}"
-        response = requests.post(url=_url, json=user_data, headers=_headers)
+        try:
+            response = requests.post(url=_url, json=user_data, headers=_headers)
+        except requests.exceptions.ConnectionError:
+            raise UnresponsiveServer()
 
         if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()
@@ -125,7 +131,10 @@ def auth_required(func):
         _url = f"{_base}{_path}"
         user_data = {'uuid': session[uuid]['uuid'], 'path': request.path, 'method': request.method}
         _headers = get_headers(user_data)
-        response = requests.post(url=_url, json=user_data, headers=_headers)
+        try:
+            response = requests.post(url=_url, json=user_data, headers=_headers)
+        except requests.exceptions.ConnectionError:
+            raise UnresponsiveServer()
 
         if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()

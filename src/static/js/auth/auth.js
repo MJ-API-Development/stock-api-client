@@ -12,12 +12,10 @@ const register_button = document.getElementById('submit_registration')
 
 async function login (event) {
     event.preventDefault();
-
     const username = username_input.value;
     const password = password_input.value;
 
     // send form data
-
     const response  = await fetch(form.action, {
         method: form.method,
         headers: {
@@ -27,18 +25,17 @@ async function login (event) {
             username, password
         })
     });
+    const data = await response.json()
 
-    if (response.status === 200){
-        const data = await response.json()
-        if (data.status && data.account && data.account.uuid) {
-            account_data = data.account;
-            window.location.href = `/account/${data.account.uuid}`;
-
-        }else{
-            message_elem.innerHTML = data.message;
-        }
+    //   check if user is logged in
+    if (data.status && data.account && data.account.uuid) {
+        account_data = data.account;
+        localStorage.setItem('uuid', JSON.stringify(data.account));
+        window.location.href = `/account/${data.account.uuid}`;
     }else{
-        message_elem.innerHTML = response.statusText;
+        account_data = {};
+        localStorage.clear();
+        message_elem.innerHTML = data.message;
     }
 }
 

@@ -39,8 +39,7 @@
         <div class="animate form login_form">
           <section class="login_content">
             <form id="auth_form" method="POST" action="{{ url_for('auth.login') }}">
-              <input type="hidden" id="csrf_token" value="{{ csrf_token }}"/>
-              <h1>Login Form</h1>
+              <h1 class="title"> Login</h1>
               <div>
                 <label class="label" for="username">Username</label>
                 <input type="text" id="username" class="form-control" placeholder="Enter Username" required="" />
@@ -65,7 +64,7 @@
 
                 <div>
                   <a href="/">
-                    <h1><i class="fa fa-paw"></i> EOD Stock API</h1>
+                    <h1><i class="fa fa-line-chart"></i> Intelligent Stock Market API</h1>
                   </a>
                   <p>©2023 All Rights Reserved. EOD Stock API .</p>
                 </div>
@@ -77,7 +76,7 @@
         <div id="register" class="animate form registration_form">
           <section class="login_content">
           <form id="registration_form" method="POST" action="{{ url_for('auth.register') }}">
-            <h1>Registration Form</h1>
+            <h1>Create Account</h1>
             <div>
               <label class="label" for="first_name">Name</label>
               <input type="text" id="first_name" class="form-control" placeholder="Enter Name" required="" />
