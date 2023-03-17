@@ -4,8 +4,6 @@
  *
  *
  */
-
-
 self.addEventListener('load', async (e) => {
 
     const request = new Request({
@@ -13,11 +11,14 @@ self.addEventListener('load', async (e) => {
         headers: {
           'Content-Type': 'application/json'
         },
-    })
+    });
+
     console.log('will be fetching data');
+
     let response = await fetch("/status/",request );
     const data = await response.json();
     console.log(`fetched data : ${data}`);
+
     if (data.status && data.payload){
         const server_status = data.payload.server_status;
         document.getElementById('server_1').innerHTML = server_status.server_1;
