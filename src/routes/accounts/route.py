@@ -1,14 +1,10 @@
 import requests
-from werkzeug.exceptions import HTTPException
-from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort, jsonify
-from functools import wraps
-import hmac
-import hashlib
+from flask import request, render_template, session, Blueprint, abort, jsonify
+
 from src.config import config_instance
-from src.databases.models.schemas.account import AccountModel, CompleteAccountResponseModel, AccountResponseSchema
+from src.databases.models.schemas.account import AccountModel, AccountResponseSchema
 from src.main import user_session
 from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature
-from src.utils import get_api_key, get_paypal_address
 
 account_handler = Blueprint("account", __name__)
 
@@ -34,7 +30,7 @@ def get_account(uuid: str):
             response = requests.get(url=_url, json=user_data, headers=_header)
         except requests.exceptions.ConnectionError:
             raise UnresponsiveServer()
-        print(response.status_code)
+
         if response.status_code not in [200, 401]:
             raise UnresponsiveServer()
 
@@ -46,14 +42,10 @@ def get_account(uuid: str):
             user_session.update({f"{uuid}": response_data.get('payload', {})})
             return jsonify(response_data)
 
-        session[uuid] = {}
+        user_session.update({f"{uuid}": {}})
         message: str = "Sorry cannot load account"
         new_response = dict(status=False, message=message, payload={})
-
         return jsonify(new_response)
-
-    # sending this information to user display
-    return jsonify(payload)
 
 
 @account_handler.route('/account/<string:uuid>', methods=['PUT'])

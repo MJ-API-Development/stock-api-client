@@ -1,9 +1,12 @@
 
 from flask import Flask
+from flask_cors import CORS
 from src.config.config import config_instance
 from src.main import create_app
 
 app: Flask = create_app(config=config_instance())
+
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 if __name__ == '__main__':
     """    

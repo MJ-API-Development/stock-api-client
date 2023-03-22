@@ -122,7 +122,7 @@ def logout():
     :return:
     """
     request_data = request.get_json()
-    uuid = request_data['uuid']
+    uuid = request_data.get('uuid')
     # session[uuid] = {}
     user_session.update({f"{uuid}": {}})
     # TODO - consider sending the message to the gateway indicating the action to logout
@@ -139,7 +139,13 @@ def auth_required(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        uuid = request.get_json('uuid')
+        request_data = request.get_json()
+        uuid = request_data.get('uuid')
+        print("request data : {}".format(request_data))
+        if uuid is None:
+            uuid = kwargs.get('uuid')
+            print("kwargs : {}".format(kwargs))
+
         if uuid not in user_session:
             return redirect('/login')
 

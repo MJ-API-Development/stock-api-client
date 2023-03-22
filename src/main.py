@@ -3,6 +3,8 @@ from flask import Flask, make_response, jsonify, session
 from src.config import config_instance
 
 user_session = {}
+
+
 def create_app(config=config_instance()) -> Flask:
     """
 

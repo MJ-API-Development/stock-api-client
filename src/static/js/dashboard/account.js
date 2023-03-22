@@ -3,6 +3,12 @@ const apiKeyEl = document.getElementById('api_key');
 const showApiKeyBtn = document.getElementById('show_api_key');
 const copyApiKeyBtn = document.getElementById('copy_api_key');
 
+let account_data = {};
+
+let settings = {
+    live_base_url: 'https://client.eod-stock-api.site',
+    base_url: 'http://localhost:8081'
+}
 // Account Script
 const updateAccountButton = document.getElementById('update_account_button');
 const password = document.getElementById('password');
@@ -66,11 +72,8 @@ updateAccountButton.addEventListener('click', async (e) => {
 
 self.addEventListener('load', async (e) => {
   const data = localStorage.getItem('uuid');
-  console.log("data : " + data);
-  console.log("data saved");
   if (data !== null) {
     account_data = JSON.parse(data);
-    console.log("parsed data: " + account_data);
     let uuid = account_data.uuid;
     let baseUrl = settings.base_url;
 
@@ -79,11 +82,11 @@ self.addEventListener('load', async (e) => {
 
     let response = await fetch(new Request(url, {
       method: 'GET',
-      headers: new Headers({...headers}),
-      mode: 'no-cors',
+      headers: new Headers(headers),
+      mode: 'cors',
       credentials: 'same-origin',
     }));
-
+    // console.log("refresh response : " + await response.json());
     await refresh_account_details(response);
 
   } else {
@@ -93,11 +96,13 @@ self.addEventListener('load', async (e) => {
 
 
 async function refresh_account_details(response){
-    if (response === 200){
-        let json_data = await response.json();
+    let json_data = await response.json();
+    // Handle the JSON data
+    console.log(json_data)
+    if (json_data.status === true){
+        // let json_data = await response.json();
         //Setting the Global Account Data
-        account_data = response.payload;
-        console.log(account_data);
+        account_data = json_data.payload;
         localStorage.setItem('uuid', JSON.stringify(account_data));
         first_name_dom.value = account_data.first_name;
         second_name_dom.value = account_data.second_name;
@@ -108,11 +113,11 @@ async function refresh_account_details(response){
 }
 
 async function updateAccountDetails(response) {
-  if (response.ok) {
+  if (response.status === 200) {
     const json = await response.json();
-    localStorage.setItem('uuid', json.uuid);
-    setAccountData(json);
-    updateUI(json);
+    localStorage.setItem('uuid', json.payload);
+    setAccountData(json.payload);
+    updateUI(json.payload);
   } else {
     clearLocalStorage();
     redirectToLogin();

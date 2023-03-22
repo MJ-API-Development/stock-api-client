@@ -3,6 +3,11 @@
 
 let account_data = {};
 
+let settings = {
+    live_base_url: 'https://client.eod-stock-api.site',
+    base_url: 'http://localhost:8081'
+}
+
 //this event will trigger on every page load
 self.addEventListener('load', async () => {
         let storage_item = localStorage.getItem('uuid');
@@ -24,11 +29,6 @@ self.addEventListener('load', async () => {
 
 
 
-let settings = {
-    live_base_url: 'https://client.eod-stock-api.site',
-    base_url: 'http://localhost:8081'
-}
-
 
 async function refresh_account(uuid) {
 
@@ -48,13 +48,5 @@ async function refresh_account(uuid) {
         localStorage.setItem('uuid', JSON.stringify(account_data));
         await refresh_account_details(response);
 
-    } else {
-        account_data = {}
-        localStorage.clear();
-        if (window.location.pathname === '/account'){
-            window.location = '/login'
-        }
-
     }
-
 }
