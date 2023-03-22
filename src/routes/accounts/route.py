@@ -6,6 +6,7 @@ import hmac
 import hashlib
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, CompleteAccountResponseModel, AccountResponseSchema
+from src.main import user_session
 from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature
 from src.utils import get_api_key, get_paypal_address
 
@@ -21,7 +22,7 @@ def account():
 @account_handler.route('/account/<string:uuid>', methods=['GET'])
 def get_account(uuid: str):
     """user data must already be contained on the session so just return that data"""
-    user_data = session[uuid]
+    user_data = session.get(uuid)
     if uuid and user_data:
         payload = dict(status=True, payload=user_data, message="successfully found user data")
     else:
@@ -33,7 +34,7 @@ def get_account(uuid: str):
             response = requests.get(url=_url, json=user_data, headers=_header)
         except requests.exceptions.ConnectionError:
             raise UnresponsiveServer()
-
+        print(response.status_code)
         if response.status_code not in [200, 401]:
             raise UnresponsiveServer()
 
@@ -41,13 +42,12 @@ def get_account(uuid: str):
             abort(401)
 
         if response.status_code == 200:
-            response_data = AccountResponseSchema(**response.json())
-            session[uuid] = response_data.dict(exclude=['uuid']).get('payload', {})
-
-            return jsonify(response_data.dict())
+            response_data = response.json()
+            user_session.update({f"{uuid}": response_data.get('payload', {})})
+            return jsonify(response_data)
 
         session[uuid] = {}
-        message: str = "Unable to update your account"
+        message: str = "Sorry cannot load account"
         new_response = dict(status=False, message=message, payload={})
 
         return jsonify(new_response)
@@ -80,11 +80,12 @@ def update_account(uuid: str):
 
     if response.status_code == 201:
         response_data = AccountResponseSchema(**response.json())
-        session[uuid] = response_data.dict(exclude=['uuid']).get('payload', {})
+        user_session.update({f"{uuid}": response_data.dict().get('payload', {})})
 
         return jsonify(response_data.dict())
 
-    session[uuid] = {}
+    user_session.update({f"{uuid}": {}})
+
     message: str = "Unable to update your account"
     new_response = dict(status=False, message=message, payload={})
 

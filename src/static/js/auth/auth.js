@@ -26,12 +26,13 @@ async function login (event) {
         })
     });
     const data = await response.json()
-
+    console.log(`data account : ${data}`)
     //   check if user is logged in
-    if (data.status && data.account && data.account.uuid) {
-        account_data = data.account;
-        localStorage.setItem('uuid', JSON.stringify(data.account));
-        window.location.href = `/account/${data.account.uuid}`;
+    if (data.status && data.payload && data.payload.uuid) {
+        console.log("setting up login")
+        account_data = data.payload;
+        localStorage.setItem('uuid', JSON.stringify(account_data));
+        window.location.href = `/account`;
     }else{
         account_data = {};
         localStorage.clear();
@@ -120,34 +121,36 @@ const validationRules = {
 const registrationForm = document.getElementById('registration_form');
 
 registrationForm.addEventListener('submit', event => {
-  event.preventDefault();
+    event.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const cell = document.getElementById('cell').value;
+    const password = document.getElementById('r_password').value;
+    console.log("submitting registration form");
+    console.log(registrationForm.action);
 
-  if (validateForm()) {
-    // form is valid, submit it
-    const name = nameInput.value;
-    const email = emailInput.value;
-    const password = passwordInput.value;
-
-    fetch(registrationForm.action, {
-      method: registrationForm.method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, email, password })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status && data.account && data.account.uuid) {
-        window.location.href = '/account/' + data.account.uuid;
-      } else {
-        message_elem.innerHTML = data.message;
-      }
+    const request = new Request(registrationForm.action,{
+         method: registrationForm.method,
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({ name, email, cell, password}),
+        mode: "no-cors",
+        credentials: "same-origin",
     });
-  }
+
+    console.log(request);
+    let response =  fetch(request);
+    if (response.status !== 201){
+        data = response.json();
+        if (data.status && data.account && data.account.uuid) {
+
+        }
+    }else{
+        console.log(response.statusText)
+    }
 });
 
 // user registration form
-register_button.addEventListener('click', (event) => {
+register_button.addEventListener('click', async (event) => {
     /**
      * Will register a new user with the just name and email
      * User will then need to update their details on Account
@@ -155,21 +158,27 @@ register_button.addEventListener('click', (event) => {
     event.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
+    const cell = document.getElementById('cell').value;
     const password = document.getElementById('r_password').value;
+    console.log("submitting registration form");
+    console.log(registrationForm.action);
 
-    fetch(registrationForm.action, {
-        method: registrationForm.method,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({name, email, password})
-    }).then(response => response.json()).then(data => {
-        if (data.status){
-            if (data.status && data.account && data.account.uuid) {
-                window.location.href = '/account/' + data.account.uuid;
-            } else {
-                message_elem.innerHTML = data.message;
-            }
+    const request = new Request(registrationForm.action,{
+         method: registrationForm.method,
+         headers: {'Content-Type': 'application/json'},
+         body: JSON.stringify({ name, email, cell, password}),
+        mode: "cors",
+        credentials: "same-origin",
+    });
+
+    console.log(request);
+    let response = await fetch(request);
+    if (response.status !== 201){
+        const data = response.json();
+        if (data.status && data.account && data.account.uuid) {
+        //    TODO - add to account details
         }
-    })
+    }else{
+        console.log(response.statusText)
+    }
 });

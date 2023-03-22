@@ -78,8 +78,8 @@
           <form id="registration_form" method="POST" action="{{ url_for('auth.register') }}">
             <h1>Create Account</h1>
             <div>
-              <label class="label" for="first_name">Name</label>
-              <input type="text" id="first_name" class="form-control" placeholder="Enter Name" required="" />
+              <label class="label" for="name">Name</label>
+              <input type="text" id="name" class="form-control" placeholder="Enter Name" required="" />
             </div>
             <div>
               <label class="label" for="email">Email</label>
@@ -110,7 +110,7 @@
         </div>
       </div>
     </div>
-
-  <script src="{{ url_for('static', filename='js/auth/auth.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/eod.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/auth/auth.js') }}"></script>
   </body>
 </html>

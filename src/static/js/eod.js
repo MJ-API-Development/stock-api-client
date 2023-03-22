@@ -7,8 +7,9 @@ let account_data = {};
 self.addEventListener('load', async () => {
         let storage_item = localStorage.getItem('uuid');
         console.log(`storage_item: ${storage_item}`);
-        if (storage_item) {
+        if (storage_item !== null){
             let data = JSON.parse(storage_item);
+            console.log(data);
             await refresh_account(data.uuid);
         } else {
             console.log("storage not found")
@@ -35,7 +36,7 @@ async function refresh_account(uuid) {
     let request = new Request(url, {
         method: 'GET',
         headers: new Headers({"Content-Type": "application/json"}),
-        mode: "cors",
+        mode: "no-cors",
         credentials: "same-origin"
     });
 
@@ -44,7 +45,9 @@ async function refresh_account(uuid) {
     if (response.status === 200) {
         const json_data = await response.json();
         account_data = json_data.payload;
-        localStorage.setItem('uuid', JSON.stringify(account_data))
+        localStorage.setItem('uuid', JSON.stringify(account_data));
+        await refresh_account_details(response);
+
     } else {
         account_data = {}
         localStorage.clear();
