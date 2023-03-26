@@ -1,4 +1,28 @@
-
+/**
+ *
+ *
+ * This is a JavaScript code that defines two functions setAccountCookie and getAccountFromCookie and an event listener
+ * for the load event.
+ *
+ * The setAccountCookie function takes an object account_data as input and sets a cookie with the name 'uuid' and the
+ * value JSON.stringify(account_data). The function also adds a 'secure' flag to the cookie if the current page is
+ * accessed via HTTPS protocol.
+ *
+ * The getAccountFromCookie function reads the cookie with the name 'uuid' and returns the parsed JSON object if it
+ * exists, otherwise returns null.
+ *
+ * The load event listener checks if there is a uuid stored in the local storage, and if so, it calls the
+ * refresh_account function with that uuid. If there is no uuid in the local storage, it sets an empty account_data
+ * object as a cookie with the name 'uuid', and if the current page is the /account page, it redirects the user to
+ * the /login page.
+ *
+ * The refresh_account function takes a uuid as input and sends an HTTP GET request to the URL
+ * ${settings.base_url}/account/${uuid}. If the response status is 200, it sets the account_data object to the payload
+ * property of the response JSON object and sets a cookie with the name 'uuid' and the value
+ * JSON.stringify(account_data). The function also calls another function refresh_account_details with the response
+ * object as a parameter, which is not defined in this code.
+ *
+ */
 
 
 let account_data = {};
@@ -17,6 +41,7 @@ function setAccountCookie(account_data) {
   const cookieValue = JSON.stringify(account_data);
   const secureFlag = window.location.protocol === 'https:' ? '; secure' : '';
   document.cookie = `${cookieName}=${cookieValue}${secureFlag}; path=/; SameSite=Strict`;
+  sessionStorage.setItem('uuid', JSON.stringify(account_data));
 }
 
 // Function to read the cookie and get the account data
@@ -25,7 +50,12 @@ function getAccountFromCookie() {
   const cookieValue = `; ${document.cookie}`;
   const parts = cookieValue.split(`; ${cookieName}=`);
   if (parts.length === 2) {
-    return JSON.parse(parts.pop().split(';').shift());
+      const session_data = sessionStorage.getItem('uuid');
+      const cookie_data = parts.pop().split(';').shift();
+      if (session_data){
+          return JSON.parse(session_data);
+      }
+      return JSON.parse(cookie_data);
   }
   return null;
 }
@@ -66,7 +96,7 @@ async function refresh_account(uuid) {
     let request = new Request(url, {
         method: 'GET',
         headers: new Headers({"Content-Type": "application/json"}),
-        mode: "no-cors",
+        mode: "cors",
         credentials: "same-origin"
     });
 

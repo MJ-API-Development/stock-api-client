@@ -1,0 +1,12 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}Subscribe to {{ plan }} Plan{% endblock %}
+
+{% block content %}
+  <h1>Subscribe to {{ plan }} Plan</h1>
+  <p>To subscribe to the {{ plan }} Plan, please click the button below:</p>
+  <form action="{{ url_for('subscribe') }}" method="POST">
+    <input type="hidden" name="plan" value="{{ plan }}">
+    <button type="submit">Subscribe with PayPal</button>
+  </form>
+{% endblock %}
