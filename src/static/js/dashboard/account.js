@@ -6,28 +6,11 @@ const copyApiKeyBtn = document.getElementById('copy_api_key');
 let account_data = {};
 // Function to set a cookie with account data
 
-function setAccountCookie(account_data) {
-  const cookieName = 'account_data';
-  const cookieValue = JSON.stringify(account_data);
-  const secureFlag = window.location.protocol === 'https:' ? '; secure' : '';
-  document.cookie = `${cookieName}=${cookieValue}${secureFlag}; path=/; SameSite=Strict`;
-}
-
-// Function to read the cookie and get the account data
-function getAccountFromCookie() {
-  const cookieName = 'account_data';
-  const cookieValue = `; ${document.cookie}`;
-  const parts = cookieValue.split(`; ${cookieName}=`);
-  if (parts.length === 2) {
-    return JSON.parse(parts.pop().split(';').shift());
-  }
-  return null;
-}
-
 let settings = {
     live_base_url: 'https://client.eod-stock-api.site',
     base_url: 'http://localhost:8081'
 }
+
 // Account Script
 const updateAccountButton = document.getElementById('update_account_button');
 const password = document.getElementById('password');
@@ -90,6 +73,10 @@ updateAccountButton.addEventListener('click', async (e) => {
 });
 
 self.addEventListener('load', async (e) => {
+  /**
+   * reloads the account data from the backend
+   * @type {string}
+   */
   const data = localStorage.getItem('uuid');
   if (data !== null) {
     account_data = JSON.parse(data);
@@ -134,7 +121,6 @@ async function refresh_account_details(response){
 async function updateAccountDetails(response) {
   if (response.status === 200) {
     const json = await response.json();
-    localStorage.setItem('uuid', json.payload);
     setAccountData(json.payload);
     updateUI(json.payload);
   } else {
@@ -144,10 +130,17 @@ async function updateAccountDetails(response) {
 }
 
 function setAccountData(data) {
+  /**
+   * will set the account data on account data variable and also on the cookie
+   */
   account_data = data;
+  setAccountCookie(account_data);
 }
 
 function updateUI(data) {
+  /**
+   *  will update the account data form
+   */
   first_name_dom.value = data.first_name;
   second_name_dom.value = data.second_name;
   surname_dom.value = data.surname;
@@ -156,10 +149,18 @@ function updateUI(data) {
 }
 
 function clearLocalStorage() {
+  /**
+   * @param {Object}
+   * @type {{}}
+   */
   account_data = {};
-  localStorage.clear();
+  setAccountCookie(account_data)
 }
 
 function redirectToLogin() {
+  /**
+   *
+   * @type {string}
+   */
   window.location.href = "/login";
 }

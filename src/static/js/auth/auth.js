@@ -15,24 +15,6 @@ function validatePassword(password) {
   return regex.test(password);
 }
 
-// Function to set a cookie with account data
-function setAccountCookie(account_data) {
-  const cookieName = 'account_data';
-  const cookieValue = JSON.stringify(account_data);
-  const secureFlag = window.location.protocol === 'https:' ? '; secure' : '';
-  document.cookie = `${cookieName}=${cookieValue}${secureFlag}; path=/; SameSite=Strict`;
-}
-
-// Function to read the cookie and get the account data
-function getAccountFromCookie() {
-  const cookieName = 'account_data';
-  const cookieValue = `; ${document.cookie}`;
-  const parts = cookieValue.split(`; ${cookieName}=`);
-  if (parts.length === 2) {
-    return JSON.parse(parts.pop().split(';').shift());
-  }
-  return null;
-}
 
 
 const login_form = document.getElementById('auth_form');
@@ -51,6 +33,10 @@ login_btn.addEventListener( 'click', async (event) => {
 
 
 async function login (event) {
+    /**
+     * login function takes in even and read password and username
+     * then validates both and then logs in
+     */
     event.preventDefault();
     const username = username_input.value;
     const password = password_input.value;
@@ -79,11 +65,11 @@ async function login (event) {
     if (data.status && data.payload && data.payload.uuid) {
         console.log("setting up login")
         account_data = data.payload;
-        localStorage.setItem('uuid', JSON.stringify(account_data));
+        setAccountCookie(account_data)
         window.location.href = `/account`;
     }else{
         account_data = {};
-        localStorage.clear();
+        setAccountCookie(account_data);
         message_elem.innerHTML = data.message;
     }
 }
