@@ -14,9 +14,9 @@ def get_plan_details(plan_id: str) -> dict:
     :param plan_id:
     :return:
     """
-
-    endpoint = f"{config_instance().GATEWAY_SETTINGS.BASE_URL}/_admin/plan/{plan_id}"
-    data = {'plan_id': plan_id}
+    base_url: str = config_instance().GATEWAY_SETTINGS.BASE_URL
+    endpoint: str = f"{base_url}/_admin/plan/{plan_id}"
+    data: dict[str, str] = {'plan_id': plan_id}
     headers = get_headers(user_data=data)
 
     # Make a GET request with plan_id in the body as a dict
@@ -30,7 +30,7 @@ def get_plan_details(plan_id: str) -> dict:
         response.raise_for_status()
 
 
-@plan_routes.route('/plan-subscription')
+@plan_routes.route('/plan-subscription', methods=["GET"])
 def plan_subscription(plan_id: str):
     if not plan_id:
         return redirect('/')
@@ -41,7 +41,7 @@ def plan_subscription(plan_id: str):
 
 @plan_routes.route('/subscribe', methods=['POST'])
 def subscribe():
-    data = request.get_json()
-    plan = data['plan']
+    subscription_data: dict[str, str] = request.get_json()
+
     # Handle subscription process using PayPal API
     return jsonify({'success': True})
