@@ -1,3 +1,5 @@
+
+// Regex Based Validators
 function validateName(name) {
   const regex = /^[a-zA-Z]{1,32}( [a-zA-Z]{1,32}){0,2}$/;
   return regex.test(name);
@@ -15,8 +17,9 @@ function validatePassword(password) {
   return regex.test(password);
 }
 
+// DOM Interface
 
-
+// login dom interface
 const login_form = document.getElementById('auth_form');
 const username_input = document.getElementById('username');
 const password_input = document.getElementById('password');
@@ -30,6 +33,21 @@ login_form.addEventListener('submit', async (event) => {
 login_btn.addEventListener( 'click', async (event) => {
     await login(event);
 });
+
+
+
+// get the input DOM Fields for registering a new user
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const cellInput = document.getElementById('cell');
+const passwordInput = document.getElementById('r_password');
+
+
+
+// Attach a validation function to the form's submit event
+const registrationForm = document.getElementById('registration_form');
+const registerButton = document.getElementById('submit_registration');
+
 
 
 async function login (event) {
@@ -76,21 +94,10 @@ async function login (event) {
 
 
 
-// get the input fields
-const nameInput = document.getElementById('name');
-const emailInput = document.getElementById('email');
-const cellInput = document.getElementById('cell');
-const passwordInput = document.getElementById('r_password');
-
-
-
-// Attach a validation function to the form's submit event
-const registrationForm = document.getElementById('registration_form');
-const registerButton = document.getElementById('submit_registration');
-
 
 const register_user = async (mode) => {
     /**
+     *  register_user
      * register_user -> creates a new user account
      * @param {mode}
      */
