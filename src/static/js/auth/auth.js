@@ -3,7 +3,7 @@ function validateName(name) {
   return regex.test(name);
 }
 function validateEmail(email) {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
 function validateCellNumber(cell) {
@@ -11,8 +11,8 @@ function validateCellNumber(cell) {
   return regex.test(cell);
 }
 function validatePassword(password) {
-    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
-    return regex.test(password);
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$/;
+  return regex.test(password);
 }
 
 // Function to set a cookie with account data
