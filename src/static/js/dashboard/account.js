@@ -3,14 +3,6 @@ const apiKeyEl = document.getElementById('api_key');
 const showApiKeyBtn = document.getElementById('show_api_key');
 const copyApiKeyBtn = document.getElementById('copy_api_key');
 
-let account_data = {};
-// Function to set a cookie with account data
-
-let settings = {
-    live_base_url: 'https://client.eod-stock-api.site',
-    base_url: 'http://localhost:8081'
-}
-
 // Account Script
 const updateAccountButton = document.getElementById('update_account_button');
 const password = document.getElementById('password');

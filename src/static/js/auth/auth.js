@@ -89,13 +89,18 @@ const registrationForm = document.getElementById('registration_form');
 const registerButton = document.getElementById('submit_registration');
 
 
-const submitForm = async (event, mode) => {
-    event.preventDefault();
+const register_user = async (mode) => {
+    /**
+     * register_user -> creates a new user account
+     * @param {mode}
+     */
+
     const name = nameInput.value;
     const email = emailInput.value;
     const cell = cellInput.value;
     const password = password_input.value;
-    console.log("submitting registration form");
+
+    console.log("creating new account");
     console.log(registrationForm.action);
 
     if (!validateName(name)){
@@ -123,7 +128,7 @@ const submitForm = async (event, mode) => {
         credentials: "same-origin",
     });
 
-    console.log(request);
+
     let response = await fetch(request);
     if (response.status !== 201) {
         const data = response.json();
@@ -137,10 +142,16 @@ const submitForm = async (event, mode) => {
 
 // Attach the submitForm function to the form's submit event
 registrationForm.addEventListener('submit', async event => {
-   await submitForm(event, 'cors');
+    /**
+     * will trigger a method to register a new user and pass the event
+     * @param {event}
+     */
+    event.preventDefault();
+    await register_user( 'cors');
 });
 
 // Attach the submitForm function to the register button's click event
 registerButton.addEventListener('click', async (event) => {
-   await submitForm(event, 'cors');
+   event.preventDefault();
+   await register_user('cors');
 });
