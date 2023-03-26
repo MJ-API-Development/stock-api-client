@@ -1,23 +1,71 @@
+function validateName(name) {
+  const regex = /^[a-zA-Z]{1,32}( [a-zA-Z]{1,32}){0,2}$/;
+  return regex.test(name);
+}
+function validateEmail(email) {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(email);
+}
+function validateCellNumber(cell) {
+  const regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+  return regex.test(cell);
+}
+function validatePassword(password) {
+    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
+    return regex.test(password);
+}
+
+// Function to set a cookie with account data
+function setAccountCookie(account_data) {
+  const cookieName = 'account_data';
+  const cookieValue = JSON.stringify(account_data);
+  const secureFlag = window.location.protocol === 'https:' ? '; secure' : '';
+  document.cookie = `${cookieName}=${cookieValue}${secureFlag}; path=/; SameSite=Strict`;
+}
+
+// Function to read the cookie and get the account data
+function getAccountFromCookie() {
+  const cookieName = 'account_data';
+  const cookieValue = `; ${document.cookie}`;
+  const parts = cookieValue.split(`; ${cookieName}=`);
+  if (parts.length === 2) {
+    return JSON.parse(parts.pop().split(';').shift());
+  }
+  return null;
+}
 
 
-const form = document.getElementById('auth_form');
+const login_form = document.getElementById('auth_form');
 const username_input = document.getElementById('username');
 const password_input = document.getElementById('password');
 
-const submit_btn = document.getElementById('submit_login');
+const login_btn = document.getElementById('submit_login');
 const message_elem = document.getElementById('message');
 
-//register new user button
-const register_button = document.getElementById('submit_registration')
+login_form.addEventListener('submit', async (event) => {
+   await login(event);
+});
+login_btn.addEventListener( 'click', async (event) => {
+    await login(event);
+});
+
 
 async function login (event) {
     event.preventDefault();
     const username = username_input.value;
     const password = password_input.value;
 
+    if (!validateEmail(username)) {
+        alert('Username must at least be a valid email address');
+        return;
+    }
+    if (!validatePassword(password)) {
+        alert('Password does not meet minimum recommended complexity');
+        return;
+    }
     // send form data
-    const response  = await fetch(form.action, {
-        method: form.method,
+    const response  = await fetch(login_form.action, {
+        method: login_form.method,
         headers: {
             'Content-Type': 'application/json'
         },
@@ -40,145 +88,73 @@ async function login (event) {
     }
 }
 
-form.addEventListener('submit', async (event) => {
-   await login(event);
-});
-submit_btn.addEventListener( 'click', async (event) => {
-    await login(event);
-});
 
-
-// create a function to validate a single field
-function validateField(value, rules) {
-  if (rules.required && !value.trim()) {
-    return 'This field is required';
-  }
-
-  if (rules.minLength && value.length < rules.minLength) {
-    return `This field must be at least ${rules.minLength} characters`;
-  }
-
-  if (rules.maxLength && value.length > rules.maxLength) {
-    return `This field must be no more than ${rules.maxLength} characters`;
-  }
-
-  if (rules.email && !isValidEmail(value)) {
-    return 'Please enter a valid email address';
-  }
-
-  return null;
-}
-
-// create a function to validate all fields
-function validateForm() {
-  let isValid = true;
-
-  // iterate over the validation rules and validate each field
-  Object.keys(validationRules).forEach(fieldName => {
-    const value = document.getElementById(fieldName).value;
-    const rules = validationRules[fieldName];
-    const errorMessage = validateField(value, rules);
-    const errorElement = document.getElementById(`${fieldName}_error`);
-
-    if (errorMessage) {
-      errorElement.innerHTML = errorMessage;
-      isValid = false;
-    } else {
-      errorElement.innerHTML = '';
-    }
-  });
-
-  return isValid;
-}
 
 // get the input fields
 const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
+const cellInput = document.getElementById('cell');
 const passwordInput = document.getElementById('r_password');
 
-// create an object to store the validation rules for each field
-const validationRules = {
-  name: {
-    required: true,
-    minLength: 2,
-    maxLength: 50
-  },
-  email: {
-    required: true,
-    email: true
-  },
-  password: {
-    required: true,
-    minLength: 6,
-    maxLength: 50
-  }
-};
 
 
-
-/** TODO refactor the code to create only one Method for both event listeners **/
-// attach a validation function to the form's submit event
+// Attach a validation function to the form's submit event
 const registrationForm = document.getElementById('registration_form');
+const registerButton = document.getElementById('submit_registration');
 
-registrationForm.addEventListener('submit', event => {
+
+const submitForm = async (event, mode) => {
     event.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const cell = document.getElementById('cell').value;
-    const password = document.getElementById('r_password').value;
+    const name = nameInput.value;
+    const email = emailInput.value;
+    const cell = cellInput.value;
+    const password = password_input.value;
     console.log("submitting registration form");
     console.log(registrationForm.action);
 
-    const request = new Request(registrationForm.action,{
-         method: registrationForm.method,
-         headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify({ name, email, cell, password}),
-        mode: "no-cors",
-        credentials: "same-origin",
-    });
-
-    console.log(request);
-    let response =  fetch(request);
-    if (response.status !== 201){
-        data = response.json();
-        if (data.status && data.account && data.account.uuid) {
-
-        }
-    }else{
-        console.log(response.statusText)
+    if (!validateName(name)){
+        alert("Names or Names are invalid");
+        return;
     }
-});
+    if (!validateEmail(email)){
+        alert("Email should at least be a valid email address");
+        return;
+    }
+    if (!validateCellNumber(cell)){
+        alert("Cell number should contain international codes");
+        return;
+    }
+    if (!validatePassword(password)){
+        alert("Try to meet our minimum password complexity requirements");
+        return;
+    }
 
-// user registration form
-register_button.addEventListener('click', async (event) => {
-    /**
-     * Will register a new user with the just name and email
-     * User will then need to update their details on Account
-     */
-    event.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const cell = document.getElementById('cell').value;
-    const password = document.getElementById('r_password').value;
-    console.log("submitting registration form");
-    console.log(registrationForm.action);
-
-    const request = new Request(registrationForm.action,{
-         method: registrationForm.method,
-         headers: {'Content-Type': 'application/json'},
-         body: JSON.stringify({ name, email, cell, password}),
-        mode: "cors",
+    const request = new Request(registrationForm.action, {
+        method: registrationForm.method,
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name, email, cell, password }),
+        mode: mode,
         credentials: "same-origin",
     });
 
     console.log(request);
     let response = await fetch(request);
-    if (response.status !== 201){
+    if (response.status !== 201) {
         const data = response.json();
         if (data.status && data.account && data.account.uuid) {
-        //    TODO - add to account details
+            // TODO - add to account details
         }
-    }else{
+    } else {
         console.log(response.statusText)
     }
+};
+
+// Attach the submitForm function to the form's submit event
+registrationForm.addEventListener('submit', async event => {
+   await submitForm(event, 'cors');
+});
+
+// Attach the submitForm function to the register button's click event
+registerButton.addEventListener('click', async (event) => {
+   await submitForm(event, 'cors');
 });

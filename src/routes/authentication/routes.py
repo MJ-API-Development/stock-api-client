@@ -77,22 +77,18 @@ def login():
         request_data = request.get_json()
         email = request_data['username']
         password = request_data['password']
-        auth_logger.info(f"login to account : {email}")
         # Check user credentials using API endpoint
         user_data = {'email': email, 'password': password}
         _headers = get_headers(user_data)
         _path = config_instance().GATEWAY_SETTINGS.LOGIN_URL
         _base = config_instance().GATEWAY_SETTINGS.BASE_URL
         _url = f"{_base}{_path}"
-        auth_logger.info(f"login endpoint : {_url}")
         try:
             response = requests.post(url=_url, json=user_data, headers=_headers)
-            auth_logger.info(f"response from gateway : {response.status_code}")
         except requests.exceptions.ConnectionError:
             raise UnresponsiveServer()
 
         if response.status_code not in [200, 201, 401]:
-            auth_logger.info(f"response from gateway : {response.text}")
             raise UnresponsiveServer()
 
         if not verify_signature(response=response):
@@ -106,8 +102,6 @@ def login():
             if uuid:
                 # session[uuid] = response_data.get('payload')
                 user_session.update({f"{uuid}": response_data.get('payload', {})})
-
-                auth_logger.info(f"session : {session.get(uuid)}")
 
         return jsonify(response_data)
 

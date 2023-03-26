@@ -13,6 +13,10 @@ contact_route = Blueprint("contact", __name__)
 
 @contact_route.route('/contact', methods=['GET', 'POST'])
 def contact():
+    """
+
+    :return:
+    """
     if request.method == 'GET':
         context = dict(BASE_URL="eod-stock-api.site")
         return render_template('dashboard/contact.html', **context)

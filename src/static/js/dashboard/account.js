@@ -4,6 +4,25 @@ const showApiKeyBtn = document.getElementById('show_api_key');
 const copyApiKeyBtn = document.getElementById('copy_api_key');
 
 let account_data = {};
+// Function to set a cookie with account data
+
+function setAccountCookie(account_data) {
+  const cookieName = 'account_data';
+  const cookieValue = JSON.stringify(account_data);
+  const secureFlag = window.location.protocol === 'https:' ? '; secure' : '';
+  document.cookie = `${cookieName}=${cookieValue}${secureFlag}; path=/; SameSite=Strict`;
+}
+
+// Function to read the cookie and get the account data
+function getAccountFromCookie() {
+  const cookieName = 'account_data';
+  const cookieValue = `; ${document.cookie}`;
+  const parts = cookieValue.split(`; ${cookieName}=`);
+  if (parts.length === 2) {
+    return JSON.parse(parts.pop().split(';').shift());
+  }
+  return null;
+}
 
 let settings = {
     live_base_url: 'https://client.eod-stock-api.site',
