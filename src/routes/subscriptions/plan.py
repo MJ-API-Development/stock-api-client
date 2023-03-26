@@ -1,18 +1,26 @@
 from flask import Blueprint, render_template, redirect, request, jsonify, request
 import requests
 
+from src.config import config_instance
 from src.routes.authentication.routes import get_headers
 
 plan_routes = Blueprint('plan', __name__)
 
 
 def get_plan_details(plan_id: str) -> dict:
-    endpoint = 'https://example.com/plan-details'
+    """
+        **get_plan_details**
+            obtain plan details using plan_id
+    :param plan_id:
+    :return:
+    """
+
+    endpoint = f"{config_instance().GATEWAY_SETTINGS.BASE_URL}/_admin/plan/{plan_id}"
     data = {'plan_id': plan_id}
     headers = get_headers(user_data=data)
 
-    # Make a POST request with plan_id in the body as a dict
-    response = requests.post(endpoint, headers=headers, json=data)
+    # Make a GET request with plan_id in the body as a dict
+    response = requests.get(endpoint, headers=headers, json=data)
 
     # Check if the request was successful and return the response body as a dict
     if response.status_code == requests.codes.ok:
