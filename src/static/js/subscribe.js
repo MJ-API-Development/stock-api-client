@@ -40,7 +40,6 @@ enterprise_plan_button.addEventListener('click', async (event) => {
 });
 
 
-
 // Add event listener for subscription form submission
 async function start_process_subscription(plan) {
   // Prevent form submission from reloading the page
@@ -48,22 +47,23 @@ async function start_process_subscription(plan) {
   if (!account_data){
     window.location.href = '/login';
   }else{
-    processSubscription(account_data, plan);
+   await processSubscription(account_data, plan);
   }
 }
 
 
 // Function to process user subscription
-function processSubscription(account_data, plan) {
+async function processSubscription(account_data, plan) {
   // Check if user has an existing account
   const uuid = account_data.uuid;
-  if (checkExistingAccount(uuid)) {
+  const account_exist = await checkExistingAccount(uuid);
+  if (account_exist) {
     // If user has an existing account, proceed to subscription form
-    showSubscriptionForm(plan);
+    await showSubscriptionForm(plan);
   } else {
     // If user doesn't have an existing account, prompt them to create one
-    const createAccount = confirm('You don\'t have an existing account. Would you like to create one?');
-    if (createAccount) {
+    const should_create_account = confirm('You don\'t have an existing account. Would you like to create one?');
+    if (should_create_account) {
       // Call function to create new user account
       window.location.href = '/login';
     } else {
