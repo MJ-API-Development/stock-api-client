@@ -39,7 +39,6 @@ enterprise_plan_button.addEventListener('click', async (event) => {
 
 });
 
-
 // Add event listener for subscription form submission
 async function start_process_subscription(plan) {
   // Prevent form submission from reloading the page
@@ -51,15 +50,15 @@ async function start_process_subscription(plan) {
   }
 }
 
-
 // Function to process user subscription
 async function processSubscription(account_data, plan) {
   // Check if user has an existing account
   const uuid = account_data.uuid;
   const account_exist = await checkExistingAccount(uuid);
+
   if (account_exist) {
     // If user has an existing account, proceed to subscription form
-    await showSubscriptionForm(plan);
+    await showSubscriptionForm(plan, uuid);
   } else {
     // If user doesn't have an existing account, prompt them to create one
     const should_create_account = confirm('You don\'t have an existing account. Would you like to create one?');
@@ -91,12 +90,13 @@ async function checkExistingAccount(uuid) {
   return false;
 }
 
-
 // Function to show subscription form
-function showSubscriptionForm(plan) {
+function showSubscriptionForm(plan_id, uuid) {
   // Show subscription form and hide login form
-  console.log(`will now create plan : ${plan}`);
-  window.location.href = '/plan-subscription';
+  console.log(`will now create plan : ${plan_id}`);
+  console.log(`uuid : ${uuid}`);
+  window.location.href = `/plan-subscription/${plan_id}`;
+
 
 }
 

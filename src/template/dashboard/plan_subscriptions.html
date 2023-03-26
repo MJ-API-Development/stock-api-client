@@ -3,10 +3,33 @@
 {% block title %}Subscribe to {{ plan }} Plan{% endblock %}
 
 {% block content %}
-  <h1>Subscribe to {{ plan }} Plan</h1>
-  <p>To subscribe to the {{ plan }} Plan, please click the button below:</p>
-  <form action="{{ url_for('subscribe') }}" method="POST">
-    <input type="hidden" name="plan" value="{{ plan }}">
+
+  <h1>Subscribe to {{ plan.name }} Plan</h1>
+  <p>To subscribe to the {{ plan.name }} Plan, please click the button below:</p>
+  <form id="paypal-form" action="{{ url_for('plan.subscribe') }}" method="POST">
+    <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
+    <div id="paypal-button-container"></div>
     <button type="submit">Subscribe with PayPal</button>
   </form>
+{% endblock %}
+
+{% block scripts %}
+
+  <!-- Include the PayPal JavaScript SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_settings.CLIENT_ID }}&vault=true"></script>
+  <script>
+    // Render the PayPal subscription button
+    paypal.Buttons({
+      createSubscription: function(data, actions) {
+        // Set up the subscription plan details
+        return actions.subscription.create({
+          plan_id: '{{ plan.paypal_id }}'
+        });
+      },
+      onApprove: function(data, actions) {
+        // Submit the form to process the subscription on the server
+        document.getElementById('paypal-form').submit();
+      }
+    }).render('#paypal-button-container');
+  </script>
 {% endblock %}
