@@ -1,3 +1,22 @@
+/**
+ * The regex-based validation functions are:
+ *
+ * validateName(name): Validates the name field by allowing only alphabetic characters and spaces, with a length between 1 and 32 characters.
+ * validateEmail(email): Validates the email field by allowing only valid email addresses.
+ * validateCellNumber(cell): Validates the cell phone number field by allowing only international phone numbers with a minimum length of 6 digits and a maximum length of 14 digits.
+ * validatePassword(password): Validates the password field by requiring at least one uppercase letter, one lowercase letter, one digit, one special character, and a length between 8 and 64 characters.
+ * The DOM interface provides functionality for user login and registration. It consists of:
+ *
+ * Login form with username and password fields and a submit button.
+ * Registration form with name, email, cell phone number, password fields, and a submit button.
+ * The login function takes in the event, reads the username and password, validates them using the validateEmail and validatePassword functions, respectively. If the validation succeeds, it sends the form data to the server using fetch API and logs in the user. If the response from the server contains a UUID, it sets the account cookie and redirects to the account page. Otherwise, it displays an error message to the user.
+ *
+ * The register_user function creates a new user account by reading the input fields, validating them using the validateName, validateEmail, validateCellNumber, and validatePassword functions, and sending the data to the server using fetch API. If the response status is 201, it logs the status text. Otherwise, it extracts the data from the response and adds it to the account details.
+ *
+ * Both the login and registration forms use event listeners to trigger the login and register_user functions, respectively, when the submit button is clicked.
+ *
+ *
+ */
 
 // Regex Based Validators
 function validateName(name) {
@@ -33,7 +52,6 @@ login_form.addEventListener('submit', async (event) => {
 login_btn.addEventListener( 'click', async (event) => {
     await login(event);
 });
-
 
 
 // get the input DOM Fields for registering a new user
@@ -93,8 +111,6 @@ async function login (event) {
 }
 
 
-
-
 const register_user = async (mode) => {
     /**
      *  register_user
@@ -105,7 +121,7 @@ const register_user = async (mode) => {
     const name = nameInput.value;
     const email = emailInput.value;
     const cell = cellInput.value;
-    const password = password_input.value;
+    const password = passwordInput.value;
 
     console.log("creating new account");
     console.log(registrationForm.action);
