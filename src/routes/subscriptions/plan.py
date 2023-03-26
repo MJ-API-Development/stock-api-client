@@ -32,6 +32,12 @@ def get_plan_details(plan_id: str) -> dict:
 
 @plan_routes.route('/plan-subscription', methods=["GET"])
 def plan_subscription(plan_id: str):
+    """
+        this endpoint will be called by the front page to get details
+        about the subscription plan
+    :param plan_id:
+    :return:
+    """
     if not plan_id:
         return redirect('/')
 

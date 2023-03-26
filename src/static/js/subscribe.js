@@ -74,12 +74,23 @@ function processSubscription(account_data, plan) {
 }
 
 // Function to check if user has an existing account
-function checkExistingAccount(uuid) {
-  // Check if user email and password match an existing account
-  // Return true if match is found, false if not
-  console.log(`uuid : ${uuid}`);
-  return uuid !== undefined
+async function checkExistingAccount(uuid) {
+  // Check if account with the specified UUID exists
+  const response = await fetch(`/account/${uuid}`, {
+    method: 'GET',
+    headers:  {'Content-Type': 'application/json'},
+    mode: 'cors',
+    credentials: "same-origin"
+  });
+
+  // If response status is 200, account exists
+  if (response.status === 200) {
+    return true;
+  }
+  // If response status is not 200, account does not exist
+  return false;
 }
+
 
 // Function to show subscription form
 function showSubscriptionForm(plan) {
