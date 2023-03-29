@@ -27,9 +27,16 @@
 
 let account_data = {};
 
+// Setting up host url
+if (document.location.host.includes('127')){
+    const url = `http://localhost:8081`
+}else{
+    const url = 'https://client.eod-stock-api.site'
+}
+
 let settings = {
     live_base_url: 'https://client.eod-stock-api.site',
-    base_url: 'https://client.eod-stock-api.site'
+    base_url: url
 }
 // Function to set a cookie with account data
 function setAccountCookie(account_data) {
