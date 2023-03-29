@@ -3,11 +3,12 @@ from flask import request, render_template, session, Blueprint, abort, jsonify
 
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, AccountResponseSchema
+from src.logger import init_logger
 from src.main import user_session
 from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature
 
 account_handler = Blueprint("account", __name__)
-
+account_logger = init_logger("account_logger")
 
 @account_handler.route('/account', methods=['GET'])
 def account():
@@ -20,6 +21,7 @@ def get_account(uuid: str):
     """user data must already be contained on the session so just return that data"""
     user_data = session.get(uuid)
     if uuid and user_data:
+        account_logger.info(f"User data : {user_data}")
         payload = dict(status=True, payload=user_data, message="successfully found user data")
     else:
         _base = config_instance().GATEWAY_SETTINGS.BASE_URL

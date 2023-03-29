@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, jsonify, request
 import requests
 from src.config import config_instance
+from src.logger import init_logger
 from src.routes.authentication.routes import get_headers
 
 plan_routes = Blueprint('plan', __name__)
+plan_logger = init_logger('plan_logger')
 
 
 def get_plan_details(plan_id: str) -> dict:
@@ -14,15 +16,15 @@ def get_plan_details(plan_id: str) -> dict:
     :return:
     """
     base_url: str = config_instance().GATEWAY_SETTINGS.BASE_URL
-    endpoint: str = f"{base_url}/_admin/plan/{plan_id}"
+    endpoint: str = f"{base_url}/_admin/plans/{plan_id}"
     data: dict[str, str] = {'plan_id': plan_id}
     headers = get_headers(user_data=data)
 
     # Make a GET request with plan_id in the body as a dict
     response = requests.get(endpoint, headers=headers, json=data)
-
+    plan_logger.info(f"response is : {response.text}")
     # Check if the request was successful and return the response body as a dict
-    if response.status_code == requests.codes.ok:
+    if response.status_code in [200, 201]:
         return response.json()
     else:
         # Handle errors
@@ -92,6 +94,20 @@ def plan_subscription(plan_id: str, uuid: str):
 
     context = dict(plan=plan, user_data=user_data, paypal_settings=paypal_settings)
     return render_template('dashboard/plan_subscriptions.html', context=context)
+
+
+@plan_routes.route('/plan-details/<string:plan_id>.<string:uuid>', methods=["GET"])
+def plan_details(plan_id: str, uuid: str):
+    """
+        this endpoint will be called by the front page to get details
+        about the subscription plan
+    :param plan_id:
+    :param uuid:
+    :return:
+    """
+    plan_logger.info("get_plan_details")
+    plan: dict[str, str] = get_plan_details(plan_id)
+    return jsonify(plan)
 
 
 @plan_routes.route('/subscribe', methods=['POST'])

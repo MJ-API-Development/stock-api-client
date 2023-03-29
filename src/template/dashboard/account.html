@@ -49,26 +49,34 @@
                 </form>
             </div>
         </div>
+        <!-- PAYMENT METHODS -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"> <i class="fa fa-cc-paypal"> </i> Payment Method</h3>
+          </div>
+          <div class="card-body">
+              <div class="text-body">Attached Paypal Account</div>
+              <hr>
+              <ol class="list-group">
+                  <li class="list-group-item"><input type="text" class="form-control" id="paypal" />  </li>
+              </ol>
+              <button class="btn btn-check btn-dark"> <i class="fa fa-paypal"> </i> Update PayPal Account </button>
+          </div>
+        </div>
 
       </div>
-
       <div class="col-md-6">
 
        <!-- API Key and Subscription Details -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title"> <i class="fa fa-key"> </i> Subscriptions</h3>
+            <h3 class="card-title"> <i class="fa fa-key"> </i> Subscription Details</h3>
           </div>
           <div class="card-body">
             <div class="form-group">
-                <ol class="list-group">
-                    <li class="list-group-item"> Plan Type:  </li>
-                    <li class="list-group-item"> Date Subscribed: </li>
-                    <li class="list-group-item"> Monthly Request Limit: </li>
-                    <li class="list-group-item"> Rate Limiting: </li>
-                    <li class="list-group-item"> Monthly Payment: </li>
-                    <li class="list-group-item"> Date Last Payment: </li>
-                </ol>
+                <div class="card-text" id="subscription_details">
+                    <strong>loading...</strong>
+                </div>
 
                 <ul class="list-group-item">
                         <li class="list-group-item"> Available Plans
@@ -81,12 +89,12 @@
                         </li>
                 </ul>
                 <div class="input-group">
-                    <button class="btn btn-dark"> Update Plan </button>
+                    <button class="btn btn-dark"><i class="fa fa-server"> </i> Update Plan </button>
                 </div>
             </div>
             <div class="form-group">
               <div class="input-group">
-                <input type="password" id="api_key" class="form-control" value="{{ api_key }}" disabled>
+                <input type="password" id="api_key" class="form-control" value="{{ api_key }}" readonly disabled onkeydown="return false;">
                 <span class="input-group-btn">
                   <button class="btn btn-secondary" type="button" id="show_api_key">
                     <i class="fa fa-eye"></i>
@@ -103,22 +111,9 @@
           </div>
         </div>
 
-        <!-- PAYMENT METHODS -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title"> <i class="fa fa-cc-paypal"> </i> Payment Method</h3>
-          </div>
-          <div class="card-body">
-              <div class="text-body">Currently We Only Support PayPal</div>
-              <hr>
-              <ol class="list-group">
-                  <li class="list-group-item"><input type="text" class="form-control" id="paypal" />  </li>
-              </ol>
-              <button class="btn btn-check btn-dark"> <i class="fa fa-paypal"> </i> Attach PayPal Account </button>
-          </div>
-        </div>
       </div>
     </div>
+
   </div>
   </div>
   </div>

@@ -85,6 +85,7 @@ def login():
         _url = f"{_base}{_path}"
         try:
             response = requests.post(url=_url, json=user_data, headers=_headers)
+            auth_logger.info(response.text)
         except requests.exceptions.ConnectionError:
             raise UnresponsiveServer()
 

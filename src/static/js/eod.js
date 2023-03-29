@@ -85,29 +85,29 @@ function getAccountFromCookie() {
 
 
 
-
-async function refresh_account(uuid) {
-    /**
-     * will refresh account details when loading the page
-     * @type {string}
-     */
-
-    let url = `${settings.base_url}/account/${uuid}`;
-    let request = new Request(url, {
-        method: 'GET',
-        headers: new Headers({"Content-Type": "application/json"}),
-        mode: "cors",
-        credentials: "same-origin"
-    });
-
-    let response = await fetch(request);
-
-    if (response.status === 200) {
-
-        const json_data = await response.json();
-        account_data = json_data.payload;
-        setAccountCookie(account_data);
-        await refresh_account_details(response);
-
-    }
-}
+//
+// async function refresh_account(uuid) {
+//     /**
+//      * will refresh account details when loading the page
+//      * @type {string}
+//      */
+//
+//     let url = `${settings.base_url}/account/${uuid}`;
+//     let request = new Request(url, {
+//         method: 'GET',
+//         headers: new Headers({"Content-Type": "application/json"}),
+//         mode: "cors",
+//         credentials: "same-origin"
+//     });
+//
+//     let response = await fetch(request);
+//
+//     if (response.status === 200) {
+//
+//         const json_data = await response.json();
+//         account_data = json_data.payload;
+//         setAccountCookie(account_data);
+//         await refresh_account_details(response);
+//
+//     }
+// }

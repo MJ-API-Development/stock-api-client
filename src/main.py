@@ -2,6 +2,7 @@ from flask import Flask, make_response, jsonify, session
 
 from src.config import config_instance
 
+
 user_session = {}
 
 
@@ -22,6 +23,7 @@ def create_app(config=config_instance()) -> Flask:
         from src.routes.contacts.contact import contact_route
         from src.routes.apikeys.route import apikeys_route
         from src.routes.server_status import status_bp
+        from src.routes.subscriptions.plan import plan_routes
         # celery.config_from_object(config.CELERY_SETTINGS)
 
         app.register_blueprint(home_route)
@@ -31,6 +33,7 @@ def create_app(config=config_instance()) -> Flask:
         app.register_blueprint(contact_route)
         app.register_blueprint(apikeys_route)
         app.register_blueprint(status_bp)
+        app.register_blueprint(plan_routes)
 
         # Handle API Errors, all errors are re raised as HTTPException
         from src.exceptions import (InvalidSignatureError, ServerInternalError, UnresponsiveServer)
