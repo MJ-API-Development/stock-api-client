@@ -61,27 +61,27 @@ function getAccountFromCookie() {
 }
 
 //this event will trigger on every page load
-self.addEventListener('load', async () => {
-    /**
-     * this event will trigger on every page load
-     * @type {string}
-     */
-        let storage_item = localStorage.getItem('uuid');
-        console.log(`storage_item: ${storage_item}`);
-        if (storage_item !== null){
-            let data = JSON.parse(storage_item);
-            console.log(data);
-            await refresh_account(data.uuid);
-        } else {
-            console.log("storage not found");
-            account_data = {};
-            setAccountCookie(account_data);
-            console.log(`window location : ${window.location}`);
-            if (window.location.pathname === '/account'){
-                window.location = '/login'
-            }
-        }
-});
+// self.addEventListener('load', async () => {
+//     /**
+//      * this event will trigger on every page load
+//      * @type {string}
+//      */
+//         let storage_item = localStorage.getItem('uuid');
+//         console.log(`storage_item: ${storage_item}`);
+//         if (storage_item !== null){
+//             let data = JSON.parse(storage_item);
+//             console.log(data);
+//             await refresh_account(data.uuid);
+//         } else {
+//             console.log("storage not found");
+//             account_data = {};
+//             setAccountCookie(account_data);
+//             console.log(`window location : ${window.location}`);
+//             if (window.location.pathname === '/account'){
+//                 window.location = '/login'
+//             }
+//         }
+// });
 
 
 
