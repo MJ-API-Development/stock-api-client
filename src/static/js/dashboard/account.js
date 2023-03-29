@@ -288,3 +288,37 @@ function redirectToLogin() {
    */
   window.location.href = "/login";
 }
+
+
+const plansSelect = document.getElementById('plans');
+
+// Function to fetch plans and populate the select element
+async function populatePlansSelect() {
+  try {
+    const baseurl = settings.baseurl;
+    const url = `${baseurl}/plans-all`;
+    const headers = { 'Content-type': 'application/json' };
+    const response = await fetch(new Request(url, {
+      method: 'GET',
+      headers: new Headers(headers),
+      mode: 'cors',
+      credentials: 'same-origin',
+    }));
+    const plans = await response.json();
+
+    // Clear existing options
+    plansSelect.innerHTML = '';
+
+    // Create new option elements for each plan
+    plans.forEach(plan => {
+      const option = document.createElement('option');
+      option.textContent = `${plan.plan_name} - $ ${plan.price}`;
+      plansSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Call function to populate select element on page load
+window.addEventListener('load', populatePlansSelect);

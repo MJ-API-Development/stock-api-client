@@ -3,9 +3,29 @@ import requests
 from src.config import config_instance
 from src.logger import init_logger
 from src.routes.authentication.routes import get_headers
+from src.utils import create_id
 
 plan_routes = Blueprint('plan', __name__)
 plan_logger = init_logger('plan_logger')
+
+
+def get_all_plans() -> list[dict[str, str]]:
+    """
+
+    :return:
+    """
+    base_url: str = config_instance().GATEWAY_SETTINGS.BASE_URL
+    endpoint: str = f"{base_url}/_admin/plans"
+    data: dict[str, str] = {'plan_id': create_id()}
+    headers = get_headers(user_data=data)
+    response = requests.get(endpoint, headers=headers, json=data)
+    plan_logger.info(f"response is : {response.text}")
+    # Check if the request was successful and return the response body as a dict
+    if response.status_code in [200, 201]:
+        return response.json()
+    else:
+        # Handle errors
+        response.raise_for_status()
 
 
 def get_plan_details(plan_id: str) -> dict:
@@ -107,6 +127,20 @@ def plan_details(plan_id: str, uuid: str):
     """
     plan_logger.info("get_plan_details")
     plan: dict[str, str] = get_plan_details(plan_id)
+    return jsonify(plan)
+
+
+@plan_routes.route('/plans-all', methods=["GET"])
+def plans_all():
+    """
+        this endpoint will be called by the front page to get details
+        about the subscription plan
+    :param plan_id:
+    :param uuid:
+    :return:
+    """
+    plan_logger.info("get_plan_details")
+    plan: dict[str, str] = get_all_plans()
     return jsonify(plan)
 
 
