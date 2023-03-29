@@ -29,7 +29,7 @@ let account_data = {};
 
 let settings = {
     live_base_url: 'https://client.eod-stock-api.site',
-    base_url: 'http://localhost:8081'
+    base_url: 'https://client.eod-stock-api.site'
 }
 // Function to set a cookie with account data
 function setAccountCookie(account_data) {
