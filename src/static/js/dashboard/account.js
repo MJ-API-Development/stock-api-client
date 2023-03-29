@@ -197,9 +197,9 @@ async function update_subscription_details(subscription){
   // subscriptionDetailsListDOM.appendChild(resourcesButton);
   // subscriptionDetailsListDOM.appendChild(resourceListDOM);
 
-  subscription_details_dom.innerHTML = '';
+  subscription_details_dom.innerHTML = ' ';
   subscription_details_dom.appendChild(subscriptionDetailsListDOM);
-  endpoints_dom.innerHTML = '';
+  endpoints_dom.innerHTML = ' ';
   endpoints_dom.appendChild(resourceListDOM);
 }
 
@@ -295,7 +295,7 @@ const plansSelect = document.getElementById('plans');
 // Function to fetch plans and populate the select element
 async function populatePlansSelect() {
   try {
-    const baseurl = settings.baseurl;
+    const baseurl = settings.base_url;
     const url = `${baseurl}/plans-all`;
     const headers = { 'Content-type': 'application/json' };
     const response = await fetch(new Request(url, {
