@@ -21,6 +21,7 @@ def get_all_plans() -> list[dict[str, str]]:
     response = requests.get(endpoint, headers=headers, json=data)
     plan_logger.info(f"response is : {response.text}")
     # Check if the request was successful and return the response body as a dict
+
     if response.status_code in [200, 201]:
         return response.json()
     else:

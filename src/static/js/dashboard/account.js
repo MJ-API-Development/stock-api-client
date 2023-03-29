@@ -197,9 +197,9 @@ async function update_subscription_details(subscription){
   // subscriptionDetailsListDOM.appendChild(resourcesButton);
   // subscriptionDetailsListDOM.appendChild(resourceListDOM);
 
-  subscription_details_dom.innerHTML = ' ';
+  subscription_details_dom.innerHTML = '';
   subscription_details_dom.appendChild(subscriptionDetailsListDOM);
-  endpoints_dom.innerHTML = ' ';
+  endpoints_dom.innerHTML = '';
   endpoints_dom.appendChild(resourceListDOM);
 }
 
@@ -290,7 +290,7 @@ function redirectToLogin() {
 }
 
 
-const plansSelect = document.getElementById('plans');
+const plansSelect = document.getElementById('plans_select');
 
 // Function to fetch plans and populate the select element
 async function populatePlansSelect() {
@@ -307,7 +307,7 @@ async function populatePlansSelect() {
     const plans = await response.json();
 
     // Clear existing options
-    plansSelect.innerHTML = '';
+    plansSelect.innerHTML = ' ';
 
     // Create new option elements for each plan
     plans.forEach(plan => {
