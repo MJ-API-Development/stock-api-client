@@ -1,8 +1,11 @@
-from flask import Blueprint, render_template, redirect, request, jsonify, request
+import json
+
+from flask import Blueprint, render_template, redirect, request, jsonify, request, abort
 import requests
 from src.config import config_instance
+from src.exceptions import UnresponsiveServer, ServerInternalError
 from src.logger import init_logger
-from src.routes.authentication.routes import get_headers
+from src.routes.authentication.routes import get_headers, verify_signature
 from src.utils import create_id
 
 plan_routes = Blueprint('plan', __name__)
@@ -18,15 +21,24 @@ def get_all_plans() -> list[dict[str, str]]:
     endpoint: str = f"{base_url}/_admin/plans"
     data: dict[str, str] = {'plan_id': create_id()}
     headers = get_headers(user_data=data)
-    response = requests.get(endpoint, headers=headers, json=data)
-    plan_logger.info(f"response is : {response.text}")
-    # Check if the request was successful and return the response body as a dict
+    with requests.Session() as session:
+        try:
+            response = requests.get(endpoint, headers=headers, json=data)
+            response.raise_for_status()
+            json_data = response.json()
+            plan_logger.info(f"Response From get All Plans : {response.text}")
+            # Check if the request was successful and return the response body as a dict
+        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+            plan_logger.exception(f"Error making requests to backend : {endpoint}")
+            raise UnresponsiveServer() from e
+        except json.JSONDecodeError as e:
+            plan_logger.exception("Error decoding paypal settings")
+            raise ServerInternalError() from e
 
-    if response.status_code in [200, 201]:
-        return response.json()
-    else:
-        # Handle errors
-        response.raise_for_status()
+    if not verify_signature(response=response):
+        abort(401)
+
+    return json_data
 
 
 def get_plan_details(plan_id: str) -> dict:
@@ -40,16 +52,25 @@ def get_plan_details(plan_id: str) -> dict:
     endpoint: str = f"{base_url}/_admin/plans/{plan_id}"
     data: dict[str, str] = {'plan_id': plan_id}
     headers = get_headers(user_data=data)
+    with requests.Session() as session:
+        try:
+            # Make a GET request with plan_id in the body as a dict
+            response = requests.get(endpoint, headers=headers, json=data)
+            response.raise_for_status()
+            json_data = response.json()
+            plan_logger.info(f"Response from Plan Details : {response.text}")
+            # Check if the request was successful and return the response body as a dict
+        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+            plan_logger.exception(f"Error making requests to backend : {endpoint}")
+            raise UnresponsiveServer() from e
+        except json.JSONDecodeError as e:
+            plan_logger.exception("Error decoding paypal settings")
+            raise ServerInternalError() from e
 
-    # Make a GET request with plan_id in the body as a dict
-    response = requests.get(endpoint, headers=headers, json=data)
-    plan_logger.info(f"response is : {response.text}")
-    # Check if the request was successful and return the response body as a dict
-    if response.status_code in [200, 201]:
-        return response.json()
-    else:
-        # Handle errors
-        response.raise_for_status()
+    if not verify_signature(response=response):
+        abort(401)
+
+    return json_data
 
 
 def get_user_data(uuid: str) -> dict:
@@ -62,16 +83,24 @@ def get_user_data(uuid: str) -> dict:
     endpoint: str = f"{base_url}/user/{uuid}"
     data = dict(uuid=uuid)
     headers = get_headers(user_data=data)
+    with requests.Session() as session:
+        try:
+            # Make a GET request with UUID in the endpoint URL
+            response = session.get(endpoint, headers=headers)
+            response.raise_for_status()
+            json_data = response.json()
+            plan_logger.info(f"Response from User Data : {response.text}")
+        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+            plan_logger.exception(f"Error making requests to backend : {endpoint}")
+            raise UnresponsiveServer() from e
+        except json.JSONDecodeError as e:
+            plan_logger.exception("Error decoding paypal settings")
+            raise ServerInternalError() from e
 
-    # Make a GET request with UUID in the endpoint URL
-    response = requests.get(endpoint, headers=headers)
+    if not verify_signature(response=response):
+        abort(401)
 
-    # Check if the request was successful and return the response body as a dict
-    if response.status_code == requests.codes.ok:
-        return response.json()
-    else:
-        # Handle errors
-        response.raise_for_status()
+    return json_data
 
 
 def get_paypal_settings(uuid: str) -> dict:
@@ -80,21 +109,26 @@ def get_paypal_settings(uuid: str) -> dict:
     :param uuid: UUID of the user.
     :return: PayPal settings as a dict.
     """
-    # Get gateway server endpoint URL and headers
     base_url = config_instance().GATEWAY_SETTINGS.BASE_URL
     endpoint = f"{base_url}/paypal/settings/{uuid}"
-    data = dict(uuid=uuid)
-    headers = get_headers(user_data=data)
+    headers = get_headers(user_data=dict(uuid=uuid))
 
-    # Make a GET request to the endpoint with the headers
-    response = requests.get(endpoint, headers=headers)
+    with requests.Session() as session:
+        try:
+            response = session.get(endpoint, headers=headers)
+            response.raise_for_status()
+            json_data = response.json()
+            plan_logger.info(f"Response from PayPal Settings : {response.text}")
+        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+            raise UnresponsiveServer() from e
+        except json.JSONDecodeError as e:
+            plan_logger.exception("Error decoding paypal settings")
+            raise ServerInternalError() from e
 
-    # Check if the request was successful and return the response body as a dict
-    if response.status_code == requests.codes.ok:
-        return response.json()
-    else:
-        # Handle errors
-        response.raise_for_status()
+    if not verify_signature(response=response):
+        abort(401)
+
+    return json_data
 
 
 @plan_routes.route('/plan-subscription/<string:plan_id>.<string:uuid>', methods=["GET"])
