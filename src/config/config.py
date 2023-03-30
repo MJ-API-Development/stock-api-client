@@ -1,5 +1,10 @@
 import functools
 from pydantic import BaseSettings, Field
+import socket
+
+
+def get_server_name():
+    return "eod-stock-api.local:8081" if socket.gethostname() == "DESKTOP-T9V7F59" else "eod-stock-api.site"
 
 
 class EmailSettings(BaseSettings):
@@ -71,6 +76,9 @@ class Settings(BaseSettings):
     LOGGING: Logging = Logging()
     DEBUG: bool = True
     GATEWAY_SETTINGS: GatewaySettings = GatewaySettings()
+    SERVER_NAME: str = Field(default_factory=get_server_name)
+    APPLICATION_ROOT: str = Field(default="/")
+    PREFERRED_URL_SCHEME: str = Field(default="https://")
 
     class Config:
         case_sensitive = True

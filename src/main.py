@@ -1,4 +1,5 @@
-from flask import Flask, make_response, jsonify, session
+from flask import Flask, make_response, jsonify, session, redirect, url_for
+from jwt import ExpiredSignatureError
 
 from src.config import config_instance
 
@@ -50,5 +51,8 @@ def create_app(config=config_instance()) -> Flask:
         app.register_error_handler(UnresponsiveServer,
                                    lambda e: make_response(jsonify({'status': False, 'message': e.description}),
                                                            e.code))
+
+        app.register_error_handler(ExpiredSignatureError,
+                                   redirect(url_for('auth.login')))
 
     return app

@@ -1,4 +1,5 @@
 import logging
+import socket
 
 from flask import Flask, send_from_directory
 from flask_cors import CORS
@@ -19,6 +20,7 @@ def sw():
     print('Waiting for for service worker ')
     return send_from_directory('static', 'js/sw.js')
 
+
 app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
@@ -38,4 +40,8 @@ if __name__ == '__main__':
     # TODO learn how to run celery
     # celery.run()
     # uvicorn.run("app:app", host="127.0.0.1", port=8081, reload=True, workers=1)
-    app.run(debug=True, use_reloader=True, host="0.0.0.0", port=8081)
+    if socket.gethostname() == "DESKTOP-T9V7F59":
+        app.run(debug=True, use_reloader=True, host="127.0.0.1", port=8081)
+    else:
+        app.run(debug=True, use_reloader=True, host="0.0.0.0", port=8081)
+
