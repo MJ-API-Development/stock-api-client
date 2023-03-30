@@ -36,7 +36,7 @@ if (document.location.host.includes('eod-stock-api.local')){
 }
 
 let settings = {
-    live_base_url: 'https://client.eod-stock-api.site',
+    live_base_url: 'https://eod-stock-api.site',
     base_url: url
 }
 
