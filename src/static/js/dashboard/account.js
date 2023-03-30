@@ -83,7 +83,7 @@ self.addEventListener('load', async (e) => {
 
     const url = `${baseUrl}/account/${uuid}`;
     let headers = { 'Content-type': 'application/json' };
-
+    console.log(url);
     let response = await fetch(new Request(url, {
       method: 'GET',
       headers: new Headers(headers),

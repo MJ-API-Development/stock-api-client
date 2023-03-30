@@ -29,8 +29,8 @@ let account_data = {};
 
 // Setting up host url
 let url;
-if (document.location.host.includes('127')){
-    url = `http://localhost:8081`
+if (document.location.host.includes('eod-stock-api.local')){
+    url = `http://eod-stock-api.local:8081`
 }else{
     url = 'https://client.eod-stock-api.site'
 }
