@@ -298,6 +298,7 @@ async function populatePlansSelect() {
     const baseurl = settings.base_url;
     const url = `${baseurl}/plans-all`;
     const headers = { 'Content-type': 'application/json' };
+
     const response = await fetch(new Request(url, {
       method: 'GET',
       headers: new Headers(headers),
