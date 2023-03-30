@@ -1,5 +1,6 @@
+import logging
 
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from src.config.config import config_instance
 from src.main import create_app
@@ -7,6 +8,18 @@ from src.main import create_app
 app: Flask = create_app(config=config_instance())
 
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+
+@app.route('/sw.js', methods=['GET'])
+def sw():
+    """
+        service worker js
+    :return:
+    """
+    print('Waiting for for service worker ')
+    return send_from_directory('static', 'js/sw.js')
+
+app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
     """    

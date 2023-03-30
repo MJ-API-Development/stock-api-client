@@ -10,6 +10,7 @@ from src.routes.authentication.routes import auth_required, get_headers, Unrespo
 account_handler = Blueprint("account", __name__)
 account_logger = init_logger("account_logger")
 
+
 @account_handler.route('/account', methods=['GET'])
 def account():
     if request.method == "GET":
@@ -84,8 +85,3 @@ def update_account(uuid: str):
     new_response = dict(status=False, message=message, payload={})
 
     return jsonify(new_response)
-
-
-
-
-

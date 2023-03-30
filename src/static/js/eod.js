@@ -50,7 +50,6 @@ function setAccountCookie(account_data) {
   const cookieValue = JSON.stringify(account_data);
   const secureFlag = window.location.protocol === 'https:' ? '; secure' : '';
   document.cookie = `${cookieName}=${cookieValue}${secureFlag}; path=/; SameSite=Strict`;
-  sessionStorage.setItem('uuid', JSON.stringify(account_data));
 }
 
 // Function to read the cookie and get the account data
@@ -59,11 +58,7 @@ function getAccountFromCookie() {
   const cookieValue = `; ${document.cookie}`;
   const parts = cookieValue.split(`; ${cookieName}=`);
   if (parts.length === 2) {
-      const session_data = sessionStorage.getItem('uuid');
       const cookie_data = parts.pop().split(';').shift();
-      if (session_data){
-          return JSON.parse(session_data);
-      }
       return JSON.parse(cookie_data);
   }
   return null;
@@ -120,3 +115,21 @@ function getAccountFromCookie() {
 //
 //     }
 // }
+
+function canRegisterServiceWorker() {
+    /** checks if its safe to instance a service worker */
+  return (window.location.protocol === 'https:' || window.location.protocol === 'http:') && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+}
+
+// Register the service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    if (canRegisterServiceWorker()) {
+        navigator.serviceWorker.register('/sw.js').then(function (registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function (err) {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    }
+  });
+}

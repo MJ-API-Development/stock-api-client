@@ -1,12 +1,16 @@
+import datetime
+import functools
+import json
+import jwt
 import requests
 from werkzeug.exceptions import HTTPException
-from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort, jsonify
+from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort, jsonify, make_response
 from functools import wraps
 import hmac
 import hashlib
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, AccountCreate
-from src.exceptions import UnresponsiveServer, InvalidSignatureError
+from src.exceptions import UnresponsiveServer, InvalidSignatureError, ServerInternalError, UnAuthenticatedError
 from src.logger import init_logger
 from src.main import user_session
 
@@ -57,7 +61,6 @@ def register():
             flash('Account created successfully. Please log in.', 'success')
             uuid = response_data.get('payload', {}).get('uuid')
             if uuid:
-                # session[uuid] = response_data.get('payload', {})
                 user_session.update({f"{uuid}": response_data.get('payload', {})})
 
             message: str = "Account created successfully. Please log in.'"
@@ -101,10 +104,11 @@ def login():
             uuid = response_data.get('payload', {}).get('uuid')
 
             if uuid:
-                # session[uuid] = response_data.get('payload')
                 user_session.update({f"{uuid}": response_data.get('payload', {})})
-
-        return jsonify(response_data)
+        response = make_response(jsonify(response_data), 200)
+        # Adding Authentication Token to the response
+        response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
+        return response
 
     elif request.method == 'GET':
         return render_template('login.html')
@@ -118,64 +122,150 @@ def logout():
     """
     request_data = request.get_json()
     uuid = request_data.get('uuid')
-    # session[uuid] = {}
+
     user_session.update({f"{uuid}": {}})
     # TODO - consider sending the message to the gateway indicating the action to logout
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
 
+def create_authentication_token(user_data: dict[str, str]):
+    # Create a token payload with the user ID and expiration date
+    payload = {
+        'uuid': user_data.get('uuid'),
+        'email': user_data.get('email'),
+        'password': user_data.get('password_hash'),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+    }
+
+    # Encode the payload using a secret key
+    token = jwt.encode(payload=payload, key=config_instance().SECRET_KEY, algorithm='HS256')
+    auth_logger.info(f"CREATED Token : {token}")
+    return token
+
+
+def verify_authentication_token(token: str):
+    """
+        :param token:
+        :return:
+    """
+    if token is None or token == "":
+        raise UnAuthenticatedError()
+    try:
+        # Decode the token using the secret key
+        payload = jwt.decode(message=token, key=config_instance().SECRET_KEY, algorithms=['HS256'],
+                             do_time_check=True, verify=True)
+
+        # Check if the token has expired
+        if datetime.datetime.utcnow() > datetime.datetime.fromtimestamp(payload['exp']):
+            raise UnAuthenticatedError()
+
+        # Return the protected resource
+        auth_logger.info(f"Verified Token : {payload}")
+        return payload
+
+    except (jwt.DecodeError, jwt.ExpiredSignatureError):
+        raise UnAuthenticatedError()
+
+
+def user_details(func):
+    """
+        Returns the user details if the user is logged in and authorized to access this route
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        token = request.headers.get('X-Auth-Token', None)
+        # Just Obtain user details no need to verify the token
+        if token is None or token == "":
+            kwargs['user_data'] = {}
+            return func(*args, **kwargs)
+        auth_logger.info(f"Token Issued from backend : {token}")
+        payload = jwt.decode(jwt=token, key=config_instance().SECRET_KEY, algorithms=['HS256'])
+
+        _uuid = payload.get('uuid', None)
+
+        authorized, response_data = is_authorized(_uuid)
+        auth_logger.info(f"Authorized : {authorized} , Response Data: {response_data}")
+
+        if response_data and response_data.get('status', False) and authorized:
+            # User is authorized, so add user details to kwargs and call the wrapped function
+            kwargs['user_data'] = user_session[_uuid]
+            response = func(*args, **kwargs)
+            # Add X-Auth-Token header to response
+            # response.headers['X-Auth-Token'] = token
+            return response
+        else:
+            kwargs['user_data'] = {}
+            response = func(*args, **kwargs)
+            # response.headers['X-Auth-Token'] = ""
+            return response
+
+    return wrapper
+
+
 def auth_required(func):
-    """
-        checks if the user is logged in and also if the user is authorized to access a certain path
-    :param func:
-    :return:
-    """
+    """will not allow the user to access the route if the user is not logged in and not authorized for the route"""
 
     @wraps(func)
     def wrapper(*args, **kwargs):
         request_data = request.get_json()
-        uuid = request_data.get('uuid')
-        print("request data : {}".format(request_data))
-        if uuid is None:
-            uuid = kwargs.get('uuid')
-            print("kwargs : {}".format(kwargs))
+        # uuid = request_data.get('uuid', kwargs.get('uuid'))
+        # if uuid is None:
+        token = request.headers.get('X-Auth-Token', None)
+        if token is None:
+            raise UnAuthenticatedError()
 
-        if uuid not in user_session:
+        payload = verify_authentication_token(token=token)
+        _uuid = payload.get('uuid', None)
+
+        if _uuid not in user_session:
             return redirect('/login')
 
-        # Call the API to check if the user is authorized to access this resource
-        _path = config_instance().GATEWAY_SETTINGS.AUTHORIZE_URL
-        _base = config_instance().GATEWAY_SETTINGS.BASE_URL
+        authorized, response_data = is_authorized(_uuid)
 
-        _url = f"{_base}{_path}"
-        user_data = {'uuid': uuid, 'path': request.path, 'method': request.method}
-        _headers = get_headers(user_data)
-        try:
-            response = requests.post(url=_url, json=user_data, headers=_headers)
-        except requests.exceptions.ConnectionError:
-            raise UnresponsiveServer()
-
-        if response.status_code not in [200, 201, 401]:
-            raise UnresponsiveServer()
-
-        if not verify_signature(response=response):
-            abort(401)
-
-        response_data = response.json()
-
-        if response_data and response_data.get('status', False):
-            if response_data.get('payload').get("authorized"):
-                return func(*args, **kwargs)
-            else:
-                abort(401)
+        if response_data and response_data.get('status', False) and authorized:
+            kwargs['user_data'] = user_session[_uuid]
+            response = func(*args, **kwargs)
+            # Add X-Auth-Token header to response
+            response.headers['X-Auth-Token'] = token
+            return response
         else:
             abort(401)
 
     return wrapper
 
 
+@functools.lru_cache(maxsize=1024)
+def is_authorized(uuid):
+    """
+        checks with the gateway server if the user is logged in and also authorized to access a specific route
+    :param uuid:
+    :return:
+    """
+    _path = config_instance().GATEWAY_SETTINGS.AUTHORIZE_URL
+    _base = config_instance().GATEWAY_SETTINGS.BASE_URL
+    _url = f"{_base}{_path}"
+    user_data = {'uuid': uuid, 'path': request.path, 'method': request.method}
+    _headers = get_headers(user_data)
+    with requests.Session() as _session:
+        try:
+            response = _session.post(url=_url, json=user_data, headers=_headers)
+            response.raise_for_status()
+            response_data = response.json()
+        except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError):
+            raise UnresponsiveServer()
+        except json.JSONDecodeError as e:
+            raise ServerInternalError() from e
+
+    if not verify_signature(response=response):
+        abort(401)
+    payload = response_data.get('payload', {})
+    authorized = payload.get('authorized', False)
+    return authorized, response_data
+
+
 def verify_signature(response):
+    """this is authentication for the client and gateway communication"""
     secret_key = config_instance().SECRET_KEY
     data_header = response.headers.get('X-SIGNATURE', '')
     data_str, signature_header = data_header.split('|')

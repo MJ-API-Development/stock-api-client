@@ -14,3 +14,8 @@ class ServerInternalError(HTTPException):
 class UnresponsiveServer(HTTPException):
     code = 503
     description = 'The server is currently unavailable and cannot process requests.'
+
+
+class UnAuthenticatedError(HTTPException):
+    code = 401
+    description = 'Unauthorized: Authentication is required to access this resource.'

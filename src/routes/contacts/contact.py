@@ -5,20 +5,22 @@ from flask import Blueprint, render_template, request, abort, jsonify
 
 from src.config import config_instance
 from src.databases.models.schemas.contacts import Contacts
-from src.routes.authentication.routes import get_headers, UnresponsiveServer, verify_signature
+from src.routes.authentication.routes import get_headers, UnresponsiveServer, verify_signature, user_details
 from src.utils import create_id
 
 contact_route = Blueprint("contact", __name__)
 
 
+# noinspection PyShadowingNames
 @contact_route.route('/contact', methods=['GET', 'POST'])
-def contact():
+@user_details
+def contact(user_data: dict[str, str]):
     """
 
     :return:
     """
     if request.method == 'GET':
-        context = dict(BASE_URL="eod-stock-api.site")
+        context = dict(BASE_URL="eod-stock-api.site", user_data=user_data)
         return render_template('dashboard/contact.html', **context)
     else:
         data = request.get_json()
