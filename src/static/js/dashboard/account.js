@@ -307,7 +307,7 @@ async function populatePlansSelect() {
     const plans = await response.json();
 
     // Clear existing options
-    plansSelect.innerHTML = ' ';
+    plansSelect.innerHTML = '<option> </option>';
 
     // Create new option elements for each plan
     plans.forEach(plan => {
