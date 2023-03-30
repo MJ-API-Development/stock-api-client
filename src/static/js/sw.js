@@ -14,17 +14,13 @@ async function addAuthHeader(request) {
     cache: 'default' // or 'no-cache' if you don't want the response to be cached
   });
 
-  const cache = await caches.open('my-cache');
-  let response = await cache.match(modifiedRequest);
+  const cache = await caches.open('eod');
+  let response = await fetch(modifiedRequest);
 
-  if (!response) {
-    response = await fetch(modifiedRequest);
+  if (response) {
     if (response.ok && response.headers.get('X-Auth-Token')) {
       const token = response.headers.get('X-Auth-Token');
       await saveUserToken(token);
-    }
-    if (modifiedRequest.method !== 'POST') {
-            await cache.put(modifiedRequest, response.clone());
     }
   }
   return response;

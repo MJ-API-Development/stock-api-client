@@ -184,10 +184,7 @@ def user_details(func):
 
         _uuid = payload.get('uuid', None)
 
-        authorized, response_data = is_authorized(_uuid)
-        auth_logger.info(f"Authorized : {authorized} , Response Data: {response_data}")
-
-        if response_data and response_data.get('status', False) and authorized:
+        if user_session.get(_uuid):
             # User is authorized, so add user details to kwargs and call the wrapped function
             kwargs['user_data'] = user_session[_uuid]
             response = func(*args, **kwargs)
