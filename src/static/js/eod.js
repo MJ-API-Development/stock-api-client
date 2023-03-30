@@ -32,7 +32,7 @@ let url;
 if (document.location.host.includes('eod-stock-api.local')){
     url = `http://eod-stock-api.local:8081`
 }else{
-    url = 'https://client.eod-stock-api.site'
+    url = 'https://eod-stock-api.site'
 }
 
 let settings = {
