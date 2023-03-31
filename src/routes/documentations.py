@@ -89,6 +89,11 @@ def openapi_html():
 
 @docs_route.route('/github-docs', methods=['GET'])
 def github_docs():
+    """
+        **github_docs**
+            github documentations this endpoint fetches the documentation directly from github
+    :return:
+    """
     url = "https://raw.githubusercontent.com/MJ-API-Development/Intelligent-EOD-Stock-Financial-News-API/main/README.md"
     response = requests.get(url)
     html_content = markdown.markdown(response.content.decode('utf-8'))
@@ -104,6 +109,12 @@ def sdk_docs():
 
 @docs_route.route('/sdk/<string:path>', methods=['GET'])
 def python_sdk_docs(path: str):
+    """
+    **python_sdk_docs**
+
+        display python sdk documentation this endpoints directly downloads a fresh
+        document from github
+    """
     if path.casefold() == "python":
         url = 'https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/README.md'
         response = requests.get(url)
@@ -115,14 +126,17 @@ def python_sdk_docs(path: str):
 
 @docs_route.route('/sdk/src/docs/<string:path>', methods=['GET'])
 def github_links(path: str):
+    """
+        this handles user clicking links on local documentation and then
+        downloads the correct document from github
+    :param path:
+    :return:
+    """
     path = request.full_path
     if path.startswith("/sdk/src/docs/"):
         url = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
-
-        print(url)
         response = requests.get(url)
         html_content = markdown.markdown(response.content.decode('utf-8'))
-
         context = dict(github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)
 
