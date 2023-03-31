@@ -4,7 +4,8 @@ import os
 
 import markdown
 import requests
-from flask import Blueprint, render_template, request, make_response
+from flask import Blueprint, render_template, request, make_response, redirect
+from flask_cors import cross_origin
 
 from src.routes.authentication.routes import user_details
 
@@ -54,6 +55,7 @@ def redoc():
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site" + request.full_path
     response = requests.get(url)
+    print(f"response headers : {response.headers}")
     return response.content
 
 
@@ -65,6 +67,7 @@ def openapi_json():
     """
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site/open-api"
+
     openapi_data = requests.get(url)
     response = make_response(openapi_data.json(), 200)
     response.headers["Content-Type"] = "application/json"
@@ -106,6 +109,20 @@ def sdk_docs():
 def python_sdk_docs(path: str):
     if path.casefold() == "python":
         url = 'https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/README.md'
+        response = requests.get(url)
+        html_content = markdown.markdown(response.content.decode('utf-8'))
+
+        context = dict(github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
+        return render_template('docs/python-docs.html', **context)
+
+
+@docs_route.route('/sdk/src/docs/<string:path>', methods=['GET'])
+def github_links(path: str):
+    path = request.full_path
+    if path.startswith("/sdk/src/docs/"):
+        url = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
+
+        print(url)
         response = requests.get(url)
         html_content = markdown.markdown(response.content.decode('utf-8'))
 

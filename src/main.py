@@ -1,4 +1,5 @@
 from flask import Flask, make_response, jsonify, session, redirect, url_for
+from flask_cors import CORS
 from flask_sitemap import Sitemap
 from jwt import ExpiredSignatureError
 from src.config import config_instance
@@ -7,7 +8,7 @@ from src.exceptions import UnAuthenticatedError
 
 user_session = {}
 sitemap = Sitemap()
-
+cors = CORS()
 
 def create_app(config=config_instance()) -> Flask:
     """
@@ -16,10 +17,10 @@ def create_app(config=config_instance()) -> Flask:
     :return:
     """
     app = Flask(__name__, template_folder="template", static_folder="static")
-
     app.config.from_object(config)
     with app.app_context():
         sitemap.init_app(app=app)
+        cors.init_app(app=app)
 
         from src.routes.home import home_route
         from src.routes.documentations import docs_route
