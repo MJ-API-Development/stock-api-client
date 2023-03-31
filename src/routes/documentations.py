@@ -4,7 +4,7 @@ import os
 
 import markdown
 import requests
-from flask import Blueprint, render_template, request, make_response, redirect, Response
+from flask import Blueprint, render_template, request, make_response, redirect, Response, send_from_directory
 from flask_cors import cross_origin
 
 from src.routes.authentication.routes import user_details
@@ -48,15 +48,18 @@ def documentations_routes(params: dict[str, str]) -> dict:
 
 @docs_route.route('/redoc', methods=['GET'])
 def redoc():
-    # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
-    url = "https://gateway.eod-stock-api.site" + request.full_path
+    # Replace "https://gateway.eod-stock-api.site" with the URL of your subdomain
+    url = "https://gateway.eod-stock-api.site/redoc"
     response = requests.get(url)
+    content = response.content.decode('utf-8')
+    content = content.replace("https://gateway.eod-stock-api.site/static/redoc.standalone.js", "/redoc.standalone.js")
+    return content
 
-    # Create a Flask Response object with the content and headers from the original response
-    headers = [(name, value) for name, value in response.headers.items()]
-    flask_response = Response(response.content, response.status_code, headers)
 
-    return flask_response
+@docs_route.route('/redoc.standalone.js')
+def send_js():
+    """helps avoid cors errors"""
+    return send_from_directory('static', 'redoc.standalone.js')
 
 
 @docs_route.route('/openapi.json', methods=['GET'])
