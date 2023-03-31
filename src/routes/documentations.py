@@ -65,8 +65,8 @@ def send_js():
 @docs_route.route('/openapi.json', methods=['GET'])
 def openapi_json():
     """
-
-    :return:
+     will server open api specifications for the API
+     :return:
     """
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site/open-api"
@@ -137,7 +137,8 @@ def github_links(path: str):
 @user_details
 def documentations(user_data: dict[str, str], path: str):
     """
-
+        **documentations**
+            TODO update documentations to reflect the sdk's usage
     :param user_data: user_data for the logged in user
     :param path: path to the correct documentation
     :return:
