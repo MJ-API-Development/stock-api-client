@@ -96,6 +96,23 @@ def github_docs():
     return render_template('docs/github-docs.html', **context)
 
 
+@docs_route.route('/sdk', methods=['GET'])
+def sdk_docs():
+    context = dict(BASE_URL="https://client.eod-stock-api.site")
+    return render_template('docs/sdk.html', **context)
+
+
+@docs_route.route('/sdk/<string:path>', methods=['GET'])
+def python_sdk_docs(path: str):
+    if path.casefold() == "python":
+        url = 'https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/README.md'
+        response = requests.get(url)
+        html_content = markdown.markdown(response.content.decode('utf-8'))
+
+        context = dict(github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
+        return render_template('docs/python-docs.html', **context)
+
+
 @docs_route.route('/docs/<string:path>', methods=['GET', 'POST'])
 @user_details
 def documentations(user_data: dict[str, str], path: str):
