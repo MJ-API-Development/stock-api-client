@@ -12,6 +12,7 @@ def generate_sitemap():
     yield 'home.status', {}
     yield 'docs.redoc', {}
     yield 'docs.openapi_json', {}
+    yield 'docs.openapi_html', {}
 
 
 @sitemap_bp.route('/sitemap.xml', methods=['GET'])

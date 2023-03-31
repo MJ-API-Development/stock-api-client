@@ -1,4 +1,5 @@
 import functools
+import json
 
 import markdown
 import requests
@@ -7,6 +8,13 @@ from flask import Blueprint, render_template, request, make_response
 from src.routes.authentication.routes import user_details
 
 docs_route = Blueprint('docs', __name__)
+
+
+@docs_route.context_processor
+def inject_specifications() -> dict[str, str]:
+    with docs_route.open_resource('..\\static\\spec.json') as f:
+        file_contents = f.read().decode('utf-8')
+    return dict(json_data=file_contents)
 
 
 # @functools.cache
@@ -57,6 +65,22 @@ def openapi_json():
     response = make_response(openapi_data.json(), 200)
     response.headers["Content-Type"] = "application/json"
     return response
+
+
+@docs_route.route('/openapi', methods=['GET'])
+def openapi_html():
+    """
+
+    :return:
+    """
+    # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
+    url = "https://gateway.eod-stock-api.site/open-api"
+    openapi_data = requests.get(url)
+    json_spec = json.dumps(openapi_data.json())
+
+    context = dict(**inject_specifications(), BASE_URL="https://client.eod-stock-api.site")
+
+    return render_template('docs/docs-openapi.html', **context)
 
 
 @docs_route.route('/github-docs', methods=['GET'])

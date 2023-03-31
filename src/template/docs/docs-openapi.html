@@ -1,0 +1,32 @@
+{% extends "layouts/layout.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+        <div class="col-md-12">
+          <div class="card container">
+              <div class="card-header">
+                  <h3>Documentations - OpenAPI Specifications</h3>
+
+                  <p class="card-text">
+                      If you prefer openapi json specifications here is our api spec below and also for your convenience
+                  </p>
+                  <p class="card-text">
+                      <a href="{{ url_for('docs.openapi_json') }}"><strong>Download Our OpenAPI Specifications</strong></a>
+                  </p>
+              </div>
+
+              <div class="card-body">
+                    <pre class="language-javascript bg-dark text-white" id="json-container">{{ json_data }}</pre>
+              </div>
+          </div>
+
+        </div>
+</div>
+{% endblock %}
+{% block scripts %}
+
+        <script>
+            // Get the JSON data from Flask and parse it
+            Prism.highlightAll();
+        </script>
+{% endblock %}
