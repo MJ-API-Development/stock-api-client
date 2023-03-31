@@ -1,12 +1,9 @@
 import functools
 import json
 import os
-
 import markdown
 import requests
 from flask import Blueprint, render_template, request, make_response, redirect, Response, send_from_directory
-from flask_cors import cross_origin
-
 from src.routes.authentication.routes import user_details
 
 docs_route = Blueprint('docs', __name__)
@@ -86,10 +83,7 @@ def openapi_html():
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site/open-api"
     openapi_data = requests.get(url)
-    json_spec = json.dumps(openapi_data.json())
-
     context = dict(**inject_specifications(), BASE_URL="https://client.eod-stock-api.site")
-
     return render_template('docs/docs-openapi.html', **context)
 
 
