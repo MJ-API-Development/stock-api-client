@@ -1,5 +1,6 @@
 import functools
 import json
+import os
 
 import markdown
 import requests
@@ -12,8 +13,11 @@ docs_route = Blueprint('docs', __name__)
 
 @docs_route.context_processor
 def inject_specifications() -> dict[str, str]:
-    with docs_route.open_resource('..\\static\\spec.json') as f:
-        file_contents = f.read().decode('utf-8')
+    static_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
+    json_path = os.path.join(static_path, 'spec.json')
+
+    with open(json_path, "r") as f:
+        file_contents = f.read()
     return dict(json_data=file_contents)
 
 
