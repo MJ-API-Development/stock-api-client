@@ -4,7 +4,7 @@ import os
 
 import markdown
 import requests
-from flask import Blueprint, render_template, request, make_response, redirect
+from flask import Blueprint, render_template, request, make_response, redirect, Response
 from flask_cors import cross_origin
 
 from src.routes.authentication.routes import user_details
@@ -48,15 +48,15 @@ def documentations_routes(params: dict[str, str]) -> dict:
 
 @docs_route.route('/redoc', methods=['GET'])
 def redoc():
-    """
-
-    :return:
-    """
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site" + request.full_path
     response = requests.get(url)
-    print(f"response headers : {response.headers}")
-    return response.content
+
+    # Create a Flask Response object with the content and headers from the original response
+    headers = [(name, value) for name, value in response.headers.items()]
+    flask_response = Response(response.content, response.status_code, headers)
+
+    return flask_response
 
 
 @docs_route.route('/openapi.json', methods=['GET'])
