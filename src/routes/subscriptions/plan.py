@@ -55,7 +55,7 @@ def get_plan_details(plan_id: str) -> dict:
     with requests.Session() as session:
         try:
             # Make a GET request with plan_id in the body as a dict
-            response = requests.get(endpoint, headers=headers, json=data)
+            response = session.get(endpoint, headers=headers, json=data)
             response.raise_for_status()
             json_data = response.json()
             plan_logger.info(f"Response from Plan Details : {response.text}")
@@ -151,6 +151,7 @@ def plan_subscription(plan_id: str, uuid: str):
     return render_template('dashboard/plan_subscriptions.html', context=context)
 
 
+# noinspection PyUnusedLocal
 @plan_routes.route('/plan-details/<string:plan_id>.<string:uuid>', methods=["GET"])
 def plan_details(plan_id: str, uuid: str):
     """
