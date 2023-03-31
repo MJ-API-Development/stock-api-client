@@ -1,6 +1,8 @@
 import functools
 
-from flask import Blueprint, render_template
+import markdown
+import requests
+from flask import Blueprint, render_template, request, make_response
 
 from src.routes.authentication.routes import user_details
 
@@ -31,6 +33,41 @@ def documentations_routes(params: dict[str, str]) -> dict:
     return _routes.get(path, _index)
 
 
+@docs_route.route('/redoc', methods=['GET'])
+def redoc():
+    """
+
+    :return:
+    """
+    # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
+    url = "https://gateway.eod-stock-api.site" + request.full_path
+    response = requests.get(url)
+    return response.content
+
+
+@docs_route.route('/openapi.json', methods=['GET'])
+def openapi_json():
+    """
+
+    :return:
+    """
+    # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
+    url = "https://gateway.eod-stock-api.site/open-api"
+    openapi_data = requests.get(url)
+    response = make_response(openapi_data.json(), 200)
+    response.headers["Content-Type"] = "application/json"
+    return response
+
+
+@docs_route.route('/github-docs', methods=['GET'])
+def github_docs():
+    url = "https://raw.githubusercontent.com/MJ-API-Development/Intelligent-EOD-Stock-Financial-News-API/main/README.md"
+    response = requests.get(url)
+    html_content = markdown.markdown(response.content.decode('utf-8'))
+    context = dict(document=html_content, BASE_URL="https://client.eod-stock-api.site")
+    return render_template('docs/github-docs.html', **context)
+
+
 @docs_route.route('/docs/<string:path>', methods=['GET', 'POST'])
 @user_details
 def documentations(user_data: dict[str, str], path: str):
@@ -46,4 +83,3 @@ def documentations(user_data: dict[str, str], path: str):
     except KeyError:
         # raise a proper HTTP Error for invalid route
         pass
-

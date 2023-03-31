@@ -10,6 +10,8 @@ def generate_sitemap():
     yield 'contact.contact', {}
     yield 'auth.login', {}
     yield 'home.status', {}
+    yield 'docs.redoc', {}
+    yield 'docs.openapi_json', {}
 
 
 @sitemap_bp.route('/sitemap.xml', methods=['GET'])
