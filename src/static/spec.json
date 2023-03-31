@@ -1,0 +1,2894 @@
+{
+	"basePath": "/api",
+	"consumes": ["application/json"],
+	"securityDefinitions": {
+		"basicAuth": {
+			"type": "basic"
+		}
+	},
+	"parameters": {
+		"api_key": {
+			"in": "query",
+			"name": "api_key",
+			"description": "API key for authentication",
+			"required": true,
+			"type": "string"
+		}
+	},
+	"definitions": {
+		"AddressResponse": {
+			"properties": {
+				"message": {
+					"description": "message explaining the response",
+					"type": "string"
+				},
+				"payload": {
+					"allOf": [{
+						"$ref": "#/definitions/GeneralAddress"
+					}],
+					"description": "Company Address"
+				},
+				"status": {
+					"description": "if status is True data was found and payload contains valid data",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"Analyst": {
+			"properties": {
+				"buy": {
+					"description": "Buy Rating",
+					"type": "integer"
+				},
+				"fundamental_id": {
+					"description": "Fundamental id",
+					"type": "string"
+				},
+				"hold": {
+					"description": "Hold Rating",
+					"type": "integer"
+				},
+				"rating": {
+					"description": "Analyst Overall Rating",
+					"type": "number"
+				},
+				"sell": {
+					"description": "Sell Rating",
+					"type": "integer"
+				},
+				"strong_buy": {
+					"description": "Strong buy Rating",
+					"type": "integer"
+				},
+				"strong_sell": {
+					"description": "Strong sell Rating",
+					"type": "integer"
+				},
+				"target_price": {
+					"description": "Target Price",
+					"type": "number"
+				}
+			},
+			"type": "object"
+		},
+		"AnnualBalanceSheet": {
+			"properties": {
+				"balance_sheet": {
+					"$ref": "#/definitions/_BalanceSheet"
+				},
+				"filing_date": {
+					"description": "Date of filing",
+					"format": "date",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"AnnualBalanceSheetResponse": {
+			"properties": {
+				"message": {
+					"description": "message explaining the response",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/AnnualBalanceSheet"
+				},
+				"status": {
+					"description": "if status is True data was found and payload contains valid data",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"BalanceSheets": {
+			"properties": {
+				"annual_balance_sheets": {
+					"$ref": "#/definitions/AnnualBalanceSheet"
+				},
+				"quarterly_balance_sheets": {
+					"$ref": "#/definitions/QuarterlyBalanceSheet"
+				}
+			},
+			"type": "object"
+		},
+		"ContractResponse": {
+			"properties": {
+				"message": {
+					"description": "message explaining the response",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Contracts"
+				},
+				"status": {
+					"description": "if status is True data was found and payload contains valid data",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"Contracts": {
+			"properties": {
+				"ask": {
+					"description": "Ask Price in Float",
+					"type": "number"
+				},
+				"bid": {
+					"description": "Bidding Price in Float",
+					"type": "number"
+				},
+				"call_put_id": {
+					"description": "Call put id",
+					"type": "string"
+				},
+				"change": {
+					"description": "Amount Change in Float",
+					"type": "number"
+				},
+				"change_percent": {
+					"description": "Amount Change in Percentage",
+					"type": "number"
+				},
+				"contract_name": {
+					"description": "contract name",
+					"type": "string"
+				},
+				"contract_period": {
+					"description": "period of contract",
+					"type": "number"
+				},
+				"contract_size": {
+					"description": "size of contract",
+					"type": "number"
+				},
+				"currency": {
+					"description": "contract currency",
+					"type": "string"
+				},
+				"days_before_expiration": {
+					"description": "number of days before expiration Integer",
+					"type": "number"
+				},
+				"delta": {
+					"description": "delta in Float",
+					"type": "number"
+				},
+				"expiration_date": {
+					"description": "expiration date in ISO Format",
+					"format": "date",
+					"type": "string"
+				},
+				"gamma": {
+					"description": "gamma in Float",
+					"type": "number"
+				},
+				"implied_volatility": {
+					"description": "implied volatility in Float",
+					"type": "number"
+				},
+				"in_the_money": {
+					"description": "money in",
+					"type": "boolean"
+				},
+				"intrinsic_value": {
+					"description": "Intrinsic Value in Float",
+					"type": "number"
+				},
+				"last_price": {
+					"description": "last contract price in Float",
+					"type": "number"
+				},
+				"last_trade_datetime": {
+					"description": "date and time of last trade in ISO Format",
+					"format": "date-time",
+					"type": "string"
+				},
+				"open_interest": {
+					"description": "Open Interest in Float",
+					"type": "number"
+				},
+				"rho": {
+					"description": "Rho in Float",
+					"type": "number"
+				},
+				"strike": {
+					"description": "number of strikes in Float",
+					"type": "number"
+				},
+				"theoretical": {
+					"description": "theoretical in Float",
+					"type": "number"
+				},
+				"theta": {
+					"description": "theta in Float",
+					"type": "number"
+				},
+				"time_value": {
+					"description": "Time value in Float",
+					"type": "number"
+				},
+				"updated_at": {
+					"description": "Updated at datetime in ISO Format",
+					"format": "date-time",
+					"type": "string"
+				},
+				"vega": {
+					"description": "vega in Float",
+					"type": "number"
+				},
+				"volume": {
+					"description": "Volume Tradedin Float",
+					"type": "number"
+				}
+			},
+			"type": "object"
+		},
+		"EODStock": {
+			"properties": {
+				"adjusted_close": {
+					"description": "Stock Adjusted Close Position",
+					"type": "integer"
+				},
+				"close": {
+					"description": "Stock Close Position",
+					"type": "integer"
+				},
+				"code": {
+					"description": "stock code",
+					"type": "string"
+				},
+				"date": {
+					"description": "date of stock trade",
+					"format": "date",
+					"type": "string"
+				},
+				"high": {
+					"description": "Stock High Position",
+					"type": "integer"
+				},
+				"low": {
+					"description": "Stock Low Position",
+					"type": "integer"
+				},
+				"market_capitalization": {
+					"description": "market capitalization",
+					"type": "integer"
+				},
+				"name": {
+					"description": "name of exchange_code",
+					"type": "string"
+				},
+				"open": {
+					"description": "Stock Open Position",
+					"type": "integer"
+				},
+				"previous_close": {
+					"description": "Stock Previous Close Position",
+					"type": "integer"
+				},
+				"type": {
+					"description": "type of stock",
+					"type": "string"
+				},
+				"volume": {
+					"description": "Stock Volume Traded",
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
+		"EODStockListResponse": {
+			"properties": {
+				"message": {
+					"description": "success or error message",
+					"type": "string"
+				},
+				"payload": {
+					"items": {
+						"$ref": "#/definitions/EODStock"
+					},
+					"type": "array"
+				},
+				"status": {
+					"description": "True if data is found and valid",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"EODStockResponse": {
+			"properties": {
+				"message": {
+					"description": "success or error message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/EODStock"
+				},
+				"status": {
+					"description": "True if data is found and valid",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"Exchange": {
+			"properties": {
+				"code": {
+					"description": "exchange_code code",
+					"type": "string"
+				},
+				"country": {
+					"description": "the country the exchange_code operates in",
+					"type": "string"
+				},
+				"currency_symbol": {
+					"description": "the currency symbol of the country the exchange_code operates in",
+					"type": "string"
+				},
+				"exchange_id": {
+					"description": "exchange_code unique id",
+					"type": "string"
+				},
+				"name": {
+					"description": "name of exchange_code",
+					"type": "string"
+				},
+				"operating_mic": {
+					"description": "exchange_code operating mic",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"ExchangeListResponse": {
+			"properties": {
+				"message": {
+					"description": "success or error message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Exchange"
+				},
+				"status": {
+					"description": "True if data is found and valid",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"ExchangeListedCompaniesResponse": {
+			"properties": {
+				"message": {
+					"description": "success or error message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/General"
+				},
+				"status": {
+					"description": "True if data is found and valid",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"ExchangeListedStock": {
+			"properties": {
+				"message": {
+					"description": "success or error message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Stock"
+				},
+				"status": {
+					"description": "True if data is found and valid",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"ExchangeRequest": {
+			"properties": {
+				"payload": {
+					"$ref": "#/definitions/Exchange"
+				}
+			},
+			"type": "object"
+		},
+		"ExchangeResponse": {
+			"properties": {
+				"message": {
+					"description": "success or error message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Exchange"
+				},
+				"status": {
+					"description": "True if data is found and valid",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"ExchangeWithListedTickers": {
+			"properties": {
+				"message": {
+					"description": "success or error message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/ExchangeWithTickers"
+				},
+				"status": {
+					"description": "True if data is found and valid",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"ExchangeWithTickers": {
+			"properties": {
+				"code": {
+					"description": "exchange_code code",
+					"type": "string"
+				},
+				"country": {
+					"description": "the country the exchange_code operates in",
+					"type": "string"
+				},
+				"currency_symbol": {
+					"description": "the currency symbol of the country the exchange_code operates in",
+					"type": "string"
+				},
+				"exchange_id": {
+					"description": "exchange_code unique id",
+					"type": "string"
+				},
+				"name": {
+					"description": "name of exchange_code",
+					"type": "string"
+				},
+				"operating_mic": {
+					"description": "exchange_code operating mic",
+					"type": "string"
+				},
+				"tickers_list": {
+					"$ref": "#/definitions/TickerExchangeCode"
+				}
+			},
+			"type": "object"
+		},
+		"General": {
+			"properties": {
+				"cik": {
+					"description": "Company CIK Number",
+					"type": "string"
+				},
+				"country_name": {
+					"description": "the name of the country where the company is trading",
+					"type": "string"
+				},
+				"currency": {
+					"description": "currency symbol under which the company financials are declared",
+					"type": "string"
+				},
+				"cusip": {
+					"description": "Company CUSIP number",
+					"type": "string"
+				},
+				"description": {
+					"description": "Description of a company",
+					"type": "string"
+				},
+				"employer_id": {
+					"description": "Company Employer ID",
+					"type": "string"
+				},
+				"exchange": {
+					"description": "the exchange_code the company has been listed under",
+					"type": "string"
+				},
+				"fiscal_year_end": {
+					"description": "Date of Companies fiscal year end",
+					"format": "date",
+					"type": "string"
+				},
+				"fundamental_id": {
+					"description": "company unique id, used to create records related to this company details for example Highlights Information",
+					"type": "string"
+				},
+				"gic_group": {
+					"description": "The Global Industry Classification Standard Group",
+					"type": "string"
+				},
+				"gic_industry": {
+					"description": "The Global Industry Classification Standard Industry",
+					"type": "string"
+				},
+				"gic_sector": {
+					"description": "The Global Industry Classification Standard sector",
+					"type": "string"
+				},
+				"home_category": {
+					"description": "home category",
+					"type": "string"
+				},
+				"industry": {
+					"description": "The industry the company operates under",
+					"type": "string"
+				},
+				"international_domestic": {
+					"description": "true if company operates internationally and domestically",
+					"type": "boolean"
+				},
+				"ipo_date": {
+					"description": "Date of initial public offering",
+					"format": "date",
+					"type": "string"
+				},
+				"is_delisted": {
+					"description": "True if company is de_listed",
+					"type": "boolean"
+				},
+				"isin": {
+					"description": "Company ISIN number",
+					"type": "string"
+				},
+				"name": {
+					"description": "company name as registered in the place country listed",
+					"type": "string"
+				},
+				"sector": {
+					"description": "The business sector the company operates in",
+					"type": "string"
+				},
+				"stock_symbol": {
+					"description": "company stock_codes as listed in the stock exchange_code",
+					"type": "string"
+				},
+				"type": {
+					"description": "company type",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"GeneralAddress": {
+			"properties": {
+				"city": {
+					"description": "company address city",
+					"type": "string"
+				},
+				"country": {
+					"description": "Company Address country",
+					"type": "string"
+				},
+				"fundamental_id": {
+					"description": "a unique id for the General Fundamental Company Data",
+					"type": "string"
+				},
+				"state": {
+					"description": "Company Address state or province",
+					"type": "string"
+				},
+				"street": {
+					"description": "company address street name",
+					"type": "string"
+				},
+				"zip": {
+					"description": "Company Address zip or postal code",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"GeneralContact": {
+			"properties": {
+				"full_time_employees": {
+					"description": "Total number of full time employees",
+					"type": "integer"
+				},
+				"fundamental_id": {
+					"description": "a unique id for the General Fundamental Company Data",
+					"type": "string"
+				},
+				"logo_url": {
+					"description": "Link  to Official Company logo",
+					"type": "string"
+				},
+				"phone": {
+					"description": "Official Company Phone Number",
+					"type": "string"
+				},
+				"updated_at": {
+					"description": "the date the company details where last updated",
+					"format": "date",
+					"type": "string"
+				},
+				"web_url": {
+					"description": "official company website address",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"GeneralListings": {
+			"properties": {
+				"exchange": {
+					"description": "Name of Exchange for this listing",
+					"type": "string"
+				},
+				"fundamental_id": {
+					"description": "a unique id for the General Fundamental Company Data",
+					"type": "string"
+				},
+				"listing_id": {
+					"description": "unique id for this listing",
+					"type": "string"
+				},
+				"name": {
+					"description": "Company Name in this listing",
+					"type": "string"
+				},
+				"stock_symbol": {
+					"description": "Stock Ticker symbol for this listing",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"GeneralOfficers": {
+			"properties": {
+				"fundamental_id": {
+					"description": "a unique id for the General Fundamental Company Data",
+					"type": "string"
+				},
+				"name": {
+					"description": "Name of officer",
+					"type": "string"
+				},
+				"title": {
+					"description": "Title of Company Officer",
+					"type": "string"
+				},
+				"year_born": {
+					"description": "Year of Birth",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"GeneralResponse": {
+			"properties": {
+				"message": {
+					"description": "message explaining the response",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/General"
+				},
+				"status": {
+					"description": "if status is True data was found and payload contains valid data",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"Highlights": {
+			"properties": {
+				"book_value": {
+					"description": "Net value of a company assets as found on its balance sheet",
+					"type": "number"
+				},
+				"date_created": {
+					"description": "date the highlights where created",
+					"format": "date",
+					"type": "string"
+				},
+				"diluted_eps_ttm": {
+					"description": "amount of income each receives if all of the dilute securities are realized, which is the amount of income that is available to the current common shareholders",
+					"type": "number"
+				},
+				"dividend_share": {
+					"description": "rewards that a company gives to its shareholders",
+					"type": "number"
+				},
+				"dividend_yield": {
+					"description": "amount of money a company pays shareholders for owning a ",
+					"type": "number"
+				},
+				"earnings_share": {
+					"description": "earnings per share (ESP) is a company net profit divided by the number of common shares it has outstanding",
+					"type": "number"
+				},
+				"ebitda": {
+					"description": "Earnings before Interest Taxes Depreciation and Amortization",
+					"type": "integer"
+				},
+				"eps_estimate_current_quarter": {
+					"description": "earnings per share (EPS) estimate for current quarter",
+					"type": "number"
+				},
+				"eps_estimate_current_year": {
+					"description": "earnings per share estimate for current year",
+					"type": "number"
+				},
+				"eps_estimate_next_quarter": {
+					"description": "earnings per share estimate for next quarter",
+					"type": "number"
+				},
+				"eps_estimate_next_year": {
+					"description": "earnings per share estimate for next year",
+					"type": "number"
+				},
+				"fundamental_id": {
+					"description": "unique company id for fundamental data",
+					"type": "string"
+				},
+				"growth_profit_ttm": {
+					"description": "profit a business makes after subtracting all the costs that are related to manufacturing and selling its products or services",
+					"type": "number"
+				},
+				"market_capitalization": {
+					"description": "Market Capitalization",
+					"type": "integer"
+				},
+				"market_capitalization_mln": {
+					"description": "market capitalization in millions",
+					"type": "integer"
+				},
+				"most_recent_quarter": {
+					"description": "MRQ refers to percent of revenues remaining after paying all expenses",
+					"format": "date",
+					"type": "string"
+				},
+				"operating_margin_ttm": {
+					"description": "measures the percent of revenues remaining after paying all operating expenses for trailing twelve months",
+					"type": "number"
+				},
+				"pe_ratio": {
+					"description": "Price Earnings Ratio",
+					"type": "number"
+				},
+				"peg_ratio": {
+					"description": "Price Earnings to Growth Ratio",
+					"type": "number"
+				},
+				"profit_margin": {
+					"description": "profit margin measures the degree to which a company makes money equals to revenue cost divided by Revenue",
+					"type": "number"
+				},
+				"quarterly_earnings_growth_yoy": {
+					"description": "an increase in the companys sales from one quarter to the next, compared on a year-over-year basis",
+					"type": "number"
+				},
+				"quarterly_revenue_growth_yoy": {
+					"description": "increase in the companys sales from one quarter to the next a good yoy growth is between 15 to 45%",
+					"type": "number"
+				},
+				"return_on_assets_ttm": {
+					"description": "income after taxes for the trailing twelve months divided by the average total assets",
+					"type": "number"
+				},
+				"return_on_equity_ttm": {
+					"description": "income available to common stockholders for the trailing twelve months divided by the average common equity expressed as a percentage",
+					"type": "number"
+				},
+				"revenue_per_share_ttm": {
+					"description": "Sales per share (Revenue) is a ratio that computes the total revenue earned for the trailing twelve months",
+					"type": "number"
+				},
+				"revenue_ttm": {
+					"description": "revenue a company earns over the trailing twelve months (TTM)",
+					"type": "number"
+				},
+				"target_price": {
+					"description": "The value an investor or analyst anticipates a stock will reach within a defined time period",
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
+		"HighlightsResponse": {
+			"properties": {
+				"message": {
+					"description": "message explaining if company details where found or not",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Highlights"
+				},
+				"status": {
+					"description": "if status is True data was found and payload contains valid company details",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"News": {
+			"properties": {
+				"link": {
+					"type": "string"
+				},
+				"providerPublishTime": {
+					"type": "integer"
+				},
+				"publisher": {
+					"type": "string"
+				},
+				"relatedTickers": {
+					"$ref": "#/definitions/RelatedTickers"
+				},
+				"thumbnail": {
+					"$ref": "#/definitions/Thumbnail"
+				},
+				"title": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
+				},
+				"uuid": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"NewsResponseList": {
+			"properties": {
+				"message": {
+					"type": "string"
+				},
+				"payload": {
+					"items": {
+						"$ref": "#/definitions/News"
+					},
+					"type": "array"
+				},
+				"status": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"NumberDividendsByYear": {
+			"properties": {
+				"count": {
+					"description": "Number of",
+					"type": "integer"
+				},
+				"year": {
+					"description": "Year",
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
+		"Options": {
+			"properties": {
+				"currency": {
+					"description": "currency for trade",
+					"type": "string"
+				},
+				"exchange": {
+					"description": "exchange_code id for the options",
+					"type": "string"
+				},
+				"last_trade_date": {
+					"description": "last trade date",
+					"format": "date",
+					"type": "string"
+				},
+				"last_trade_price": {
+					"description": "last traded price",
+					"type": "string"
+				},
+				"options_id": {
+					"description": "will carry a unique options id",
+					"type": "string"
+				},
+				"stock_symbol": {
+					"description": "symbol for stock",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"OptionsResponse": {
+			"properties": {
+				"message": {
+					"description": "message explaining the response",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Options"
+				},
+				"status": {
+					"description": "if status is True data was found and payload contains valid data",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"Payload": {
+			"properties": {
+				"followers_count": {
+					"type": "integer"
+				},
+				"friends_count": {
+					"type": "integer"
+				},
+				"location": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				},
+				"profile_image_url": {
+					"type": "string"
+				},
+				"screen_name": {
+					"type": "string"
+				},
+				"sentiments": {
+					"items": {
+						"$ref": "#/definitions/Sentiment"
+					},
+					"type": "array"
+				},
+				"statuses_count": {
+					"type": "integer"
+				},
+				"total_bearish": {
+					"type": "integer"
+				},
+				"total_bullish": {
+					"type": "integer"
+				},
+				"tweeter_profile_link": {
+					"type": "string"
+				},
+				"uid": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"PublicFundamental": {
+			"properties": {
+				"address": {
+					"$ref": "#/definitions/GeneralAddress"
+				},
+				"analyst_rankings": {
+					"$ref": "#/definitions/Analyst"
+				},
+				"balance_sheets": {
+					"$ref": "#/definitions/BalanceSheets"
+				},
+				"cik": {
+					"description": "Company CIK Number",
+					"type": "string"
+				},
+				"contact": {
+					"$ref": "#/definitions/GeneralContact"
+				},
+				"country_name": {
+					"description": "the name of the country where the company is trading",
+					"type": "string"
+				},
+				"currency": {
+					"description": "currency symbol under which the company financials are declared",
+					"type": "string"
+				},
+				"cusip": {
+					"description": "Company CUSIP number",
+					"type": "string"
+				},
+				"description": {
+					"description": "Description of a company",
+					"type": "string"
+				},
+				"employer_id": {
+					"description": "Company Employer ID",
+					"type": "string"
+				},
+				"exchange": {
+					"description": "the exchange_code the company has been listed under",
+					"type": "string"
+				},
+				"fiscal_year_end": {
+					"description": "Date of Companies fiscal year end",
+					"format": "date",
+					"type": "string"
+				},
+				"fundamental_id": {
+					"description": "company unique id, used to create records related to this company details for example Highlights Information",
+					"type": "string"
+				},
+				"gic_group": {
+					"description": "The Global Industry Classification Standard Group",
+					"type": "string"
+				},
+				"gic_industry": {
+					"description": "The Global Industry Classification Standard Industry",
+					"type": "string"
+				},
+				"gic_sector": {
+					"description": "The Global Industry Classification Standard sector",
+					"type": "string"
+				},
+				"highlights": {
+					"$ref": "#/definitions/Highlights"
+				},
+				"home_category": {
+					"description": "home category",
+					"type": "string"
+				},
+				"industry": {
+					"description": "The industry the company operates under",
+					"type": "string"
+				},
+				"international_domestic": {
+					"description": "true if company operates internationally and domestically",
+					"type": "boolean"
+				},
+				"ipo_date": {
+					"description": "Date of initial public offering",
+					"format": "date",
+					"type": "string"
+				},
+				"is_delisted": {
+					"description": "True if company is de_listed",
+					"type": "boolean"
+				},
+				"isin": {
+					"description": "Company ISIN number",
+					"type": "string"
+				},
+				"listings": {
+					"$ref": "#/definitions/GeneralListings"
+				},
+				"name": {
+					"description": "company name as registered in the place country listed",
+					"type": "string"
+				},
+				"officers": {
+					"$ref": "#/definitions/GeneralOfficers"
+				},
+				"sector": {
+					"description": "The business sector the company operates in",
+					"type": "string"
+				},
+				"share_stats": {
+					"$ref": "#/definitions/ShareStats"
+				},
+				"split_dividends": {
+					"$ref": "#/definitions/SplitDividends"
+				},
+				"stock_symbol": {
+					"description": "company stock_codes as listed in the stock exchange_code",
+					"type": "string"
+				},
+				"technicals": {
+					"$ref": "#/definitions/Technicals"
+				},
+				"type": {
+					"description": "company type",
+					"type": "string"
+				},
+				"valuation": {
+					"$ref": "#/definitions/Valuations"
+				}
+			},
+			"type": "object"
+		},
+		"PublicFundamentalsResponse": {
+			"properties": {
+				"message": {
+					"description": "Message about the payload received",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/PublicFundamental"
+				},
+				"status": {
+					"description": "Response Status",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"QuarterlyBalanceResponse": {
+			"properties": {
+				"message": {
+					"description": "message explaining the response",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/QuarterlyBalanceSheet"
+				},
+				"status": {
+					"description": "if status is True data was found and payload contains valid data",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"QuarterlyBalanceSheet": {
+			"properties": {
+				"balance_sheet": {
+					"$ref": "#/definitions/_BalanceSheet"
+				},
+				"filing_date": {
+					"description": "Date of filing",
+					"format": "date",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"RelatedTickers": {
+			"properties": {
+				"ticker": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"Resolution": {
+			"properties": {
+				"height": {
+					"type": "integer"
+				},
+				"tag": {
+					"type": "string"
+				},
+				"url": {
+					"type": "string"
+				},
+				"width": {
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
+		"Sentiment": {
+			"properties": {
+				"created_at": {
+					"type": "string"
+				},
+				"favourite_count": {
+					"type": "integer"
+				},
+				"retweet_count": {
+					"type": "integer"
+				},
+				"sentiment": {
+					"type": "string"
+				},
+				"sentiment_id": {
+					"type": "string"
+				},
+				"stock_code": {
+					"type": "string"
+				},
+				"tweet_id": {
+					"type": "string"
+				},
+				"tweet_link": {
+					"type": "string"
+				},
+				"tweet_text": {
+					"type": "string"
+				},
+				"uid": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"ShareStats": {
+			"properties": {
+				"date_created": {
+					"description": "Date of valuation",
+					"format": "date",
+					"type": "string"
+				},
+				"fundamental_id": {
+					"description": "Fundamental id",
+					"type": "string"
+				},
+				"percent_insiders": {
+					"description": "Percentage of insider shares",
+					"type": "number"
+				},
+				"percent_institutions": {
+					"description": "Percentage of shares owned by institutions",
+					"type": "number"
+				},
+				"shares_float": {
+					"description": "shares float",
+					"type": "integer"
+				},
+				"shares_outstanding": {
+					"description": "Number of shares outstanding",
+					"type": "integer"
+				},
+				"shares_short": {
+					"description": "Number of shares Shorted",
+					"type": "integer"
+				},
+				"shares_short_prior_month": {
+					"description": "Number of shares Shorted Previous Month",
+					"type": "integer"
+				},
+				"short_percent_float": {
+					"description": "percentage of a company's stock that has been shorted by institutional traders, compared to the number of shares of a company's stock that are available to the public",
+					"type": "number"
+				},
+				"short_percent_outstanding": {
+					"description": "number of shorted shares divided by the number of shares outstanding",
+					"type": "number"
+				},
+				"short_ratio": {
+					"description": "Ratio of shorted shares",
+					"type": "number"
+				}
+			},
+			"type": "object"
+		},
+		"SplitDividends": {
+			"properties": {
+				"date_created": {
+					"description": "Date of valuation",
+					"format": "date",
+					"type": "string"
+				},
+				"dividend_date": {
+					"description": "Date",
+					"format": "date",
+					"type": "string"
+				},
+				"ex_dividend_date": {
+					"description": "Date",
+					"format": "date",
+					"type": "string"
+				},
+				"forward_annual_dividend_rate": {
+					"description": "Dividend Rate",
+					"type": "number"
+				},
+				"forward_annual_dividend_yield": {
+					"description": "Dividend Yield",
+					"type": "number"
+				},
+				"fundamental_id": {
+					"description": "Fundamental id",
+					"type": "string"
+				},
+				"last_split_date": {
+					"description": "Date",
+					"format": "date",
+					"type": "string"
+				},
+				"last_split_factor": {
+					"description": "Last Split factor",
+					"type": "string"
+				},
+				"number_of_dividends_by_year": {
+					"$ref": "#/definitions/NumberDividendsByYear"
+				},
+				"payout_ratio": {
+					"description": "Payout Ratio",
+					"type": "number"
+				}
+			},
+			"type": "object"
+		},
+		"Stock": {
+			"properties": {
+				"code": {
+					"description": "The Code of the stock in exchange_code",
+					"type": "string"
+				},
+				"currency": {
+					"description": "The Currency of the stock as listed in exchange_code",
+					"type": "string"
+				},
+				"exchange_code": {
+					"description": "The name of the exchange_code this stock is listed in",
+					"type": "string"
+				},
+				"exchange_id": {
+					"description": "exchange_code id of the exchange_code the stock is listed in",
+					"type": "string"
+				},
+				"name": {
+					"description": "Name of stock",
+					"type": "string"
+				},
+				"stock_id": {
+					"description": "The id of the stock in exchange_code",
+					"type": "string"
+				},
+				"stock_type": {
+					"description": "The type of stock as listed in exchange_code",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"Stock1": {
+			"properties": {
+				"code": {
+					"description": "The Code of the stock in exchange_code",
+					"type": "string"
+				},
+				"currency": {
+					"description": "The Currency of the stock as listed in exchange_code",
+					"type": "string"
+				},
+				"exchange_code": {
+					"description": "The name of the exchange_code this stock is listed in",
+					"type": "string"
+				},
+				"name": {
+					"description": "Name of stock",
+					"type": "string"
+				},
+				"stock_type": {
+					"description": "The type of stock as listed in exchange_code",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"StockListRequest": {
+			"properties": {
+				"payload": {
+					"$ref": "#/definitions/Stock1"
+				}
+			},
+			"type": "object"
+		},
+		"StockListResponse": {
+			"properties": {
+				"message": {
+					"description": "response message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Stock"
+				},
+				"status": {
+					"default": false,
+					"description": "status indicating if request was successful or not",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"StockResponse": {
+			"properties": {
+				"message": {
+					"description": "response message",
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Stock"
+				},
+				"status": {
+					"default": false,
+					"description": "status indicating if request was successful or not",
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"StockTrendSetters": {
+			"properties": {
+				"message": {
+					"type": "string"
+				},
+				"payload": {
+					"$ref": "#/definitions/Payload"
+				},
+				"status": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"Technicals": {
+			"properties": {
+				"beta": {
+					"description": "the expected move in a stock relative to movements in the overall market",
+					"type": "number"
+				},
+				"date_created": {
+					"description": "Date of technical valuation",
+					"format": "date",
+					"type": "string"
+				},
+				"fundamental_id": {
+					"description": "Fundamental id",
+					"type": "string"
+				},
+				"shares_short": {
+					"description": "Number of shares Shorted",
+					"type": "integer"
+				},
+				"shares_short_prior_month": {
+					"description": "Number of shares Shorted Previous Month",
+					"type": "integer"
+				},
+				"short_percent": {
+					"description": "Percentage of a shorted Shares",
+					"type": "number"
+				},
+				"short_ratio": {
+					"description": "Ratio of shorted shares",
+					"type": "number"
+				},
+				"t_200_day_ma": {
+					"description": "200 days moving average",
+					"type": "number"
+				},
+				"t_50_day_ma": {
+					"description": "50 days moving average",
+					"type": "number"
+				},
+				"t_52_week_high": {
+					"description": "52 week high",
+					"type": "number"
+				},
+				"t_52_week_low": {
+					"description": "52 week low",
+					"type": "number"
+				}
+			},
+			"type": "object"
+		},
+		"Thumbnail": {
+			"properties": {
+				"resolutions": {
+					"$ref": "#/definitions/Resolution"
+				}
+			},
+			"type": "object"
+		},
+		"TickerExchangeCode": {
+			"properties": {
+				"stock_code": {
+					"type": "string"
+				},
+				"stock_id": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"Valuations": {
+			"properties": {
+				"date_created": {
+					"description": "Date of valuation",
+					"format": "date",
+					"type": "string"
+				},
+				"enterprise_value": {
+					"description": "Enterprise value",
+					"type": "integer"
+				},
+				"enterprise_value_ebitda": {
+					"description": "Enterprise value/EBITDA is a popular valuation manyple used to determine the fair market value of a company.",
+					"type": "number"
+				},
+				"enterprise_value_revenue": {
+					"description": "The enterprise value-to-revenue manyple (EV/R) is a measure of the value of a stock that compares a company's enterprise value to its revenue.",
+					"type": "number"
+				},
+				"forward_pe": {
+					"description": "A variation of the price-to-earnings ratio (P/E ratio) is the forward P/E ratio, which is based on a prediction of a company's future earnings",
+					"type": "number"
+				},
+				"fundamental_id": {
+					"description": "Fundamental id",
+					"type": "string"
+				},
+				"price_book_mrq": {
+					"description": "This is the Current Price divided by the latest annual Tangible Book Value Per Share.",
+					"type": "number"
+				},
+				"price_sales_ttm": {
+					"description": "The price-to-sales ratio shows how much the market values every dollar of the company's sales.",
+					"type": "number"
+				},
+				"trailing_pe": {
+					"description": " relative valuation multiple that is based on the last 12 months of actual earnings",
+					"type": "number"
+				}
+			},
+			"type": "object"
+		},
+		"_BalanceSheet": {
+			"properties": {
+				"accounts_payable": {
+					"description": "Accounts Payable (Float)",
+					"type": "number"
+				},
+				"accumulated_amortization": {
+					"description": "Accumulated Amortization (Float)",
+					"type": "number"
+				},
+				"accumulated_depreciation": {
+					"description": "Accumulated Depreciation (Float)",
+					"type": "number"
+				},
+				"accumulated_other_comprehensive_income": {
+					"description": "Accumulated other comprehensive income (Float)",
+					"type": "number"
+				},
+				"additional_paid_in_capital": {
+					"description": "Additional paid capital (Float)",
+					"type": "number"
+				},
+				"balance_sheet_id": {
+					"description": "unique balance sheet id",
+					"type": "string"
+				},
+				"capital_lease_obligations": {
+					"description": "Capital Lease obligations (Float)",
+					"type": "number"
+				},
+				"capital_surplus": {
+					"description": "Capital Surplus (Float)",
+					"type": "number"
+				},
+				"cash": {
+					"description": "Cash (Float)",
+					"type": "number"
+				},
+				"cash_and_short_term_investments": {
+					"description": "Cash & Short term investments (Float)",
+					"type": "number"
+				},
+				"common_stock": {
+					"description": "Common Stock (Float)",
+					"type": "number"
+				},
+				"common_stock_shares_outstanding": {
+					"description": "Common Stock Shares Outstanding (Float)",
+					"type": "number"
+				},
+				"common_stock_total_equity": {
+					"description": "Common Stock total equity (Float)",
+					"type": "number"
+				},
+				"currency": {
+					"description": "currency code",
+					"type": "string"
+				},
+				"date": {
+					"description": "date",
+					"format": "date",
+					"type": "string"
+				},
+				"deferred_long_term_liability": {
+					"description": "Deferred long term liability (Float)",
+					"type": "number"
+				},
+				"earnings_assets": {
+					"description": "Earnings Assets (Float)",
+					"type": "number"
+				},
+				"fundamental_id": {
+					"description": "fundamental id",
+					"type": "string"
+				},
+				"good_will": {
+					"description": "Good Will (Float)",
+					"type": "number"
+				},
+				"intangible_assets": {
+					"description": "Intangible Assets (Float)",
+					"type": "number"
+				},
+				"inventory": {
+					"description": "Inventory Value (Float)",
+					"type": "number"
+				},
+				"long_term_debt": {
+					"description": "Long Term Debt (Float)",
+					"type": "number"
+				},
+				"long_term_debt_total": {
+					"description": "Long term debt total (Float)",
+					"type": "number"
+				},
+				"long_term_investments": {
+					"description": "Long Term Investments (Float)",
+					"type": "number"
+				},
+				"negative_good_will": {
+					"description": "Negative good will (Float)",
+					"type": "number"
+				},
+				"net_debt": {
+					"description": "Net Debt (Float)",
+					"type": "number"
+				},
+				"net_invested_capital": {
+					"description": "Net Invested Capital (Float)",
+					"type": "number"
+				},
+				"net_receivables": {
+					"description": "Net Receivables (Float)",
+					"type": "number"
+				},
+				"net_tangible_assets": {
+					"description": "Net Tangible Assets (Float)",
+					"type": "number"
+				},
+				"networking_capital": {
+					"description": "Networking Capital (Float)",
+					"type": "number"
+				},
+				"non_controlling_interest_in_consolidated_equity": {
+					"description": "Non Controlling Interest in consolidated equity (Float)",
+					"type": "number"
+				},
+				"non_current_assets_other": {
+					"description": "Non Current Assets Other (Float)",
+					"type": "number"
+				},
+				"non_current_liabilities_other": {
+					"description": "Non Current liabilities Other (Float)",
+					"type": "number"
+				},
+				"non_current_liabilities_total": {
+					"description": "Non Current liabilities Total (Float)",
+					"type": "number"
+				},
+				"other_assets": {
+					"description": "Other Assets (Float)",
+					"type": "number"
+				},
+				"other_current_assets": {
+					"description": "Other Currency Assets (Float)",
+					"type": "number"
+				},
+				"other_current_liability": {
+					"description": "Other Current Liability (Float)",
+					"type": "number"
+				},
+				"other_liability": {
+					"description": "Other Liability (Float)",
+					"type": "number"
+				},
+				"other_stock_holder_equity": {
+					"description": "Other Stock Holder Equity (Float)",
+					"type": "number"
+				},
+				"preferred_stock_redeemable": {
+					"description": "Preferred Stock redeemable (Float)",
+					"type": "number"
+				},
+				"preferred_stock_total_equity": {
+					"description": "Preferred Stock total equity (Float)",
+					"type": "number"
+				},
+				"property_plant_and_equipment_gross": {
+					"description": "Property plant & Equipment Gross (Float)",
+					"type": "number"
+				},
+				"property_plant_equipment": {
+					"description": "Property Plant Equipment (Float)",
+					"type": "number"
+				},
+				"retained_earnings": {
+					"description": "Retained Earnings (Float)",
+					"type": "number"
+				},
+				"retained_earnings_total_equity": {
+					"description": "Retained Earnings total equity (Float)",
+					"type": "number"
+				},
+				"short_long_term_debt_total": {
+					"description": "Short & Long Term Debt Total (Float)",
+					"type": "number"
+				},
+				"short_term_debt": {
+					"description": "Short Term Debt (Float)",
+					"type": "number"
+				},
+				"short_term_investments": {
+					"description": "Short Term Investments (Float)",
+					"type": "number"
+				},
+				"temporary_equity_redeemable_non_controlling_interests": {
+					"description": "temporary equity redeemable non controlling interests (Float)",
+					"type": "number"
+				},
+				"total_assets": {
+					"description": "Total Assets (Float)",
+					"type": "number"
+				},
+				"total_current_assets": {
+					"description": "Total Current Assets (Float)",
+					"type": "number"
+				},
+				"total_current_liabilities": {
+					"description": "Total Current Liabilities (Float)",
+					"type": "number"
+				},
+				"total_liability": {
+					"description": "Total Liability (Float)",
+					"type": "number"
+				},
+				"total_permanent_equity": {
+					"description": "Total Permanent Equity (Float)",
+					"type": "number"
+				},
+				"total_stock_holder_equity": {
+					"description": "Total Stock Holder Equity (Float)",
+					"type": "number"
+				},
+				"treasury_stock": {
+					"description": "Treasury Stock (Float)",
+					"type": "number"
+				},
+				"warrants": {
+					"description": "Warrants (Float)",
+					"type": "number"
+				}
+			},
+			"type": "object"
+		}
+	},
+	"host": "https://gateway.eod-stock-api.site",
+	"info": {
+		"contact": {
+			"email": "support@eod-stock-api.site",
+			"name": "MJ API Development"
+		},
+		"description": "\n<h2>Intelligent EOD Stocks API</h2>\n    <p>\n    End of day stock world wide STOCK API, this api is intended for use by web application developers, \n    and service providers looking for up-to-date always available.\n    <ul>\n        <li>Exchange Information</li>\n        <li>Stock Tickers Data</li>\n        <li>End of Day (EOD) Stock Data</li>\n        <li>Fundamental Data</li>\n        <li>Stock Options And Splits Data</li>\n        <li>Financial News API</li>\n        <li>Social Media Trend Data For Stocks</li>\n        <li>Sentiment Analysis for News & Social Media</li>\n    </ul>       \n        The information provided covers more than 150 000 tickers, stocks, mutual funds and more around the world.\n        we provide information for any period, including daily, weekly.\n    </p>\n\n",
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		},
+		"termsOfService": "https://eod-stock-api.site/terms",
+		"title": "EOD STOCK API",
+		"version": "v1"
+	},
+	"paths": {
+		"/v1/eod/{_date}/{exchange_code}": {
+			"get": {
+				"description": "will return end of day data for a certain stock at a given date",
+				"parameters": [{
+					"in": "path",
+					"name": "_date",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/EODStockResponse"
+						}
+					}
+				},
+				"tags": ["eod"]
+			}
+		},
+		"/v1/eod/{_date}/{exchange_code}.{stock_code}": {
+			"get": {
+				"description": "will return end of day data for a certain stock at a given date",
+				"parameters": [{
+					"in": "path",
+					"name": "_date",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/EODStockResponse"
+						}
+					}
+				},
+				"tags": ["eod"]
+			}
+		},
+		"/v1/eod/{_from}.{_to}/{exchange_code}": {
+			"get": {
+				"description": "return a list of eod historical data on exchange_code from one date to the other",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_to",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_from",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/EODStockListResponse"
+						}
+					}
+				},
+				"tags": ["eod"]
+			}
+		},
+		"/v1/eod/{_from}.{_to}/{stock_code}": {
+			"get": {
+				"description": "will return end of day data for a certain stock at a given date",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_to",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_from",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/EODStockResponse"
+						}
+					}
+				},
+				"tags": ["eod"]
+			}
+		},
+		"/v1/exchange": {
+			"post": {
+				"description": "given exchange_code data create new exchange_code",
+				"parameters": [{
+					"in": "body",
+					"name": "body",
+					"required": false,
+					"schema": {
+						"$ref": "#/definitions/ExchangeRequest"
+					}
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ExchangeResponse"
+						}
+					}
+				},
+				"tags": ["exchanges"]
+			}
+		},
+		"/v1/exchange/code/{exchange_code}": {
+			"get": {
+				"description": "given exchange_id or exchange_code code will return exchange_code data",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ExchangeResponse"
+						}
+					}
+				},
+				"tags": ["exchanges"]
+			}
+		},
+		"/v1/exchange/exchange-with-tickers/code/{exchange_code}": {
+			"get": {
+				"description": "Exchange Data with a total list of stock_codes and stock_id's ",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ExchangeWithListedTickers"
+						}
+					}
+				},
+				"tags": ["exchanges"]
+			}
+		},
+		"/v1/exchange/id/{exchange_id}": {
+			"get": {
+				"description": "given exchange_id or exchange_code code will return exchange_code data",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_id",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ExchangeResponse"
+						}
+					}
+				},
+				"tags": ["exchanges"]
+			}
+		},
+		"/v1/exchange/listed-companies/{exchange_code}": {
+			"get": {
+				"description": "returns a list of listed companies in exchange_code",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ExchangeListedCompaniesResponse"
+						}
+					}
+				},
+				"tags": ["exchanges"]
+			}
+		},
+		"/v1/exchange/listed-stocks/{exchange_code}": {
+			"get": {
+				"description": "returns a list of listed stocks in exchange_code",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ExchangeListedStock"
+						}
+					}
+				},
+				"tags": ["exchanges"]
+			}
+		},
+		"/v1/exchanges": {
+			"get": {
+				"description": "returns a list of exchanges",
+				"parameters": [],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ExchangeListResponse"
+						}
+					}
+				},
+				"tags": ["exchanges"]
+			}
+		},
+		"/v1/fundamental/company/{stock_code}": {
+			"get": {
+				"description": "for each stock code return the fundamental data for the company",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/PublicFundamentalsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamental/general": {
+			"get": {
+				"description": "return general fundamental data for all companies",
+				"parameters": [],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/GeneralResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/annual-balance-sheet/{filing_date}/{stock_code}": {
+			"get": {
+				"description": "given the filing date & balance_sheet_id return annual balance sheet",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "filing_date",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/AnnualBalanceSheetResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/company-address/id/{fundamental_id}": {
+			"get": {
+				"description": "returns company address data",
+				"parameters": [{
+					"in": "path",
+					"name": "fundamental_id",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "get response for company address",
+						"schema": {
+							"$ref": "#/definitions/AddressResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/company-address/stock/{stock_code}": {
+			"get": {
+				"description": "returns company address data",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "get response for company address",
+						"schema": {
+							"$ref": "#/definitions/AddressResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/company-details/id/{fundamental_id}": {
+			"get": {
+				"description": "returns company details from company fundamental data",
+				"parameters": [{
+					"in": "path",
+					"name": "fundamental_id",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/GeneralResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/company-details/stock/{stock_code}": {
+			"get": {
+				"description": "returns company details from company fundamental data",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/GeneralResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/company-insider-transactions/stock-code/{stock_code}/{year}": {
+			"get": {
+				"description": "Given companies stock_code, and year return a list of insider transactions",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/company-valuations/stock-code/{stock_code}/{year}": {
+			"get": {
+				"description": "Get Company Valuations Data for the year",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/exchange-analyst-rankings/exchange-code/{exchange_code}/{year}": {
+			"get": {
+				"description": "Get Analyst rankings for all companies listed under a specific exchange",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/exchange-outstanding-shares/exchange-code/{exchange_code}/{year}": {
+			"get": {
+				"description": "Given an exchange_code and a year return all outstanding shares for all companies for that year",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/financial-statements/by-term/{_from}.{_to}/{stock_code}/{term}": {
+			"get": {
+				"description": "Return Annual or Quarterly Statements based on Term, Stock Code, and dates _from and _to",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_to",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_from",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "term",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/financial-statements/company-statement/{stock_code}/{year}": {
+			"get": {
+				"description": "given an a stock_code and a year return a complete financial statements for the year",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/financial-statements/exchange-year/{exchange_code}/{year}": {
+			"get": {
+				"description": "Given an exchange_code and a year return a complete list of financial statements for all companies in exchange",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/financial-statements/filing-date-ticker/{filing_date}/{stock_code}": {
+			"get": {
+				"description": "Returns Income Statements by Filing Date and Company Stock Code",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "filing_date",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/financial-statements/ticker-date-range/{_from}.{_to}/{stock_code}": {
+			"get": {
+				"description": "Given two dates and a stock date return all financial statements, _from & _to should be date-strings",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_to",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "_from",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/financials/income-statements/{statement_id}": {
+			"get": {
+				"description": "Will return Company Income Statement By Statement ID",
+				"parameters": [{
+					"in": "path",
+					"name": "statement_id",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/highlights/id/{fundamental_id}": {
+			"get": {
+				"description": "get fundamental highlights data from either fundamental_id or stock_codes",
+				"parameters": [{
+					"in": "path",
+					"name": "fundamental_id",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/HighlightsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/highlights/stock/{stock_code}": {
+			"get": {
+				"description": "get fundamental highlights data from either fundamental_id or stock_codes",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/HighlightsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/quarterly-balance-sheet/{filing_date}/{stock_code}": {
+			"get": {
+				"description": "given filing_date and balance_sheet_id return Quarterly Balance Sheet",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "filing_date",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/QuarterlyBalanceResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/tech-indicators-by-company/stock-code/{stock_code}/{year}": {
+			"get": {
+				"description": "Given a company stock_code and a year return technical indicators for that year",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/fundamentals/tech-indicators-by-exchange/exchange-code/{exchange_code}/{year}": {
+			"get": {
+				"description": "Given an exchange_code and a year return all technical indicators released for companies listed on the exchange for the year mentioned",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}, {
+					"in": "path",
+					"name": "year",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["fundamentals"]
+			}
+		},
+		"/v1/news/article/{uuid}": {
+			"get": {
+				"description": "Obtain Financial News Information related to listed companies",
+				"parameters": [{
+					"in": "path",
+					"name": "uuid",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/News"
+						}
+					}
+				},
+				"tags": ["financial-news"]
+			}
+		},
+		"/v1/news/articles-bounded/{upper_bound}": {
+			"get": {
+				"description": "Get list of all News Upper Bound is an Integer indicating a total number of articles to return",
+				"parameters": [{
+					"format": "int32",
+					"in": "path",
+					"name": "upper_bound",
+					"required": true,
+					"type": "integer"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/NewsResponseList"
+						}
+					}
+				},
+				"tags": ["financial-news"]
+			}
+		},
+		"/v1/news/articles-by-date/{_date}": {
+			"get": {
+				"description": "Get Articles Financial News By Date",
+				"parameters": [{
+					"in": "path",
+					"name": "_date",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/News"
+						}
+					}
+				},
+				"tags": ["financial-news"]
+			}
+		},
+		"/v1/news/articles-by-publisher/{publisher}": {
+			"get": {
+				"description": "Get News Financial News by publisher",
+				"parameters": [{
+					"in": "path",
+					"name": "publisher",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/NewsResponseList"
+						}
+					}
+				},
+				"tags": ["financial-news"]
+			}
+		},
+		"/v1/news/articles-by-ticker/{stock_code}": {
+			"get": {
+				"description": "Get Financial News Articles By Ticker",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/NewsResponseList"
+						}
+					}
+				},
+				"tags": ["financial-news"]
+			}
+		},
+		"/v1/sentiment/trend-setters/stock/{stock_code}": {
+			"get": {
+				"description": "Given the stock_code return a list of trend setters for this stock and their sentiments",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockTrendSetters"
+						}
+					}
+				},
+				"tags": ["sentiment"]
+			}
+		},
+		"/v1/sentiment/trending/stock/{stock_code}": {
+			"get": {
+				"description": "Will return a sentiment for most trending Tweets by stock",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["sentiment"]
+			}
+		},
+		"/v1/sentiment/tweet/stock/{stock_code}": {
+			"get": {
+				"description": "Will return a list Social Media Sentiments for a certain stock",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["sentiment"]
+			}
+		},
+		"/v1/stock/code/{stock_code}": {
+			"get": {
+				"description": "given stock code return stock details",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockResponse"
+						}
+					}
+				},
+				"tags": ["stocks"]
+			}
+		},
+		"/v1/stocks": {
+			"get": {
+				"description": "returns a complete list of stocks present",
+				"parameters": [],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockListResponse"
+						}
+					}
+				},
+				"tags": ["stocks"]
+			},
+			"post": {
+				"description": "create new stocks from a list of stocks",
+				"parameters": [{
+					"in": "body",
+					"name": "body",
+					"required": false,
+					"schema": {
+						"$ref": "#/definitions/StockListRequest"
+					}
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockListResponse"
+						}
+					}
+				},
+				"tags": ["stocks"]
+			}
+		},
+		"/v1/stocks/contract/{call_put_id}": {
+			"get": {
+				"description": "given call_put_id return Contract",
+				"parameters": [{
+					"in": "path",
+					"name": "call_put_id",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/ContractResponse"
+						}
+					}
+				},
+				"tags": ["options"]
+			}
+		},
+		"/v1/stocks/country/{country}": {
+			"get": {
+				"description": "returns a list of stocks listed in a certain country",
+				"parameters": [{
+					"in": "path",
+					"name": "country",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockListResponse"
+						}
+					}
+				},
+				"tags": ["stocks"]
+			}
+		},
+		"/v1/stocks/currency/{currency}": {
+			"get": {
+				"description": "returns a list of stocks listed with a certain currency",
+				"parameters": [{
+					"in": "path",
+					"name": "currency",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockListResponse"
+						}
+					}
+				},
+				"tags": ["stocks"]
+			}
+		},
+		"/v1/stocks/exchange/code/{exchange_code}": {
+			"get": {
+				"description": "given an exchange_code code return a list of stocks in the exchange_code",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockListResponse"
+						}
+					}
+				},
+				"tags": ["stocks"]
+			}
+		},
+		"/v1/stocks/exchange/id/{exchange_id}": {
+			"get": {
+				"description": "given an exchange_code id return a list of stocks in the exchange_code",
+				"parameters": [{
+					"in": "path",
+					"name": "exchange_id",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/StockListResponse"
+						}
+					}
+				},
+				"tags": ["stocks"]
+			}
+		},
+		"/v1/stocks/options/stock/{stock_code}": {
+			"get": {
+				"description": "get Stock options data for the provided stock code",
+				"parameters": [{
+					"in": "path",
+					"name": "stock_code",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"default": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/OptionsResponse"
+						}
+					}
+				},
+				"tags": ["options"]
+			}
+		}
+	},
+	"produces": ["application/json"],
+	"swagger": "2.0"
+}
