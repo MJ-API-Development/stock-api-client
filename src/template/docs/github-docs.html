@@ -2,6 +2,31 @@
 
 {% block content %}
 <div class="right_col" role="main">
-    {{ document|safe }}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"> Github Documentations</h3>
+        </div>
+        <div class="card-body">
+            {{ document|safe }}
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">
+                <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk">
+                    <i class="fa fa-github"></i>
+                    Github Documentations
+                </a>
+            </h3>
+            <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk">
+            <span>
+                Looking to learn more about our Stock API & Python SDK?
+                Check out our Github documentation for detailed
+                information on how to get started, sample code snippets,
+                and tips for optimizing your API usage.
+            </span>
+            </a>
+        </div>
+    </div>
+</div>
 </div>
 {% endblock %}

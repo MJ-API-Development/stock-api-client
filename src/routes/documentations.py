@@ -1,9 +1,10 @@
 import functools
-import json
 import os
+
 import markdown
 import requests
-from flask import Blueprint, render_template, request, make_response, redirect, Response, send_from_directory
+from flask import Blueprint, render_template, request, make_response, send_from_directory
+
 from src.routes.authentication.routes import user_details
 
 docs_route = Blueprint('docs', __name__)
@@ -19,7 +20,7 @@ def inject_specifications() -> dict[str, str]:
     return dict(json_data=file_contents)
 
 
-# @functools.cache
+@functools.cache
 def documentations_routes(params: dict[str, str]) -> dict:
     """
         will return a map of paths
@@ -42,9 +43,17 @@ def documentations_routes(params: dict[str, str]) -> dict:
     }
     return _routes.get(path, _index)
 
+# TODO - consider using a memory cache for this endpoints
+
 
 @docs_route.route('/redoc', methods=['GET'])
+@functools.cache
 def redoc():
+    """
+        **redoc**
+            display redoc documentation for our clients
+    :return:
+    """
     # Replace "https://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site/redoc"
     response = requests.get(url)
@@ -54,15 +63,22 @@ def redoc():
 
 
 @docs_route.route('/redoc.standalone.js')
+@functools.cache
 def send_js():
-    """helps avoid cors errors"""
+    """
+    **send_js**
+        helps avoid cors errors - by sending the redoc js file directly from our static folder
+    """
+    # TODO consider fetching this file from gateway static folder instead
     return send_from_directory('static', 'redoc.standalone.js')
 
 
 @docs_route.route('/openapi.json', methods=['GET'])
+@functools.cache
 def openapi_json():
     """
-     will server open api specifications for the API
+    **openapi_json**
+         will server open api specifications for the API
      :return:
     """
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
@@ -75,8 +91,11 @@ def openapi_json():
 
 
 @docs_route.route('/openapi', methods=['GET'])
+@functools.cache
 def openapi_html():
     """
+    **openapi_html**
+        display openapi json documentation in an html document
 
     :return:
     """
@@ -88,6 +107,7 @@ def openapi_html():
 
 
 @docs_route.route('/github-docs', methods=['GET'])
+# @functools.cache
 def github_docs():
     """
         **github_docs**
@@ -102,12 +122,19 @@ def github_docs():
 
 
 @docs_route.route('/sdk', methods=['GET'])
+@functools.cache
 def sdk_docs():
+    """
+        **sdk_docs**
+
+        documentation python and node sdk
+    """
     context = dict(BASE_URL="https://client.eod-stock-api.site")
     return render_template('docs/sdk.html', **context)
 
 
 @docs_route.route('/sdk/<string:path>', methods=['GET'])
+@functools.cache
 def python_sdk_docs(path: str):
     """
     **python_sdk_docs**
@@ -125,8 +152,10 @@ def python_sdk_docs(path: str):
 
 
 @docs_route.route('/sdk/src/docs/<string:path>', methods=['GET'])
+@functools.cache
 def github_links(path: str):
     """
+    **github_links**
         this handles user clicking links on local documentation and then
         downloads the correct document from github
     :param path:
