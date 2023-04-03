@@ -1,3 +1,5 @@
+// noinspection JSUnresolvedVariable
+
 /**
  * Subscribe
  *
@@ -19,36 +21,49 @@ const paypal_id = document.getElementById('paypal_id');
 let plan_data;
 
 self.addEventListener('load', async (e) => {
-    const response = await fetch(`/plans-all`, {
-    method: 'GET',
-    headers:  {'Content-Type': 'application/json'},
-    mode: 'cors',
-    credentials: "same-origin"
-  });
-  const json_data = await response.json();
-  console.dir(json_data);
-  plan_data = json_data;
+  const response = await fetch(`/plans-all`, {
 
-  basic_plan_button.innerHTML = `
-  <i class="fa fa-dollar">  </i> ${getPlanAmount('BASIC', plan_data.payload )}.00 /Month
-  `
-  professional_plan_button.innerHTML = `
-    <i class="fa fa-dollar">  </i> ${getPlanAmount('PROFESSIONAL', plan_data.payload )}.00 /Month
-  `
-  business_plan_button.innerHTML = `
-  <i class="fa fa-dollar">  </i> ${getPlanAmount('BUSINESS', plan_data.payload )}.00 /Month
-  `
-  enterprise_plan_button.innerHTML = `
-  <i class="fa fa-dollar">  </i> ${getPlanAmount('ENTERPRISE', plan_data.payload )}.00 /Month
-  `
+        method: 'GET',
+        headers:  {'Content-Type': 'application/json'},
+        mode: 'cors',
+        credentials: "same-origin"
+  });
+
+  const json_data = await response.json();
+  const plan_list = json_data.payload;
+  await updatePlanIOs(plan_list);
+  await updatePlanButtons(plan_list);
+  plan_data = plan_list;
 })
 
-function updatePlanIOs(){
-  basic_id.value = getPlanId("BASIC", plan_data.payload);
-  professional_id.value = getPlanId("PROFESSIONAL", plan_data.payload);
-  business_id.value = getPlanId("BUSINESS", plan_data.payload);
-  enterprise_id.value = getPlanId("ENTERPRISE", plan_data.payload);
+async function updatePlanIOs(plan_list){
+  /**
+   * Update Plan Id's
+   */
+  basic_id.value = getPlanId("BASIC", plan_list);
+    professional_id.value = getPlanId("PROFESSIONAL", plan_list);
+    business_id.value = getPlanId("BUSINESS", plan_list);
+    enterprise_id.value = getPlanId("ENTERPRISE", plan_list);
+}
 
+async function updatePlanButtons(plan_list){
+  /**
+   * Will update the front page interface related to plans
+   *
+   */
+
+    basic_plan_button.innerHTML = `
+    <i class="fa fa-dollar">  </i> ${getPlanAmount('BASIC', plan_list )}.00 /Month
+    `
+    professional_plan_button.innerHTML = `
+      <i class="fa fa-dollar">  </i> ${getPlanAmount('PROFESSIONAL', plan_list )}.00 /Month
+    `
+    business_plan_button.innerHTML = `
+    <i class="fa fa-dollar">  </i> ${getPlanAmount('BUSINESS', plan_list )}.00 /Month
+    `
+    enterprise_plan_button.innerHTML = `
+    <i class="fa fa-dollar">  </i> ${getPlanAmount('ENTERPRISE', plan_list )}.00 /Month
+    `
 }
 
 function getPlanId(planName, plans) {
@@ -72,26 +87,26 @@ function getPlanAmount(planName, plans) {
 
 basic_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  updatePlanIOs();
+  // await updatePlanIOs(plan_data);
   await start_process_subscription(basic_id.value);
 });
 
 professional_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  updatePlanIOs();
+  // await updatePlanIOs(plan_data);
   await start_process_subscription(professional_id.value);
 
 });
 
 business_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  updatePlanIOs();
+  // await updatePlanIOs(plan_data);
   await start_process_subscription(business_id.value);
 });
 
 enterprise_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  updatePlanIOs();
+  // await updatePlanIOs(plan_data);
   await start_process_subscription(enterprise_id.value);
 });
 

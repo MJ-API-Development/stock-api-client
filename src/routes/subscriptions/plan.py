@@ -121,8 +121,8 @@ def get_paypal_settings(uuid: str) -> dict:
             plan_logger.exception("Error decoding paypal settings")
             raise ServerInternalError() from e
 
-    # if not verify_signature(response=response):
-    #     abort(401)
+    if not verify_signature(response=response):
+        abort(401)
 
     return json_data
 
@@ -157,7 +157,6 @@ def plan_details(plan_id: str, uuid: str):
     :param uuid:
     :return:
     """
-    plan_logger.info("get_plan_details")
     plan: dict[str, str] = get_plan_details(plan_id)
     return jsonify(plan)
 
@@ -169,7 +168,6 @@ def plans_all():
         about the subscription plan
     :return:
     """
-    plan_logger.info("get_plan_details")
     plan: dict[str, str] = get_all_plans()
     return jsonify(plan)
 
