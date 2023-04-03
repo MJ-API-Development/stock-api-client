@@ -1,3 +1,4 @@
+import functools
 import json
 
 from flask import Blueprint, render_template, redirect, request, jsonify, request, abort
@@ -5,13 +6,17 @@ import requests
 from src.config import config_instance
 from src.exceptions import UnresponsiveServer, ServerInternalError
 from src.logger import init_logger
-from src.routes.authentication.routes import get_headers, verify_signature
+from src.routes.authentication.routes import get_headers, verify_signature, auth_required
 from src.utils import create_id
 
 plan_routes = Blueprint('plan', __name__)
 plan_logger = init_logger('plan_logger')
 
 
+paypal_settings_cache = {}
+
+
+@functools.lru_cache(maxsize=1)
 def get_all_plans() -> list[dict[str, str]]:
     """
 
@@ -31,7 +36,7 @@ def get_all_plans() -> list[dict[str, str]]:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
             raise UnresponsiveServer() from e
         except json.JSONDecodeError as e:
-            plan_logger.exception("Error decoding paypal settings")
+            plan_logger.exception(f"Error decoding paypal settings : {response.text}")
             raise ServerInternalError() from e
 
     if not verify_signature(response=response):
@@ -40,6 +45,7 @@ def get_all_plans() -> list[dict[str, str]]:
     return json_data
 
 
+@functools.lru_cache(maxsize=4)
 def get_plan_details(plan_id: str) -> dict:
     """
         **get_plan_details**
@@ -62,7 +68,7 @@ def get_plan_details(plan_id: str) -> dict:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
             raise UnresponsiveServer() from e
         except json.JSONDecodeError as e:
-            plan_logger.exception("Error decoding paypal settings")
+            plan_logger.exception(f"Error decoding paypal settings : {response.text}")
             raise ServerInternalError() from e
 
     if not verify_signature(response=response):
@@ -71,6 +77,7 @@ def get_plan_details(plan_id: str) -> dict:
     return json_data
 
 
+@functools.lru_cache(maxsize=1024)
 def get_user_data(uuid: str) -> dict:
     """
         given uuid obtain user details from the gateway server
@@ -91,7 +98,7 @@ def get_user_data(uuid: str) -> dict:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
             raise UnresponsiveServer() from e
         except json.JSONDecodeError as e:
-            plan_logger.exception("Error decoding paypal settings")
+            plan_logger.exception(f"Error decoding paypal settings: {response.text}")
             raise ServerInternalError() from e
 
     if not verify_signature(response=response):
@@ -128,6 +135,7 @@ def get_paypal_settings(uuid: str) -> dict:
 
 
 @plan_routes.route('/plan-subscription/<string:plan_id>.<string:uuid>', methods=["GET", "POST"])
+@auth_required
 def plan_subscription(plan_id: str, uuid: str):
     """
         this endpoint will be called by the front page to get details
@@ -142,13 +150,19 @@ def plan_subscription(plan_id: str, uuid: str):
 
         plan = get_plan_details(plan_id)
         user_data = get_user_data(uuid=uuid)
-        paypal_settings = get_paypal_settings(uuid=uuid)
+
+        paypal_settings = paypal_settings_cache.get('settings', None)
+        if paypal_settings is None:
+            paypal_settings = get_paypal_settings(uuid=uuid)
+            paypal_settings_cache['settings'] = paypal_settings
+
         context = dict(plan=plan.get('payload'), user_data=user_data.get("payload"), paypal_settings=paypal_settings)
         return render_template('dashboard/plan_subscriptions.html', **context)
 
 
 # noinspection PyUnusedLocal
 @plan_routes.route('/plan-details/<string:plan_id>.<string:uuid>', methods=["GET"])
+@auth_required
 def plan_details(plan_id: str, uuid: str):
     """
         this endpoint will be called by the front page to get details
@@ -161,18 +175,8 @@ def plan_details(plan_id: str, uuid: str):
     return jsonify(plan)
 
 
-@plan_routes.route('/plans-all', methods=["GET"])
-def plans_all():
-    """
-        this endpoint will be called by the front page to get details
-        about the subscription plan
-    :return:
-    """
-    plan: dict[str, str] = get_all_plans()
-    return jsonify(plan)
-
-
 @plan_routes.route('/subscribe', methods=['POST'])
+@auth_required
 def subscribe():
     """
         **called to actually create a subscription
@@ -203,3 +207,14 @@ def subscribe():
         abort(401)
 
     return json_data
+
+
+@plan_routes.route('/plans-all', methods=["GET"])
+def plans_all():
+    """
+        this endpoint will be called by the front page to get details
+        about the subscription plan
+    :return:
+    """
+    plan: dict[str, str] = get_all_plans()
+    return jsonify(plan)

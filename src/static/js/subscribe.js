@@ -41,9 +41,9 @@ async function updatePlanIOs(plan_list){
    * Update Plan Id's
    */
   basic_id.value = getPlanId("BASIC", plan_list);
-    professional_id.value = getPlanId("PROFESSIONAL", plan_list);
-    business_id.value = getPlanId("BUSINESS", plan_list);
-    enterprise_id.value = getPlanId("ENTERPRISE", plan_list);
+  professional_id.value = getPlanId("PROFESSIONAL", plan_list);
+  business_id.value = getPlanId("BUSINESS", plan_list);
+  enterprise_id.value = getPlanId("ENTERPRISE", plan_list);
 }
 
 async function updatePlanButtons(plan_list){
