@@ -107,7 +107,7 @@ def openapi_html():
 
 
 @docs_route.route('/github-docs', methods=['GET'])
-# @functools.cache
+@functools.cache
 def github_docs():
     """
         **github_docs**

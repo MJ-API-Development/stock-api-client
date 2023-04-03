@@ -10,33 +10,69 @@ const professional_plan_button = document.getElementById('professional_plan');
 const business_plan_button = document.getElementById('business_plan');
 const enterprise_plan_button = document.getElementById('enterprise_plan');
 
+const basic_id = document.getElementById('basic_id');
+const professional_id = document.getElementById('professional_id');
+const business_id = document.getElementById('business_id');
+const enterprise_id = document.getElementById('enterprise_id');
+const paypal_id = document.getElementById('paypal_id');
+
+let plan_data;
+
+self.addEventListener('load', async (e) => {
+    const response = await fetch(`/plans-all`, {
+    method: 'GET',
+    headers:  {'Content-Type': 'application/json'},
+    mode: 'cors',
+    credentials: "same-origin"
+  });
+  const json_data = await response.json();
+  console.dir(json_data);
+  plan_data = json_data;
+
+
+})
+
+function updatePlanIOs(){
+  basic_id.value = getPlanId("BASIC", plan_data.payload);
+  professional_id.value = getPlanId("PROFESSIONAL", plan_data.payload);
+  business_id.value = getPlanId("BUSINESS", plan_data.payload);
+  enterprise_id.value = getPlanId("ENTERPRISE", plan_data.payload);
+
+}
+
+function getPlanId(planName, plans) {
+  for (let i = 0; i < plans.length; i++) {
+    if (plans[i].plan_name.toUpperCase() === planName.toUpperCase()) {
+      return plans[i].plan_id;
+    }
+  }
+  return null; // return null if no match is found
+}
+
 
 basic_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  const plan_type = "basic_plan";
-  await start_process_subscription(plan_type);
-
+  updatePlanIOs();
+  await start_process_subscription(basic_id.value);
 });
 
 professional_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  const plan_type = "professional_plan";
-  await start_process_subscription(plan_type);
+  updatePlanIOs();
+  await start_process_subscription(professional_id.value);
 
 });
 
 business_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  const plan_type = "business_plan";
-  await start_process_subscription(plan_type);
-
+  updatePlanIOs();
+  await start_process_subscription(business_id.value);
 });
 
 enterprise_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  const plan_type = "enterprise_plan";
-  await start_process_subscription(plan_type);
-
+  updatePlanIOs();
+  await start_process_subscription(enterprise_id.value);
 });
 
 // Add event listener for subscription form submission
@@ -95,8 +131,6 @@ function showSubscriptionForm(plan_id, uuid) {
   // Show subscription form and hide login form
   console.log(`will now create plan : ${plan_id}`);
   console.log(`uuid : ${uuid}`);
-  window.location.href = `/plan-subscription/${plan_id}`;
-
-
+  window.location.href = `/plan-subscription/${plan_id}.${uuid}`;
 }
 

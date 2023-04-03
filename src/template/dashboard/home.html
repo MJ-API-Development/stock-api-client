@@ -103,7 +103,10 @@
                           <li>Stock Tickers</li>
                           <li>EOD Data</li>
                         </ul>
-                        <button class="btn btn-dark" id="basic_plan"><i class="fa fa-dollar"> </i> 19.99/month </button>
+                            <form id="basic_plan_form" class="form-horizontal" action="/plan-subscription/">
+                                <input type="hidden" id="basic_id" name="basic_id" value="">
+                                <button type="button" class="btn btn-dark" id="basic_plan"><i class="fa fa-dollar"> </i> 19.99/month </button>
+                            </form>
                       </div>
                       <div class="col-md-3">
                         <h3>Professional</h3>
@@ -122,7 +125,10 @@
                           <li>Technical Data</li>
                           <li>Sentiment Analysis</li>
                         </ul>
-                        <button class="btn btn-dark" id="professional_plan"><i class="fa fa-dollar"> </i> 49.99/month</button>
+                        <form id="professional_plan_form" class="form-horizontal" action="/plan-subscription/">
+                            <input type="hidden" id="professional_id" name="professional_id" value="">
+                         <button type="button" class="btn btn-dark" id="professional_plan"><i class="fa fa-dollar"> </i> 49.99/month</button>
+                        </form>
                       </div>
                       <div class="col-md-3">
                         <h3>Business</h3>
@@ -143,7 +149,10 @@
                           <li>Sentiment Analysis</li>
                           <li>Real Time Social Media Trends</li>
                         </ul>
-                        <button class="btn btn-dark" id="business_plan"><i class="fa fa-dollar"> </i> 199.99/month</button>
+                          <form id="business_plan_form" class="form-horizontal" action="/plan-subscription/">
+                                <input type="hidden" id="business_id" name="business_id" value="">
+                                <button class="btn btn-dark" id="business_plan"><i class="fa fa-dollar"> </i> 199.99/month</button>
+                          </form>
                       </div>
                       <div class="col-md-3">
                         <h3>Enterprise</h3>
@@ -165,7 +174,10 @@
                           <li>Sentiment Analysis</li>
                           <li>Real Time Social Media Trends</li>
                         </ul>
-                        <button class="btn btn-dark" id="enterprise_plan"><i class="fa fa-envelope"> </i> Contact Us</button>
+                          <form id="enterprise_plan_form" class="form-horizontal" action="/plan-subscription/">
+                              <input type="hidden" id="enterprise_id" name="enterprise_id" value="">
+                              <button type="button" class="btn btn-dark" id="enterprise_plan"><i class="fa fa-envelope"> </i> Contact Us</button>
+                         </form>
                       </div>
                 </div>
                 </div>

@@ -1,35 +1,61 @@
 {% extends "layouts/layout.html" %}
 
-{% block title %}Subscribe to {{ plan }} Plan{% endblock %}
+
+{% block headers %}
+    <style>
+    #paypal-button-container {
+      max-width: 150px;
+    }
+    </style>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_settings.CLIENT_ID }}&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+{% endblock %}
 
 {% block content %}
+<div class="right_col" role="main">
+<div class="col-md-12">
+        <div class="card-header">
+            <h3 class="card-title">EOD Stock API - {{ plan.plan_name }} Plan</h3>
+        </div>
+        <div class="card-body">
+        <div class="card-header">
+            <h3></h3>
+            <span class="text-body">
+                    {{ plan.description }}
 
-  <h1>Subscribe to {{ plan.name }} Plan</h1>
-  <p>To subscribe to the {{ plan.name }} Plan, please click the button below:</p>
-  <form id="paypal-form" action="{{ url_for('plan.subscribe') }}" method="POST">
-    <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
-    <div id="paypal-button-container"></div>
-    <button type="submit">Subscribe with PayPal</button>
-  </form>
+            </span>
+        </div>
+            {#  TODO include plan details #}
+            {% if plan.name == 'business' %}
+                {% include 'dashboard/plans/business.html' %}
+            {% elif plan.name == 'basic' %}
+                {% include 'dashboard/plans/basic.html' %}
+            {% elif plan.name == 'enterprise' %}
+                {% include 'dashboard/plans/enterprise.html' %}
+            {% else %}
+                {% include 'dashboard/plans/professional.html' %}
+            {% endif %}
+            <div class="card-body">
+                  <h3>{{ plan.plan_name }}</h3>
+                <h4>                <h4></h4>
+</h4>
+                <form class="form-horizontal">
+                  <div id="paypal-button-container"></div>
+                </form>
+            </div>
+            <form class="form-horizontal" id="user_subscription_data_form">
+                <input id="uuid" type="hidden" value="{{ user_data.uuid }}" />
+                <input id="plan_id" type="hidden" value="{{ plan.plan_id }}" />
+                <input id="paypal_id" type="hidden" value="{{ plan.paypal_id }}" />
+
+            </form>
+            <div class="text-body" id="subscription_response_message"></div>
+        </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-
   <!-- Include the PayPal JavaScript SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_settings.CLIENT_ID }}&vault=true"></script>
-  <script>
-    // Render the PayPal subscription button
-    paypal.Buttons({
-      createSubscription: function(data, actions) {
-        // Set up the subscription plan details
-        return actions.subscription.create({
-          plan_id: '{{ plan.paypal_id }}'
-        });
-      },
-      onApprove: function(data, actions) {
-        // Submit the form to process the subscription on the server
-        document.getElementById('paypal-form').submit();
-      }
-    }).render('#paypal-button-container');
-  </script>
+s<script src="{{ url_for('static', filename='js/paypalbutton.js') }}"></script>
 {% endblock %}
+

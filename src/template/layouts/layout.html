@@ -6,7 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/ico" />
+  {% block title %}
     <title>EOD Stock API </title>
+  {% endblock %}
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Font Awesome -->
@@ -26,7 +28,9 @@
     <link href="{{ url_for('static', filename='vendors/dropzone/dist/min/dropzone.min.css') }}" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="{{ url_for('static', filename='build/css/custom.min.css') }}" rel="stylesheet">
+     {% block headers %}
 
+      {% endblock %}
   </head>
   <body class="nav-md">
     <div class="container body">
@@ -108,6 +112,7 @@
     <!-- Custom Theme Scripts -->
     <script src="{{ url_for('static', filename='build/js/custom.js') }}"></script>
     {% block scripts %}
+{#        custom scripts #}
     {% endblock scripts %}
   </body>
 </html>

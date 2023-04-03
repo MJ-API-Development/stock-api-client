@@ -1,0 +1,42 @@
+{% extends "layouts/layout.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+<div class="col-md-12">
+        <h2>EOD Stock API - Contact US</h2>
+
+<form id="contact_form" method="post" action="{{ url_for('contact.contact') }}">
+  <input type="hidden" name="csrf_token" id="csrf_token" value="{{csrf_token}}" />
+
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" class="form-control" required>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" class="form-control" required>
+  </div>
+
+  <div class="form-group">
+    <label for="message">Message</label>
+    <textarea name="message"  id="message" class="form-control" rows="5" required></textarea>
+  </div>
+
+    <button type="submit" class="btn btn-dark btn-outline-info">Submit</button>
+    <button type="reset" class="btn btn-danger btn-outline-info"> Reset</button>
+
+    <div class="form-group">
+        <span class="title title-success" id="success_message"></span>
+    </div>
+</form>
+
+</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/eod.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard/contact.js') }}"></script>
+{% endblock %}
