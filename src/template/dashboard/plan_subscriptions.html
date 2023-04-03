@@ -25,11 +25,11 @@
             </span>
         </div>
             {#  TODO include plan details #}
-            {% if plan.name == 'business' %}
+            {% if plan.plan_name == 'BUSINESS' %}
                 {% include 'dashboard/plans/business.html' %}
-            {% elif plan.name == 'basic' %}
+            {% elif plan.plan_name == 'BASIC' %}
                 {% include 'dashboard/plans/basic.html' %}
-            {% elif plan.name == 'enterprise' %}
+            {% elif plan.plan_name == 'ENTERPRISE' %}
                 {% include 'dashboard/plans/enterprise.html' %}
             {% else %}
                 {% include 'dashboard/plans/professional.html' %}

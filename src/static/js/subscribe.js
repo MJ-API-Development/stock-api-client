@@ -29,7 +29,18 @@ self.addEventListener('load', async (e) => {
   console.dir(json_data);
   plan_data = json_data;
 
-
+  basic_plan_button.innerHTML = `
+  <i class="fa fa-dollar">  </i> ${getPlanAmount('BASIC', plan_data.payload )}.00 /Month
+  `
+  professional_plan_button.innerHTML = `
+    <i class="fa fa-dollar">  </i> ${getPlanAmount('PROFESSIONAL', plan_data.payload )}.00 /Month
+  `
+  business_plan_button.innerHTML = `
+  <i class="fa fa-dollar">  </i> ${getPlanAmount('BUSINESS', plan_data.payload )}.00 /Month
+  `
+  enterprise_plan_button.innerHTML = `
+  <i class="fa fa-dollar">  </i> ${getPlanAmount('ENTERPRISE', plan_data.payload )}.00 /Month
+  `
 })
 
 function updatePlanIOs(){
@@ -44,6 +55,15 @@ function getPlanId(planName, plans) {
   for (let i = 0; i < plans.length; i++) {
     if (plans[i].plan_name.toUpperCase() === planName.toUpperCase()) {
       return plans[i].plan_id;
+    }
+  }
+  return null; // return null if no match is found
+}
+
+function getPlanAmount(planName, plans) {
+  for (let i = 0; i < plans.length; i++) {
+    if (plans[i].plan_name.toUpperCase() === planName.toUpperCase()) {
+      return plans[i].Amount;
     }
   }
   return null; // return null if no match is found
