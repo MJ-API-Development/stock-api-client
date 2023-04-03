@@ -34,6 +34,7 @@
             {% else %}
                 {% include 'dashboard/plans/professional.html' %}
             {% endif %}
+
             <div class="card-body">
 
                 <form class="form-horizontal">
@@ -44,7 +45,6 @@
                 <input id="uuid" type="hidden" value="{{ user_data.uuid }}" />
                 <input id="plan_id" type="hidden" value="{{ plan.plan_id }}" />
                 <input id="paypal_id" type="hidden" value="{{ plan.paypal_id }}" />
-
             </form>
             <div class="text-body" id="subscription_response_message"></div>
         </div>
@@ -54,6 +54,6 @@
 
 {% block scripts %}
   <!-- Include the PayPal JavaScript SDK -->
-s<script src="{{ url_for('static', filename='js/paypalbutton.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/paypal_button.js') }}"></script>
 {% endblock %}
 

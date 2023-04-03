@@ -15,7 +15,6 @@ self.addEventListener('load', async (e) => {
       createSubscription: function(data, actions) {
           // Set up the subscription plan details
           const paypal_id = document.getElementById('paypal_id').value;
-          console.log('PAYPAL ID: ' + paypal_id);
           return actions.subscription.create({
               env: 'production',
               plan_id: paypal_id,
@@ -46,9 +45,11 @@ self.addEventListener('load', async (e) => {
           const billing_token = data.billingToken;
           const payer_id = data.payerID;
           const facilitatorAccessToken = data.facilitatorAccessToken;
+
           const subscription_data = {
               uuid, plan_id, paypal_id, billing_token, payer_id, subscription_id, facilitatorAccessToken
           }
+
           const url = '/subscribe';
           const request = new Request( url,{
               method: 'POST',
@@ -72,12 +73,14 @@ self.addEventListener('load', async (e) => {
           console.log(`Subscription canceled: ${JSON.stringify(data)}`);
           // data: { reason }
           // Display a message to the user indicating that the subscription was canceled
-
+          window.location.href = '/'
       },
       onError: function(err) {
           // Called when an error occurs during subscription creation or approval
           console.log(`Error: ${err}`);
           // Display an error message to the user
+            const responseContainer = document.getElementById('subscription_response_message');
+            responseContainer.innerHTML = err;
       }
   }).render('#paypal-button-container')
 
@@ -87,7 +90,7 @@ function create_account_button() {
   const button = document.createElement('button');
   button.innerHTML = 'Proceed to your account';
   button.addEventListener('click', () => {
-    window.location.href = 'https://eod-stock-api.site/account';
+    window.location.href = '/account';
   });
   return button;
 }
