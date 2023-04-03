@@ -26,7 +26,6 @@ def get_all_plans() -> list[dict[str, str]]:
             response = requests.get(endpoint, headers=headers, json=data)
             response.raise_for_status()
             json_data = response.json()
-            plan_logger.info(f"Response From get All Plans : {response.text}")
             # Check if the request was successful and return the response body as a dict
         except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
@@ -58,7 +57,6 @@ def get_plan_details(plan_id: str) -> dict:
             response = session.get(endpoint, headers=headers, json=data)
             response.raise_for_status()
             json_data = response.json()
-            plan_logger.info(f"Response from Plan Details : {response.text}")
             # Check if the request was successful and return the response body as a dict
         except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
@@ -89,7 +87,6 @@ def get_user_data(uuid: str) -> dict:
             response = session.get(endpoint, headers=headers)
             response.raise_for_status()
             json_data = response.json()
-            plan_logger.info(f"Response from User Data : {response.text}")
         except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
             raise UnresponsiveServer() from e
@@ -118,7 +115,6 @@ def get_paypal_settings(uuid: str) -> dict:
             response = session.get(endpoint, headers=headers)
             response.raise_for_status()
             json_data = response.json()
-            plan_logger.info(f"Response from PayPal Settings : {response.text}")
         except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
             raise UnresponsiveServer() from e
         except json.JSONDecodeError as e:
@@ -127,7 +123,7 @@ def get_paypal_settings(uuid: str) -> dict:
 
     # if not verify_signature(response=response):
     #     abort(401)
-    print("PAYPAL DATA : {}".format(json_data))
+
     return json_data
 
 
@@ -147,7 +143,6 @@ def plan_subscription(plan_id: str, uuid: str):
         plan = get_plan_details(plan_id)
         user_data = get_user_data(uuid=uuid)
         paypal_settings = get_paypal_settings(uuid=uuid)
-        print(f"IS PLAN DEFINED : {plan}")
         context = dict(plan=plan.get('payload'), user_data=user_data.get("payload"), paypal_settings=paypal_settings)
         return render_template('dashboard/plan_subscriptions.html', **context)
 
@@ -200,7 +195,6 @@ def subscribe():
             response = session.post(endpoint, json=json_data, headers=headers)
             response.raise_for_status()
             json_data = response.json()
-            plan_logger.info(f"Response from Subscriptions : {response.text}")
         except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
             raise UnresponsiveServer() from e
         except json.JSONDecodeError as e:
