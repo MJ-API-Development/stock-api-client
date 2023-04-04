@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class Contacts(BaseModel):
     """
         ORM Model for Contacts
+
     """
     uuid: str | None
     contact_id: str | None
@@ -11,3 +12,5 @@ class Contacts(BaseModel):
     email: str
     message: str
     timestamp: float
+
+# TODO add verification for contact fields

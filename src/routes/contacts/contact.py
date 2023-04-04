@@ -14,13 +14,14 @@ contact_route = Blueprint("contact", __name__)
 @user_details
 def contact(user_data: dict[str, str]):
     """
-
+    TODO - convert to a Ticket System
     :return:
     """
     if request.method == 'GET':
         context = dict(BASE_URL="eod-stock-api.site", user_data=user_data)
         return render_template('dashboard/contact.html', **context)
     else:
+        # TODO Catch click bouncing here
         data = request.get_json()
         uuid = data.get("uuid", create_id())
         name = data.get("name")
@@ -34,14 +35,19 @@ def contact(user_data: dict[str, str]):
         base_url = config_instance().GATEWAY_SETTINGS.BASE_URL
         url: str = f"{base_url}/_admin/contacts"
         _headers = get_headers(user_data=contact_instance.dict())
-        try:
-            response = requests.post(url=url, json=contact_instance.dict(), headers=_headers)
-        except requests.exceptions.ConnectionError:
-            raise UnresponsiveServer()
-        except requests.exceptions.Timeout:
-            raise UnresponsiveServer()
 
-        if response.status_code not in [200, 201, 401]:
+        with requests.Session() as request_session:
+            try:
+                response: requests.Response = request_session.post(url=url, json=contact_instance.dict(),
+                                                                   headers=_headers)
+                response.raise_for_status()
+
+            except requests.exceptions.ConnectionError:
+                raise UnresponsiveServer()
+            except requests.exceptions.Timeout:
+                raise UnresponsiveServer()
+
+        if response.status_code not in [200, 201]:
             raise UnresponsiveServer()
 
         if not verify_signature(response=response):

@@ -32,10 +32,12 @@ def get_account(uuid: str):
         with requests.Session() as request_session:
             try:
                 response = request_session.get(url=_url, json=user_data, headers=_header)
+                response.raise_for_status()
             except requests.exceptions.ConnectionError:
                 raise UnresponsiveServer()
             except requests.exceptions.Timeout:
                 raise UnresponsiveServer()
+            # TODO try catching HTTP Errors
 
         if response.status_code not in [200, 401]:
             raise UnresponsiveServer()
@@ -68,6 +70,7 @@ def update_account(uuid: str):
     with requests.Session() as request_session:
         try:
             response = request_session.put(url=_url, json=user_data, headers=_headers)
+            response.raise_for_status()
         except requests.exceptions.ConnectionError:
             raise UnresponsiveServer()
         except requests.exceptions.Timeout:

@@ -35,7 +35,6 @@ def get_headers(user_data: dict) -> dict[str, str]:
 def register():
     if request.method == 'POST':
         user_data = request.get_json()
-        print(user_data)
 
         account_base = AccountCreate(**user_data)
         _path = config_instance().GATEWAY_SETTINGS.CREATE_USER_URL
