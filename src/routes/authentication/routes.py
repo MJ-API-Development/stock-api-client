@@ -38,17 +38,19 @@ def register():
         print(user_data)
 
         account_base = AccountCreate(**user_data)
-        print(account_base)
         _path = config_instance().GATEWAY_SETTINGS.CREATE_USER_URL
         _base = config_instance().GATEWAY_SETTINGS.BASE_URL
         _url = f"{_base}{_path}"
         _headers = get_headers(user_data=account_base.dict())
-        print(f"registering new user : {_url}")
-        try:
-            response = requests.post(url=_url, data=account_base.json(), headers=_headers)
-            print(response.text)
-        except requests.exceptions.ConnectionError:
-            raise UnresponsiveServer()
+
+        with requests.Session() as request_session:
+            try:
+                response = request_session.post(url=_url, data=account_base.json(), headers=_headers)
+
+            except requests.exceptions.ConnectionError:
+                raise UnresponsiveServer()
+            except requests.exceptions.Timeout:
+                raise UnresponsiveServer()
 
         if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()
@@ -76,6 +78,14 @@ def register():
 
 @auth_handler.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    **login - POST **
+        will authenticate login credentials and also create new
+        user_session
+    ** login GET **
+        will return the login form
+    :return:
+    """
     if request.method == 'POST':
         request_data = request.get_json()
         email = request_data['username']
@@ -86,11 +96,14 @@ def login():
         _path = config_instance().GATEWAY_SETTINGS.LOGIN_URL
         _base = config_instance().GATEWAY_SETTINGS.BASE_URL
         _url = f"{_base}{_path}"
-        try:
-            response = requests.post(url=_url, json=user_data, headers=_headers)
-            auth_logger.info(response.text)
-        except requests.exceptions.ConnectionError:
-            raise UnresponsiveServer()
+        with requests.Session() as request_session:
+            try:
+                response = request_session.post(url=_url, json=user_data, headers=_headers)
+                auth_logger.info(response.text)
+            except requests.exceptions.ConnectionError:
+                raise UnresponsiveServer()
+            except requests.exceptions.Timeout:
+                raise UnresponsiveServer()
 
         if response.status_code not in [200, 201, 401]:
             raise UnresponsiveServer()

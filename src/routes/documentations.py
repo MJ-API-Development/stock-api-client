@@ -164,7 +164,12 @@ def github_links(path: str):
     path = request.full_path
     if path.startswith("/sdk/src/docs/"):
         url = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
-        response = requests.get(url)
+        with requests.Session() as session:
+            try:
+                response = session.get(url)
+            except requests.ConnectionError as e:
+                return render_template("docs/error/docs.html")
+
         html_content = markdown.markdown(response.content.decode('utf-8'))
         context = dict(github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)

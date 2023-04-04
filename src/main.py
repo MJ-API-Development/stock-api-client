@@ -5,10 +5,10 @@ from jwt import ExpiredSignatureError
 from src.config import config_instance
 from src.exceptions import UnAuthenticatedError
 
-
 user_session = {}
 sitemap = Sitemap()
 cors = CORS()
+
 
 def create_app(config=config_instance()) -> Flask:
     """

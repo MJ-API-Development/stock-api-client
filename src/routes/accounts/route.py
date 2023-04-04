@@ -1,6 +1,5 @@
 import requests
 from flask import request, render_template, session, Blueprint, abort, jsonify
-
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, AccountResponseSchema
 from src.logger import init_logger
@@ -19,20 +18,24 @@ def account():
 
 @account_handler.route('/account/<string:uuid>', methods=['GET'])
 def get_account(uuid: str):
-    """user data must already be contained on the session so just return that data"""
-    user_data = session.get(uuid)
-    if uuid and user_data:
+    """user data must already be contained on the
+    session so just return that data"""
+    user_data = user_session.get(uuid)
+    if uuid and (user_data is not None):
         account_logger.info(f"User data : {user_data}")
         payload = dict(status=True, payload=user_data, message="successfully found user data")
     else:
-        _base = config_instance().GATEWAY_SETTINGS.BASE_URL
+        _base: str = config_instance().GATEWAY_SETTINGS.BASE_URL
         _url = f"{_base}/_admin/user/{uuid}"
-        user_data = dict(uuid=uuid)
-        _header = get_headers(user_data=user_data)
-        try:
-            response = requests.get(url=_url, json=user_data, headers=_header)
-        except requests.exceptions.ConnectionError:
-            raise UnresponsiveServer()
+        user_data: dict[str, str] = dict(uuid=uuid)
+        _header: dict[str, str] = get_headers(user_data=user_data)
+        with requests.Session() as request_session:
+            try:
+                response = request_session.get(url=_url, json=user_data, headers=_header)
+            except requests.exceptions.ConnectionError:
+                raise UnresponsiveServer()
+            except requests.exceptions.Timeout:
+                raise UnresponsiveServer()
 
         if response.status_code not in [200, 401]:
             raise UnresponsiveServer()
@@ -62,10 +65,13 @@ def update_account(uuid: str):
 
     _base = config_instance().GATEWAY_SETTINGS.BASE_URL
     _url = f"{_base}/_admin/user"
-    try:
-        response = requests.put(url=_url, json=user_data, headers=_headers)
-    except requests.exceptions.ConnectionError:
-        raise UnresponsiveServer()
+    with requests.Session() as request_session:
+        try:
+            response = request_session.put(url=_url, json=user_data, headers=_headers)
+        except requests.exceptions.ConnectionError:
+            raise UnresponsiveServer()
+        except requests.exceptions.Timeout:
+            raise UnresponsiveServer()
 
     if response.status_code not in [200, 201, 401]:
         raise UnresponsiveServer()
