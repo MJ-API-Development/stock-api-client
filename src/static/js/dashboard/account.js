@@ -100,6 +100,7 @@ self.addEventListener('load', async (e) => {
 
 
 async function refresh_account_details(response){
+
     let json_data = await response.json();
     // Handle the JSON data
     console.dir(json_data)
@@ -306,7 +307,6 @@ async function populatePlansSelect() {
       credentials: 'same-origin',
     }));
     if ((response.headers.has('Content-type')) && (response.headers['Content-type'] === 'application/json')){
-      alert("found correct headers");
           const plans = await response.json();
           // Clear existing options
           plansSelect.innerHTML = '<option> </option>';
@@ -317,7 +317,7 @@ async function populatePlansSelect() {
             plansSelect.appendChild(option);
           });
     }else{
-      alert("bad headers");
+
     }
   } catch (error) {
     console.error(error);

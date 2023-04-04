@@ -218,7 +218,10 @@ def auth_required(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        request_data = request.get_json()
+
+        # if request.headers.get('Content-Type')  == 'application/json':
+        #     request_data = request.get_json()
+
         # uuid = request_data.get('uuid', kwargs.get('uuid'))
         # if uuid is None:
         token = request.headers.get('X-Auth-Token', None)

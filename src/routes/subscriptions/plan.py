@@ -175,23 +175,26 @@ def plan_subscription(plan_id: str, uuid: str) -> flask.Response:
 
 # noinspection PyUnusedLocal
 @plan_routes.route('/plan-details/<string:plan_id>.<string:uuid>', methods=["GET"])
-def plan_details(plan_id: str, uuid: str):
+@auth_required
+def plan_details(user_data: dict[str, str], plan_id: str, uuid: str) -> flask.Response:
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
     :param plan_id:
     :param uuid:
-    :return:
+    :param user_data:
+    :return: flask.Response
     """
     return jsonify(get_plan_details(plan_id=plan_id))
 
 
 @plan_routes.route('/subscribe', methods=['POST'])
-def subscribe() -> flask.Response:
+@auth_required
+def subscribe(user_data: dict[str, str]) -> flask.Response:
     """
         **called to actually create a subscription
         this is after a person has already approved the subscription on paypal
-    :return:
+    :return: flask.Response
     """
     # subscription_data: dict[str, str] = request.get_json()
     # subscription_data = dict(uuid=uuid, plan_id=plan_id, payment_method="paypal")

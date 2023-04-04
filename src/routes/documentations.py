@@ -47,7 +47,7 @@ def documentations_routes(params: dict[str, str]) -> dict:
 
 
 @docs_route.route('/redoc', methods=['GET'])
-@functools.cache
+@functools.lru_cache(maxsize=1)
 def redoc():
     """
         **redoc**
@@ -63,7 +63,7 @@ def redoc():
 
 
 @docs_route.route('/redoc.standalone.js')
-@functools.cache
+@functools.lru_cache(maxsize=1)
 def send_js():
     """
     **send_js**
@@ -91,7 +91,7 @@ def openapi_json():
 
 
 @docs_route.route('/openapi', methods=['GET'])
-@functools.cache
+@functools.lru_cache(maxsize=1)
 def openapi_html():
     """
     **openapi_html**
@@ -107,7 +107,7 @@ def openapi_html():
 
 
 @docs_route.route('/github-docs', methods=['GET'])
-@functools.cache
+@functools.lru_cache(maxsize=1)
 def github_docs():
     """
         **github_docs**
@@ -122,7 +122,7 @@ def github_docs():
 
 
 @docs_route.route('/sdk', methods=['GET'])
-@functools.cache
+@functools.lru_cache(maxsize=1)
 def sdk_docs():
     """
         **sdk_docs**
@@ -134,7 +134,7 @@ def sdk_docs():
 
 
 @docs_route.route('/sdk/<string:path>', methods=['GET'])
-@functools.cache
+@functools.lru_cache(maxsize=1024)
 def python_sdk_docs(path: str):
     """
     **python_sdk_docs**
@@ -152,7 +152,7 @@ def python_sdk_docs(path: str):
 
 
 @docs_route.route('/sdk/src/docs/<string:path>', methods=['GET'])
-@functools.cache
+@functools.lru_cache(maxsize=1024)
 def github_links(path: str):
     """
     **github_links**
