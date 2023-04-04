@@ -1,5 +1,7 @@
 import json
 import time
+
+import flask
 import requests
 from flask import Blueprint, render_template, request, abort, jsonify
 from src.config import config_instance
@@ -18,13 +20,13 @@ def get_bouncer_key(headers: dict[str, str, tuple[str, str]]) -> str:
     return ip.split(',')[0] if ip else request.remote_addr
 
 
-def debouncer():
+def debounce_requests() -> None:
     """simply debounce too many requests being made from the same ip addresses"""
     key = get_bouncer_key(headers=request.headers)
     request_time = time.monotonic()
     if bouncer.get(key) is not None:
         remainder = request_time - bouncer.get(key)
-        if remainder > 1:
+        if remainder < 1:
             abort(429)
         bouncer[key] = request_time
 
@@ -32,10 +34,10 @@ def debouncer():
 # noinspection PyShadowingNames
 @contact_route.route('/contact', methods=['GET'])
 @user_details
-def contact(user_data: dict[str, str]):
+def contact(user_data: dict[str, str]) -> flask.Response:
     """
     TODO - convert to a Ticket System
-    :return:
+    :return: flask.Response
     """
     context = dict(BASE_URL="eod-stock-api.site", user_data=user_data)
     return render_template('dashboard/contact.html', **context)
@@ -43,17 +45,20 @@ def contact(user_data: dict[str, str]):
 
 @contact_route.route('/contact', methods=['POST'])
 @user_details
-def create_contact(user_data: dict[str, str]):
+def create_contact(user_data: dict[str, str]) -> flask.Response:
     # TODO Catch click bouncing here
-    debouncer()
+    debounce_requests()
     contact_instance: Contacts = Contacts(**request.get_json())
     contact_instance.contact_id = create_id()
+
     if contact_instance.uuid is None:
         contact_instance.uuid = user_data.get('uuid', create_id())
+
     if (contact_instance.email is None) and user_data.get('email'):
         contact_instance.email = user_data.get('email')
     else:
         return jsonify(dict(message='Email is required, or Login'))
+
     if (contact_instance.name is None) and user_data.get('first_name'):
         contact_instance.name = user_data.get('first_name')
     else:
