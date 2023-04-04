@@ -18,6 +18,7 @@ def home(user_data: dict[str, str]):
 
 
 @home_route.route('/status')
+@functools.lru_cache(maxsize=128)
 @user_details
 def status(user_data: dict[str, str]):
     if user_data is None:
@@ -28,6 +29,7 @@ def status(user_data: dict[str, str]):
 
 
 @home_route.route('/pricing')
+@functools.lru_cache(maxsize=128)
 @user_details
 def pricing(user_data: dict[str, str]):
     if user_data is None:
