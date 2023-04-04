@@ -24,6 +24,7 @@ def get_account(uuid: str):
     if uuid and (user_data is not None):
         account_logger.info(f"User data : {user_data}")
         payload = dict(status=True, payload=user_data, message="successfully found user data")
+        return jsonify(payload)
     else:
         _base: str = config_instance().GATEWAY_SETTINGS.BASE_URL
         _url = f"{_base}/_admin/user/{uuid}"

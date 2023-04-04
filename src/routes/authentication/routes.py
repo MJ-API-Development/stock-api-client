@@ -165,6 +165,7 @@ def verify_authentication_token(token: str):
         raise UnAuthenticatedError()
     try:
         # Decode the token using the secret key
+
         payload = jwt.decode(message=token, key=config_instance().SECRET_KEY, algorithms=['HS256'],
                              do_time_check=True, verify=True)
 

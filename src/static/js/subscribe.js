@@ -87,26 +87,26 @@ function getPlanAmount(planName, plans) {
 
 basic_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  // await updatePlanIOs(plan_data);
+  await updatePlanIOs(plan_data);
   await start_process_subscription(basic_id.value);
 });
 
 professional_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  // await updatePlanIOs(plan_data);
+  await updatePlanIOs(plan_data);
   await start_process_subscription(professional_id.value);
 
 });
 
 business_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  // await updatePlanIOs(plan_data);
+  await updatePlanIOs(plan_data);
   await start_process_subscription(business_id.value);
 });
 
 enterprise_plan_button.addEventListener('click', async (event) => {
   event.preventDefault();
-  // await updatePlanIOs(plan_data);
+  await updatePlanIOs(plan_data);
   await start_process_subscription(enterprise_id.value);
 });
 
@@ -126,7 +126,7 @@ async function processSubscription(account_data, plan) {
   // Check if user has an existing account
   const uuid = account_data.uuid;
   const account_exist = await checkExistingAccount(uuid);
-
+  console.log("Account exists: " + account_exist)
   if (account_exist) {
     // If user has an existing account, proceed to subscription form
     await showSubscriptionForm(plan, uuid);
@@ -152,20 +152,14 @@ async function checkExistingAccount(uuid) {
     mode: 'cors',
     credentials: "same-origin"
   });
-
-  // If response status is 200, account exists
-  if (response.status === 200) {
-    return true;
-  }
-  // If response status is not 200, account does not exist
-  return false;
+  return response.ok
 }
 
-// Function to show subscription form
 function showSubscriptionForm(plan_id, uuid) {
   // Show subscription form and hide login form
-  console.log(`will now create plan : ${plan_id}`);
-  console.log(`uuid : ${uuid}`);
-  window.location.href = `/plan-subscription/${plan_id}.${uuid}`;
+  // const xhr = new XMLHttpRequest();
+  // xhr.open('GET', `/plan-subscription/${plan_id}.${uuid}`, true);
+  // xhr.setRequestHeader('Content-Type', 'text/html');
+  // xhr.send();
+  window.location.href = `/plan-subscription/${plan_id}.${uuid}`
 }
-

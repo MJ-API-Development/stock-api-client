@@ -305,17 +305,20 @@ async function populatePlansSelect() {
       mode: 'cors',
       credentials: 'same-origin',
     }));
-    const plans = await response.json();
-
-    // Clear existing options
-    plansSelect.innerHTML = '<option> </option>';
-
-    // Create new option elements for each plan
-    plans.forEach(plan => {
-      const option = document.createElement('option');
-      option.textContent = `${plan.plan_name} - $ ${plan.price}`;
-      plansSelect.appendChild(option);
-    });
+    if ((response.headers.has('Content-type')) && (response.headers['Content-type'] === 'application/json')){
+      alert("found correct headers");
+          const plans = await response.json();
+          // Clear existing options
+          plansSelect.innerHTML = '<option> </option>';
+          // Create new option elements for each plan
+          plans.forEach(plan => {
+            const option = document.createElement('option');
+            option.textContent = `${plan.plan_name} - $ ${plan.price}`;
+            plansSelect.appendChild(option);
+          });
+    }else{
+      alert("bad headers");
+    }
   } catch (error) {
     console.error(error);
   }

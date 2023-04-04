@@ -20,7 +20,6 @@ paypal_settings_cache: dict[str, dict[str, str | int]] = {}
 cache_get_paypal_settings: Callable = paypal_settings_cache.get
 
 
-@functools.lru_cache(maxsize=1)
 def get_all_plans() -> list[dict[str, str]]:
     """
         will fetch all plans from the gateway
@@ -53,7 +52,6 @@ def get_all_plans() -> list[dict[str, str]]:
     return all_plan_details
 
 
-@functools.lru_cache(maxsize=4)
 def get_plan_details(plan_id: str) -> dict[str, str | int]:
     """
         **get_plan_details**
@@ -85,7 +83,6 @@ def get_plan_details(plan_id: str) -> dict[str, str | int]:
     return _plan_details
 
 
-@functools.lru_cache(maxsize=1024)
 def get_user_data(uuid: str) -> dict[str, str | int]:
     """
         given uuid obtain user details from the gateway server
@@ -128,8 +125,10 @@ def get_paypal_settings(uuid: str) -> dict[str, str | int]:
     with requests.Session() as request_session:
         try:
             response: requests.Response = request_session.get(url=endpoint, headers=headers)
+            # plan_logger.info(f"PayPal settings : {response.headers['Content-Type']}")
             response.raise_for_status()
             paypal_settings: dict[str, str | int] = response.json()
+
         except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
             plan_logger.exception(f"Exception - get_paypal_settings: {e}")
             raise UnresponsiveServer() from e
@@ -143,9 +142,8 @@ def get_paypal_settings(uuid: str) -> dict[str, str | int]:
     return paypal_settings
 
 
-@plan_routes.route('/plan-subscription/<string:plan_id>.<string:uuid>', methods=["GET", "POST"])
-@auth_required
-def plan_subscription(plan_id: str, uuid: str) -> flask.Response:
+@plan_routes.route('/plan-subscription/<string:plan_id>.<string:uuid>', methods=["GET"])
+def plan_subscription(plan_id: str, uuid: str):
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
@@ -153,29 +151,28 @@ def plan_subscription(plan_id: str, uuid: str) -> flask.Response:
     :param uuid:
     :return:
     """
+
     if request.method.casefold() == "get":
         if not plan_id:
             return redirect('/')
 
         plan: dict[str, str | int] = get_plan_details(plan_id)
         user_data: dict[str, str | int] = get_user_data(uuid=uuid)
-
-        paypal_settings: dict[str, dict[str, str | int]] = cache_get_paypal_settings('settings', None)
-        if paypal_settings is None:
-            paypal_settings = get_paypal_settings(uuid=uuid)
-            paypal_settings_cache['settings'] = paypal_settings
+        _paypal_settings: dict[str, dict[str, str | int]] = cache_get_paypal_settings('settings', None)
+        if _paypal_settings is None:
+            _paypal_settings = get_paypal_settings(uuid=uuid)
+            paypal_settings_cache['settings'] = _paypal_settings
 
         context: dict[str, dict[str, str]] = dict(plan=plan.get("payload", {}),
                                                   user_data=user_data.get("payload", {}),
-                                                  paypal_settings=paypal_settings)
+                                                  paypal_settings=_paypal_settings)
 
         return render_template('dashboard/plan_subscriptions.html', **context)
 
 
 # noinspection PyUnusedLocal
 @plan_routes.route('/plan-details/<string:plan_id>.<string:uuid>', methods=["GET"])
-@auth_required
-def plan_details(plan_id: str, uuid: str) -> flask.Response:
+def plan_details(plan_id: str, uuid: str):
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
@@ -183,13 +180,11 @@ def plan_details(plan_id: str, uuid: str) -> flask.Response:
     :param uuid:
     :return:
     """
-    plan: dict[str, str] = get_plan_details(plan_id)
-    return jsonify(plan)
+    return jsonify(get_plan_details(plan_id=plan_id))
 
 
 @plan_routes.route('/subscribe', methods=['POST'])
-@auth_required
-def subscribe() -> flask.Response:
+def subscribe():
     """
         **called to actually create a subscription
         this is after a person has already approved the subscription on paypal
@@ -202,11 +197,11 @@ def subscribe() -> flask.Response:
 
     base_url: str = config_instance().GATEWAY_SETTINGS.BASE_URL
     endpoint: str = f"{base_url}/_admin/subscriptions"
-    headers: dict[str, str] = get_headers(user_data=paypal_subscription)
+    _headers: dict[str, str] = get_headers(user_data=paypal_subscription.dict())
 
     with requests.Session() as request_session:
         try:
-            response = request_session.post(endpoint, json=paypal_subscription.dict(), headers=headers)
+            response = request_session.post(endpoint, json=paypal_subscription.dict(), headers=_headers)
             response.raise_for_status()
             json_data: dict[str, str | int] = response.json()
 
@@ -224,7 +219,7 @@ def subscribe() -> flask.Response:
 
 
 @plan_routes.route('/plans-all', methods=["GET"])
-def plans_all() -> flask.Response:
+def plans_all():
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
