@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel
 
 
@@ -13,3 +12,23 @@ class SubscriptionModel(BaseModel):
     api_requests_balance: int | None = None
     approval_url: str | None = None
     paypal_id: str | None = None
+
+
+class PayPalSubscriptionModel(BaseModel):
+    """
+    captures subscription data from PayPalSubscriptions
+    const subscription_data = {
+        uuid, plan_id, paypal_id, billing_token, payer_id, subscription_id, facilitatorAccessToken
+    }
+    """
+    uuid: str
+    plan_id: str
+    paypal_id: str
+    billing_token: str
+    payer_id: str
+    subscription_id: str
+    facilitatorAccessToken: str
+    payment_method: str = "paypal"
+
+
+

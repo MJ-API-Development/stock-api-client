@@ -19,3 +19,8 @@ class UnresponsiveServer(HTTPException):
 class UnAuthenticatedError(HTTPException):
     code = 401
     description = 'Unauthorized: Authentication is required to access this resource.'
+
+
+class BadResponseError(HTTPException):
+    code = 400
+    description = "Bad Response: server responding with unreadable data please inform admins"
