@@ -20,6 +20,7 @@ paypal_settings_cache: dict[str, dict[str, str | int]] = {}
 cache_get_paypal_settings: Callable = paypal_settings_cache.get
 
 
+@functools.lru_cache(maxsize=1)
 def get_all_plans() -> list[dict[str, str]]:
     """
         will fetch all plans from the gateway
@@ -52,6 +53,7 @@ def get_all_plans() -> list[dict[str, str]]:
     return all_plan_details
 
 
+@functools.lru_cache(maxsize=12)
 def get_plan_details(plan_id: str) -> dict[str, str | int]:
     """
         **get_plan_details**
@@ -83,6 +85,7 @@ def get_plan_details(plan_id: str) -> dict[str, str | int]:
     return _plan_details
 
 
+@functools.lru_cache(maxsize=1024)
 def get_user_data(uuid: str) -> dict[str, str | int]:
     """
         given uuid obtain user details from the gateway server
@@ -143,7 +146,7 @@ def get_paypal_settings(uuid: str) -> dict[str, str | int]:
 
 
 @plan_routes.route('/plan-subscription/<string:plan_id>.<string:uuid>', methods=["GET"])
-def plan_subscription(plan_id: str, uuid: str):
+def plan_subscription(plan_id: str, uuid: str) -> flask.Response:
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
@@ -184,7 +187,7 @@ def plan_details(plan_id: str, uuid: str):
 
 
 @plan_routes.route('/subscribe', methods=['POST'])
-def subscribe():
+def subscribe() -> flask.Response:
     """
         **called to actually create a subscription
         this is after a person has already approved the subscription on paypal
@@ -219,7 +222,7 @@ def subscribe():
 
 
 @plan_routes.route('/plans-all', methods=["GET"])
-def plans_all():
+def plans_all() -> flask.Response:
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
