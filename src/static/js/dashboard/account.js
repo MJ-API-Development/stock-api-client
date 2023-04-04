@@ -197,9 +197,9 @@ async function update_subscription_details(subscription){
   // subscriptionDetailsListDOM.appendChild(resourcesButton);
   // subscriptionDetailsListDOM.appendChild(resourceListDOM);
 
-  subscription_details_dom.innerHTML = '';
+  subscription_details_dom.innerHTML = '<div> </div>';
   subscription_details_dom.appendChild(subscriptionDetailsListDOM);
-  endpoints_dom.innerHTML = '';
+  endpoints_dom.innerHTML = '<div> </div>';
   endpoints_dom.appendChild(resourceListDOM);
 }
 
