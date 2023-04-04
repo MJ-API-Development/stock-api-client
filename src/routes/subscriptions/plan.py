@@ -1,6 +1,7 @@
 import functools
 import json
 
+import flask
 from flask import Blueprint, render_template, redirect, request, jsonify, request, abort
 import requests
 from src.config import config_instance
@@ -19,7 +20,7 @@ paypal_settings_cache = {}
 @functools.lru_cache(maxsize=1)
 def get_all_plans() -> list[dict[str, str]]:
     """
-
+        will fetch all plans from the gateway
     :return:
     """
     base_url: str = config_instance().GATEWAY_SETTINGS.BASE_URL
@@ -28,7 +29,7 @@ def get_all_plans() -> list[dict[str, str]]:
     headers = get_headers(user_data=data)
     with requests.Session() as session:
         try:
-            response = requests.get(endpoint, headers=headers, json=data)
+            response = session.get(endpoint, headers=headers, json=data)
             response.raise_for_status()
             json_data = response.json()
             # Check if the request was successful and return the response body as a dict
@@ -46,7 +47,7 @@ def get_all_plans() -> list[dict[str, str]]:
 
 
 @functools.lru_cache(maxsize=4)
-def get_plan_details(plan_id: str) -> dict:
+def get_plan_details(plan_id: str) -> dict[str, str | int]:
     """
         **get_plan_details**
             obtain plan details using plan_id
@@ -78,7 +79,7 @@ def get_plan_details(plan_id: str) -> dict:
 
 
 @functools.lru_cache(maxsize=1024)
-def get_user_data(uuid: str) -> dict:
+def get_user_data(uuid: str) -> dict[str, str | int]:
     """
         given uuid obtain user details from the gateway server
     :param uuid:
@@ -107,7 +108,7 @@ def get_user_data(uuid: str) -> dict:
     return json_data
 
 
-def get_paypal_settings(uuid: str) -> dict:
+def get_paypal_settings(uuid: str) -> dict[str, str | int]:
     """
     Given UUID obtain PayPal settings from the gateway server.
     :param uuid: UUID of the user.
@@ -136,7 +137,7 @@ def get_paypal_settings(uuid: str) -> dict:
 
 @plan_routes.route('/plan-subscription/<string:plan_id>.<string:uuid>', methods=["GET", "POST"])
 @auth_required
-def plan_subscription(plan_id: str, uuid: str):
+def plan_subscription(plan_id: str, uuid: str) -> flask.Response:
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
@@ -163,7 +164,7 @@ def plan_subscription(plan_id: str, uuid: str):
 # noinspection PyUnusedLocal
 @plan_routes.route('/plan-details/<string:plan_id>.<string:uuid>', methods=["GET"])
 @auth_required
-def plan_details(plan_id: str, uuid: str):
+def plan_details(plan_id: str, uuid: str) -> flask.Response:
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
@@ -177,7 +178,7 @@ def plan_details(plan_id: str, uuid: str):
 
 @plan_routes.route('/subscribe', methods=['POST'])
 @auth_required
-def subscribe():
+def subscribe() -> flask.Response:
     """
         **called to actually create a subscription
         this is after a person has already approved the subscription on paypal
