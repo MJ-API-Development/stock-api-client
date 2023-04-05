@@ -1,3 +1,5 @@
+from typing import Callable
+
 from flask import Flask, make_response, jsonify, session, redirect, url_for
 from flask_cors import CORS
 from flask_sitemap import Sitemap
@@ -10,8 +12,16 @@ user_session = {}
 sitemap = Sitemap()
 cors = CORS()
 
+
+def create_blog_url():
+    server_url = config_instance().SERVER_NAME
+    scheme = "http://" if "local" in server_url else "https://"
+    return f"{scheme}{server_url}/blog/"
+
+
 github_blog = GithubBlog(github_token=config_instance().GITHUB_SETTINGS.GITHUB_BLOG_TOKEN,
-                         blog_repo=config_instance().GITHUB_SETTINGS.BLOG_REPO)
+                         blog_repo=config_instance().GITHUB_SETTINGS.BLOG_REPO,
+                         blog_url=create_blog_url())
 
 
 def create_app(config=config_instance()) -> Flask:

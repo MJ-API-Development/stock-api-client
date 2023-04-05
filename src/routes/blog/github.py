@@ -32,21 +32,20 @@ class GithubBlog:
 
     def __init__(self, github_token, blog_repo, ignore_files=None, github_url=None, blog_url=None):
         """
-        Initialize a GithubBlog object.
+            Initialize a GithubBlog object.
 
-        Parameters:
-        - github_token (str): A personal access token for accessing the GitHub API.
-        - blog_repo (str): The name of the GitHub repository containing the blog.
-        - ignore_files (list of str, optional): A list of filenames to ignore when fetching blog files.
-        - github_url (str, optional): The base URL for the raw GitHub content.
-        - blog_url (str, optional): The base URL for the published blog.
-
+            Parameters:
+            - github_token (str): A personal access token for accessing the GitHub API.
+            - blog_repo (str): The name of the GitHub repository containing the blog.
+            - ignore_files (list of str, optional): A list of filenames to ignore when fetching blog files.
+            - github_url (str, optional): The base URL for the raw GitHub content.
+            - blog_url (str, optional): The base URL for the published blog.
         """
         self.token = github_token
         self.github = Github(self.token)
         self.repo = self.github.get_repo(blog_repo)
         self.ignore_files = ignore_files or ['readme.md', '.gitignore', 'license']
-        self.github_url = github_url or f'https://raw.githubusercontent.com/{self.repo.full_name}/'
+        self.github_url = github_url or 'https://raw.githubusercontent.com/MJ-API-Development/eod-api-blog/main/'
         self.blog_url = blog_url or 'https://eod-stock-api.site/blog/'
         self.last_commit_time = None
         self.blog_files = {}
@@ -132,9 +131,9 @@ class GithubBlog:
         """
             Returns the content of the blog file corresponding to the given URL
         """
-        print("url is {}".format(url))
+        print("original url is {}".format(url))
         url = f"{self.swap_to_github_url(url)}"
-        print("url is {}".format(url))
+        print("swapped url is {}".format(url))
         _found_url = self._locate_url(_url=url, blog_urls=self.blog_files)
         if _found_url is not None:
             file_name = self.blog_files[_found_url]
@@ -156,11 +155,9 @@ class GithubBlog:
         if not _url.endswith("/") and not _url.endswith(".md"):
             _url += "/"
         _url = _url.casefold()
-        print(f"url : {_url}")
         for blog_url, value in blog_urls.items():
             if blog_url.casefold().startswith(_url):
                 suffix = urlparse(blog_url).path[-3:].lower()
-                print(f"blog_url : {blog_url}")
                 if (suffix == ".md") or (suffix[-1] == "/"):
                     return blog_url
         return
@@ -177,7 +174,6 @@ class GithubBlog:
         """
         Given a blog URL, returns the corresponding URL for GitHub.
         """
-        print(f"swap_to_github_url : blog url: {self.blog_url}")
-        if url.casefold().startswith(self.blog_url.casefold()):
+        if  url.casefold().startswith(self.blog_url.casefold()):
             return url.replace(self.blog_url, self.github_url)
         return None
