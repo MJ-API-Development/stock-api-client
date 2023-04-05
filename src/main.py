@@ -6,17 +6,20 @@ from flask_sitemap import Sitemap
 from jwt import ExpiredSignatureError
 from src.config import config_instance
 from src.exceptions import UnAuthenticatedError
+from src.logger import init_logger
 from src.routes.blog.github import GithubBlog
 
 user_session = {}
 sitemap = Sitemap()
 cors = CORS()
-
+main_logger = init_logger("main_logger")
 
 def create_blog_url():
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
-    return f"{scheme}{server_url}/blog/"
+    blog_url = f"{scheme}{server_url}/blog/"
+    main_logger.info("Blog URL: {}".format(blog_url))
+    return blog_url
 
 
 github_blog = GithubBlog(github_token=config_instance().GITHUB_SETTINGS.GITHUB_BLOG_TOKEN,
