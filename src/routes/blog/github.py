@@ -7,6 +7,7 @@ import requests
 from flask import render_template, Response
 from github import Github
 from src.config import config_instance
+from src.logger import init_logger
 
 
 def submit_sitemap_to_google_search_console(sitemap_url):
@@ -49,6 +50,7 @@ class GithubBlog:
         self.blog_url = blog_url or 'https://eod-stock-api.site/blog/'
         self.last_commit_time = None
         self.blog_files = {}
+        self._logger = init_logger('github_blog')
 
     def check_for_updates(self):
         """
@@ -131,34 +133,41 @@ class GithubBlog:
         """
             Returns the content of the blog file corresponding to the given URL
         """
-        print("original url is {}".format(url))
+        self._logger.info("original url is {}".format(url))
         url = f"{self.swap_to_github_url(url)}"
-        print("swapped url is {}".format(url))
+        self._logger.info("swapped url is {}".format(url))
         _found_url = self._locate_url(_url=url, blog_urls=self.blog_files)
         if _found_url is not None:
+            self._logger.info("found url is {}".format(_found_url))
             file_name = self.blog_files[_found_url]
             content_file = self.repo.get_contents(file_name)
             return content_file.decoded_content.decode('utf-8')
         else:
             for dir_name, files in self.blog_files.items():
                 _found_url = self._locate_url(_url=url, blog_urls=files)
+                self._logger.info("found url is {}".format(_found_url))
                 if _found_url is not None:
                     file_name = files[_found_url]
                     content_file = self.repo.get_contents(dir_name + "/" + file_name)
                     return content_file.decoded_content.decode("utf-8")
             return None
 
-    @staticmethod
-    def _locate_url(_url: str, blog_urls: dict[str, str]) -> str | None:
+
+    def _locate_url(self, _url: str, blog_urls: dict[str, str]) -> str | None:
         if not isinstance(blog_urls, dict):
             return
         if not _url.endswith("/") and not _url.endswith(".md"):
             _url += "/"
         _url = _url.casefold()
+        self._logger.info("on locate starting with {}".format(_url))
+
         for blog_url, value in blog_urls.items():
+            self._logger.info("testing against : {}".format(blog_url))
             if blog_url.casefold().startswith(_url):
+
                 suffix = urlparse(blog_url).path[-3:].lower()
                 if (suffix == ".md") or (suffix[-1] == "/"):
+                    self._logger.info("found against : {}".format(blog_url))
                     return blog_url
         return
 
@@ -174,7 +183,8 @@ class GithubBlog:
         """
         Given a blog URL, returns the corresponding URL for GitHub.
         """
-        return url.replace(self.blog_url, self.github_url)
-        # if url.casefold().startswith(self.blog_url.casefold()):
-        #
-        # return None
+        github_url = None
+        if url.casefold().startswith(self.blog_url.casefold()):
+            github_url = url.replace(self.blog_url, self.github_url)
+        self._logger.info("swapped against : {}".format(github_url))
+        return github_url
