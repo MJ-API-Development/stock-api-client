@@ -174,6 +174,7 @@ class GithubBlog:
         """
         Given a blog URL, returns the corresponding URL for GitHub.
         """
-        if  url.casefold().startswith(self.blog_url.casefold()):
-            return url.replace(self.blog_url, self.github_url)
-        return None
+        return url.replace(self.blog_url, self.github_url)
+        # if url.casefold().startswith(self.blog_url.casefold()):
+        #
+        # return None
