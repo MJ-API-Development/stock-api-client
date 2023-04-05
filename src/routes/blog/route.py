@@ -2,6 +2,8 @@
 import os
 import markdown
 from flask import render_template, request, send_from_directory, Blueprint
+
+from src.config import config_instance
 from src.main import github_blog
 from src.routes.blog.github import submit_sitemap_to_google_search_console
 
@@ -11,7 +13,9 @@ github_blog_route = Blueprint('blog', __name__)
 @github_blog_route.route('/blog', methods={"GET"})
 def blog():
     # convert the blog URL to the corresponding GitHub URL
-    _url = f"{request.scheme}://{request.host}{request.path}/index.md"
+    server_url = config_instance().SERVER_NAME
+    scheme = "http://" if "local" in server_url else "https://"
+    _url = f"{scheme}://{request.host}{request.path}/index.md"
     # get the content of the blog post
     content = github_blog.get_blog_file(url=_url)
     if content is None:
@@ -27,7 +31,9 @@ def blog():
 @github_blog_route.route('/blog/<path:blog_path>', methods=["GET"])
 def blog_post(blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
-    _url = f"{request.scheme}://{request.host}{request.path}"
+    server_url = config_instance().SERVER_NAME
+    scheme = "http://" if "local" in server_url else "https://"
+    _url = f"{scheme}://{request.host}{request.path}"
     # get the content of the blog post
     content = github_blog.get_blog_file(url=_url)
     if content is None:

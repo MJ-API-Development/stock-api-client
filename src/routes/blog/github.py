@@ -185,7 +185,7 @@ class GithubBlog:
         """
         github_url = None
         self._logger.info("swapping with github : {}".format(self.github_url))
-        # if url.casefold().startswith(self.blog_url.casefold()):
-        github_url = url.replace(self.blog_url, self.github_url)
+        if url.casefold().startswith(self.blog_url.casefold()):
+            github_url = url.replace(self.blog_url, self.github_url)
         self._logger.info("swapped against : {}".format(github_url))
         return github_url
