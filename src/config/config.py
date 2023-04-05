@@ -71,6 +71,11 @@ class GithubSettings(BaseSettings):
     GITHUB_BLOG_TOKEN: str = Field(..., env="GIHUB_BLOG_TOKEN")
     BLOG_REPO: str = Field(..., env="BLOG_REPO")
 
+    class Config:
+        case_sensitive = True
+        env_file = '.env.development'
+        env_file_encoding = 'utf-8'
+
 
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
@@ -85,6 +90,7 @@ class Settings(BaseSettings):
     APPLICATION_ROOT: str = Field(default="/")
     PREFERRED_URL_SCHEME: str = Field(default="https://")
     GITHUB_SETTINGS: GithubSettings = GithubSettings()
+
     class Config:
         case_sensitive = True
         env_file = '.env.development'
