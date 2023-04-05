@@ -14,6 +14,7 @@ sitemap = Sitemap()
 cors = CORS()
 main_logger = init_logger("main_logger")
 
+
 def create_blog_url():
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
