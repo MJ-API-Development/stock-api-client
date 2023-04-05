@@ -13,3 +13,4 @@ __pycache__
 *.map
 *.docx
 /src/_main/
+/src/service-accounts/

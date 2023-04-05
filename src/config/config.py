@@ -68,7 +68,7 @@ class GatewaySettings(BaseSettings):
 
 
 class GithubSettings(BaseSettings):
-    GITHUB_BLOG_TOKEN: str = Field(..., env="GIHUB_BLOG_TOKEN")
+    GITHUB_BLOG_TOKEN: str = Field(..., env="GITHUB_BLOG_TOKEN")
     BLOG_REPO: str = Field(..., env="BLOG_REPO")
 
     class Config:
@@ -90,6 +90,7 @@ class Settings(BaseSettings):
     APPLICATION_ROOT: str = Field(default="/")
     PREFERRED_URL_SCHEME: str = Field(default="https://")
     GITHUB_SETTINGS: GithubSettings = GithubSettings()
+    SEARCH_CONSOLE_API_KEY: str = Field(..., env="SEARCH_CONSOLE_API_KEY")
 
     class Config:
         case_sensitive = True

@@ -1,0 +1,21 @@
+{% extends "layouts/layout.html" %}
+
+{% block content %}
+<div class="right_col" role="main">
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">404 Error: Page Not Found</h2>
+        </div>
+        <div class="card-body">
+            <p>The requested page could not be found:</p>
+            <p>{{ message }}</p>
+        </div>
+
+        <div class="card-footer">
+            <h3><a href="{{ url_for('blog.blog') }}"> Blog </a></h3>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -10,7 +10,8 @@ user_session = {}
 sitemap = Sitemap()
 cors = CORS()
 
-github_blog = GithubBlog()
+github_blog = GithubBlog(github_token=config_instance().GITHUB_SETTINGS.GITHUB_BLOG_TOKEN,
+                         blog_repo=config_instance().GITHUB_SETTINGS.BLOG_REPO)
 
 
 def create_app(config=config_instance()) -> Flask:
@@ -24,7 +25,7 @@ def create_app(config=config_instance()) -> Flask:
     with app.app_context():
         sitemap.init_app(app=app)
         cors.init_app(app=app)
-        github_blog.blog_pages()
+        github_blog.update_blog()
 
         from src.routes.home import home_route
         from src.routes.documentations import docs_route

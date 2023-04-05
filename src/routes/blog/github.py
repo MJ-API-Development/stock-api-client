@@ -1,28 +1,85 @@
+import json
+import os
 from datetime import date
+from urllib.parse import urlparse
 
 import requests
 from flask import render_template, Response
 from github import Github
-from markdown import markdown
-
 from src.config import config_instance
+
+
+def submit_sitemap_to_google_search_console(sitemap_url):
+    """
+    Submit the sitemap to Google Search Console
+    """
+    api_endpoint = f"https://www.google.com/ping?sitemap={sitemap_url}"
+    # Define the request headers
+    headers = {
+        'Content-Type': 'application/xml',
+        'User-Agent': 'Mozilla/5.0 (Windows; U; Windows)',
+    }
+    params = {'key': config_instance().SEARCH_CONSOLE_API_KEY}
+    response = requests.get(api_endpoint, headers=headers, params=params)
+
+    return response
 
 
 class GithubBlog:
     """
-
+    A class representing a blog hosted on GitHub.
     """
 
-    def __init__(self):
-        self.token = config_instance().GITHUB_SETTINGS.GITHUB_BLOG_TOKEN
-        self.github = Github(self.token)
-        self.repo = self.github.get_repo(config_instance().GITHUB_SETTINGS.BLOG_REPO)
-        self.blog_files = {}
-        self.ignore_files = ['readme.md', '.gitignore', 'license']
-        self.github_url = 'https://raw.githubusercontent.com/MJ-API-Development/eod-api-blog/main/'
-        self.blog_url = 'https://eod-stock-api.site/blog/' if config_instance().SERVER_NAME.startswith('eod-stock-api.site') else "http://eod-stock-api.local:8081/blog/"
+    def __init__(self, github_token, blog_repo, ignore_files=None, github_url=None, blog_url=None):
+        """
+        Initialize a GithubBlog object.
 
-    def blog_pages(self):
+        Parameters:
+        - github_token (str): A personal access token for accessing the GitHub API.
+        - blog_repo (str): The name of the GitHub repository containing the blog.
+        - ignore_files (list of str, optional): A list of filenames to ignore when fetching blog files.
+        - github_url (str, optional): The base URL for the raw GitHub content.
+        - blog_url (str, optional): The base URL for the published blog.
+
+        """
+        self.token = github_token
+        self.github = Github(self.token)
+        self.repo = self.github.get_repo(blog_repo)
+        self.ignore_files = ignore_files or ['readme.md', '.gitignore', 'license']
+        self.github_url = github_url or f'https://raw.githubusercontent.com/{self.repo.full_name}/'
+        self.blog_url = blog_url or 'https://eod-stock-api.site/blog/'
+        self.last_commit_time = None
+        self.blog_files = {}
+
+    def check_for_updates(self):
+        """
+        Check if there has been a commit since the last time this method was called.
+        """
+        latest_commit_time = self.repo.updated_at
+        if self.last_commit_time is None or latest_commit_time > self.last_commit_time:
+            self.last_commit_time = latest_commit_time
+            # Do something if there has been an update
+            self.update_blog()
+            sitemap_url = f"{self.blog_url}sitemap.xml"
+            submit_sitemap_to_google_search_console(sitemap_url)
+        else:
+            # Do something if there has not been an update
+            pass
+
+    def fetch_all_blog_files(self):
+        """
+        Fetch the blog files from the GitHub repository.
+        """
+        contents = self.repo.get_contents('')
+        while contents:
+            file_content = contents.pop(0)
+            if file_content.type == 'dir':
+                contents.extend(self.repo.get_contents(file_content.path))
+            else:
+                if file_content.name.lower() not in self.ignore_files:
+                    self.blog_files[file_content.name] = file_content
+
+    def update_blog(self):
         """
             **blog_pages**
         :return:
@@ -75,43 +132,48 @@ class GithubBlog:
         """
             Returns the content of the blog file corresponding to the given URL
         """
-        print(url)
         url = f"{self.swap_to_github_url(url)}"
-        response = requests.get(url)
-        _found_url = self.locate_url(_url=url, blog_urls=self.blog_files)
+
+        _found_url = self._locate_url(_url=url, blog_urls=self.blog_files)
         if _found_url is not None:
-            print("url found")
             file_name = self.blog_files[_found_url]
             content_file = self.repo.get_contents(file_name)
             return content_file.decoded_content.decode('utf-8')
         else:
-            print("url not found : {}".format(url))
             for dir_name, files in self.blog_files.items():
-
-                _found_url = self.locate_url(_url=url, blog_urls=files)
+                _found_url = self._locate_url(_url=url, blog_urls=files)
                 if _found_url is not None:
-                    print("found in directories")
                     file_name = files[_found_url]
                     content_file = self.repo.get_contents(dir_name + "/" + file_name)
                     return content_file.decoded_content.decode("utf-8")
             return None
-        # print(url)
-        # return markdown(response.content.decode('utf-8'))
 
     @staticmethod
-    def locate_url(_url: str, blog_urls: dict[str, str]) -> str:
+    def _locate_url(_url: str, blog_urls: dict[str, str]) -> str | None:
+        if not isinstance(blog_urls, dict):
+            return
+        if not _url.endswith("/") and not _url.endswith(".md"):
+            _url += "/"
+        _url = _url.casefold()
         for blog_url, value in blog_urls.items():
-            print(blog_url)
-            if blog_url.startswith(_url):
-                return blog_url
-        return None
+            if blog_url.casefold().startswith(_url):
+                suffix = urlparse(blog_url).path[-3:].lower()
+                if (suffix == ".md") or (suffix[-1] == "/"):
+                    return blog_url
+        return
 
     def swap_to_blog_url(self, url: str) -> str:
-        """ given a github url change to blog url"""
-        _url = url.replace(self.github_url, self.blog_url) if url.startswith(self.github_url) else f"{self.blog_url}{url}"
-        return _url.split("?")[0]
+        """
+        Given a GitHub URL, returns the corresponding URL for the blog.
+        """
+        if url.startswith(self.github_url):
+            return url.replace(self.github_url, self.blog_url).split("?")[0]
+        return f"{self.blog_url}{url.split('?')[0]}"
 
     def swap_to_github_url(self, url: str) -> str:
+        """
+        Given a blog URL, returns the corresponding URL for GitHub.
+        """
         if url.startswith(self.blog_url):
             return url.replace(self.blog_url, self.github_url)
         return None
