@@ -15,7 +15,7 @@ def blog():
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
-    _url = f"{scheme}://{request.host}{request.path}/index.md"
+    _url = f"{scheme}{request.host}{request.path}/index.md"
     # get the content of the blog post
     content = github_blog.get_blog_file(url=_url)
     if content is None:
@@ -33,7 +33,7 @@ def blog_post(blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
-    _url = f"{scheme}://{request.host}{request.path}"
+    _url = f"{scheme}{request.host}{request.path}"
     # get the content of the blog post
     content = github_blog.get_blog_file(url=_url)
     if content is None:

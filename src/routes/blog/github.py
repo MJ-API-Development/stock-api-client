@@ -152,7 +152,6 @@ class GithubBlog:
                     return content_file.decoded_content.decode("utf-8")
             return None
 
-
     def _locate_url(self, _url: str, blog_urls: dict[str, str]) -> str | None:
         if not isinstance(blog_urls, dict):
             return
