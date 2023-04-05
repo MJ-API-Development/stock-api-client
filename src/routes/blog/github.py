@@ -128,12 +128,13 @@ class GithubBlog:
                                           formatted_date=date.today().isoformat())
         return Response(sitemap_content, mimetype='application/xml')
 
-    def get_blog_file(self, url):
+    def get_blog_file(self, url: str) -> str | None:
         """
             Returns the content of the blog file corresponding to the given URL
         """
+        print("url is {}".format(url))
         url = f"{self.swap_to_github_url(url)}"
-
+        print("url is {}".format(url))
         _found_url = self._locate_url(_url=url, blog_urls=self.blog_files)
         if _found_url is not None:
             file_name = self.blog_files[_found_url]
@@ -155,9 +156,11 @@ class GithubBlog:
         if not _url.endswith("/") and not _url.endswith(".md"):
             _url += "/"
         _url = _url.casefold()
+        print(f"url : {_url}")
         for blog_url, value in blog_urls.items():
             if blog_url.casefold().startswith(_url):
                 suffix = urlparse(blog_url).path[-3:].lower()
+                print(f"blog_url : {blog_url}")
                 if (suffix == ".md") or (suffix[-1] == "/"):
                     return blog_url
         return
@@ -174,6 +177,7 @@ class GithubBlog:
         """
         Given a blog URL, returns the corresponding URL for GitHub.
         """
-        if url.startswith(self.blog_url):
+        print(f"swap_to_github_url : blog url: {self.blog_url}")
+        if url.casefold().startswith(self.blog_url.casefold()):
             return url.replace(self.blog_url, self.github_url)
         return None

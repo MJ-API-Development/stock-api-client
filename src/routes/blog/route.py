@@ -11,11 +11,11 @@ github_blog_route = Blueprint('blog', __name__)
 @github_blog_route.route('/blog', methods={"GET"})
 def blog():
     # convert the blog URL to the corresponding GitHub URL
-    github_url = f"{request.scheme}://{request.host}{request.path}/index.md"
+    _url = f"{request.scheme}://{request.host}{request.path}/index.md"
     # get the content of the blog post
-    content = github_blog.get_blog_file(url=github_url)
+    content = github_blog.get_blog_file(url=_url)
     if content is None:
-        return render_template('blog/404.html', message=github_url), 404
+        return render_template('blog/404.html', message=_url), 404
     html_content = markdown.markdown(content)
     # process the content to replace any links to images and other resources with links to the static directory
     # content = process_content(content)
@@ -27,11 +27,11 @@ def blog():
 @github_blog_route.route('/blog/<path:blog_path>', methods=["GET"])
 def blog_post(blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
-    github_url = f"{request.scheme}://{request.host}{request.path}"
+    _url = f"{request.scheme}://{request.host}{request.path}"
     # get the content of the blog post
-    content = github_blog.get_blog_file(url=github_url)
+    content = github_blog.get_blog_file(url=_url)
     if content is None:
-        return render_template('blog/404.html', message=github_url), 404
+        return render_template('blog/404.html', message=_url), 404
     html_content = markdown.markdown(content)
     # process the content to replace any links to images and other resources with links to the static directory
     # content = process_content(content)
