@@ -184,7 +184,95 @@ class GithubBlog:
         """
         github_url = None
         self._logger.info("swapping with github : {}".format(self.github_url))
-        # if url.casefold().startswith(self.blog_url.casefold()):
-        github_url = url.replace(self.blog_url, self.github_url)
+        if url.casefold().startswith(self.blog_url.casefold()):
+            github_url = url.replace(self.blog_url, self.github_url)
         self._logger.info("swapped against : {}".format(github_url))
         return github_url
+
+    def remove_github_url(self, filename: str) -> str:
+        return filename.replace(self.github_url, "")
+
+    def create_blog_link(self, directory: str, filename: str) -> str:
+        """
+        Create a link for a blog post.
+
+        Parameters:
+        - directory (str): The name of the directory where the file is located.
+        - filename (str): The name of the file.
+
+        Returns:
+        - str: The link to the blog post.
+        """
+
+        blog_url = 'https://eod-stock-api.site/blog/'
+        if directory:
+            return f'{blog_url}{directory}/{filename}'
+        else:
+            _filename = self.remove_github_url(filename)
+            return f'{blog_url}{filename}'
+
+    def create_menu(self, links: list[dict]):
+        menu = {}
+
+        def remove_blog_link(_self, _link: str) -> str:
+            """
+
+            :param _link:
+            :param _self:
+            :return:
+            """
+
+            return _link.replace(_self.blog_url, "")
+
+        for link in links:
+            name = remove_blog_link(self, link)
+            print(name)
+
+            if name.endswith('.md'):
+                # this is a file link
+                filename = name
+                directory = None
+            else:
+                parts = name.split("/")
+                # this is a directory link
+                if len(parts) == 2:
+                    filename = parts[1]
+                    directory = parts[0]
+                else:
+                    filename = None
+                    directory = parts[0]
+
+            # add the directory to the menu if it doesn't exist yet
+            if directory and directory not in menu:
+                menu[directory] = {}
+
+            # add the file to the menu
+            if directory and filename:
+                menu[directory][filename] = link
+            else:
+                menu[filename] = link
+
+        return menu
+
+    def create_sidebar_menu(self):
+        folders = []
+        single_files = []
+        for key, value in self.blog_files.items():
+            if isinstance(value, dict):
+                folders.append({f"{self.swap_to_blog_url(key)}": f"{value}"})
+                for _key, _value in value.items():
+                    folders.append({f"{self.swap_to_blog_url(_key)}": f"{_value}"})
+            else:
+                single_files.append({f"{self.swap_to_blog_url(key)}": f"{value}"})
+
+        folders.extend(single_files)
+        print(f"folders contains {len(folders)}")
+        links = []
+        for files in folders:
+            if isinstance(files, dict):
+                for url, name in files.items():
+                    links.append(url)
+            else:
+                links.append(files)
+        print(f"link contains {len(links)}")
+        return self.create_menu(links=links)

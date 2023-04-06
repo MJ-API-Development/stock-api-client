@@ -77,3 +77,11 @@ def submit_sitemap():
     sitemap_url = 'https://eod-stock-api.site/blog/sitemap.xml'
     response = submit_sitemap_to_google_search_console(sitemap_url)
     return github_blog.sitemap()
+
+
+@github_blog_route.route('/blog/sidebar', methods=['GET'])
+def create_sidebar():
+    sidebar = github_blog.create_sidebar_menu()
+    for key, value in sidebar.items():
+        print(f"{key} {value}")
+    return 'OK', 200
