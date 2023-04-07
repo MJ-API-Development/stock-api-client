@@ -69,7 +69,6 @@ def send_js():
     **send_js**
         helps avoid cors errors - by sending the redoc js file directly from our static folder
     """
-    # TODO consider fetching this file from gateway static folder instead
     return send_from_directory('static', 'redoc.standalone.js')
 
 

@@ -91,6 +91,7 @@ class Settings(BaseSettings):
     PREFERRED_URL_SCHEME: str = Field(default="https://")
     GITHUB_SETTINGS: GithubSettings = GithubSettings()
     SEARCH_CONSOLE_API_KEY: str = Field(..., env="SEARCH_CONSOLE_API_KEY")
+    EOD_STOCK_API_KEY: str = Field(..., env="EOD_STOCK_API_KEY")
 
     class Config:
         case_sensitive = True

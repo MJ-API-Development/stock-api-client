@@ -1,0 +1,32 @@
+{% extends "layouts/layout.html" %}
+
+{% block headers %}
+{% endblock %}
+
+{% block content %}
+<div class="right_col" role="main">
+<div class="container">
+
+{% for story in stories %}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"> {{ story.title }}</h3>
+            </div>
+            <div class="card-body">
+                <h2>Published By : {{ story.publisher }}</h2>
+                <p>Date Published: {{ story.datetime_published }}</p>
+                <p>Related Tickers: {{ story.related_tickers|join(', ') }}</p>
+                <a href="{{ story.link }}" target="_blank">
+                    <img
+                            src="{{ story.thumbnail_url }}"
+                            alt="{{ story.publisher }} thumbnail"
+                            height="600"
+                            width="600"
+                    >
+                </a>
+            </div>
+        </div>
+{% endfor %}
+</div>
+</div>
+{% endblock %}
