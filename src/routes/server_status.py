@@ -17,41 +17,18 @@ def get_status():
     :return:
     """
     status_logger.info("are we even getting status")
-    try:
-        server_1 = requests.get(url="https://www.eod-stock-api.site/_ah/warmup")
+    response = requests.get(url="https://gateway.eod-stock-api.site/_ah/warmup")
+    server_status = dict(Gateway='offline',
+                         API_Master='offline',
+                         API_Slave='offline')
 
-    except ConnectTimeout:
-        server_1 = "Server busy"
-        # server busy
-    except ConnectionError:
-        server_1 = "Server Unavailable"
-        # server not available
+    if response.status_code == 200 and response.headers.get('Content-Type') == 'application/json':
+        payload = response.json()['payload']
+        server_status = dict(Gateway=payload.get('Gateway'),
+                             API_Master=payload.get('API_Master'),
+                             API_Slave=payload.get('API_Slave'))
 
-    try:
-        server_2 = requests.get(url="https://cron.eod-stock-api.site/_ah/warmup")
-    except ConnectTimeout:
-        server_2 = "Server busy"
-        # server busy
-    except ConnectionError:
-        server_2 = "Server Unavailable"
-        # server not available
-    try:
-        gateway_status = requests.get(url="https://gateway.eod-stock-api.site/_ah/warmup")
-    except ConnectTimeout:
-        gateway_status = "Server busy"
-        # server busy
-    except ConnectionError:
-        gateway_status = "Server Unavailable"
-        # server not available
-
-    server_status = dict(server_1=server_1,
-                         server_2=server_2,
-                         gateway=gateway_status)
-
-    service_availability = dict()
-    _payload = dict(server_status=server_status, services=service_availability)
-
-    payload = dict(status=True, payload=_payload, message='successfully retrieved status of all the servers')
+    payload = dict(status=True, payload=server_status, message='successfully retrieved status of all the servers')
 
     return jsonify(payload), 200
 
