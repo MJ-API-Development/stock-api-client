@@ -2,19 +2,17 @@
 
 {% block content %}
 <div class="right_col" role="main">
-<div class="col-md-12">
+    <div class="col-md-12">
         <h2>EOD Stock API - Services Status</h2>
-
-    <ul class="list-group">
-        <li class="list-group-item" id="server_1">Server 1 </li>
-        <li class="list-group-item" id="server_2">Server 2 </li>
-        <li class="list-group-item" id="gateway">Gateway </li>
-    </ul>
+        <ul class="list-group">
+            <li class="list-group-item" id="server_1">Server 1 - <span class="text-success">Online</span></li>
+            <li class="list-group-item" id="server_2">Server 2 - <span class="text-success">Online</span></li>
+            <li class="list-group-item" id="gateway">Gateway - <span class="text-success">Online</span></li>
+        </ul>
+    </div>
 </div>
-</div>
-
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ url_for('static', filename='js/dashboard/status.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/dashboard/status.js') }}"></script>
 {% endblock %}
