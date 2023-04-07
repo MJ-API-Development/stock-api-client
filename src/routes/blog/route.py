@@ -4,7 +4,7 @@ from pprint import pprint
 
 import markdown
 import requests
-from flask import render_template, request, send_from_directory, Blueprint
+from flask import render_template, request, send_from_directory, Blueprint, url_for
 
 from src.config import config_instance
 from src.main import github_blog
@@ -45,6 +45,8 @@ def load_top_stories():
     created_stories = []
     for story in top_stories:
         good_image_url: str = select_resolution(story.get('thumbnail', []))
+        if good_image_url is None:
+            good_image_url = url_for('static', filename='images/placeholder.jpg')
         new_story = {
             'title': story.get('title').title(),
             'publisher': story.get('publisher').title(),
@@ -153,8 +155,10 @@ def select_resolution(thumbnals: list[dict[str, int | str]]) -> str:
     sorted_resolutions = sorted(thumbnail_resolutions, key=lambda x: x['height'], reverse=True)
 
     # Select the resolution with the highest height (which is the first element after sorting)
-    highest_resolution = sorted_resolutions[0]
+    if sorted_resolutions:
+        highest_resolution = sorted_resolutions[0]
 
-    # Access the URL of the image with the highest resolution
-    highest_resolution_url = highest_resolution['url']
-    return highest_resolution_url
+        # Access the URL of the image with the highest resolution
+        highest_resolution_url = highest_resolution['url']
+        return highest_resolution_url
+    return None
