@@ -13,6 +13,9 @@ def generate_sitemap():
     yield 'docs.redoc', {}
     yield 'docs.openapi_json', {}
     yield 'docs.openapi_html', {}
+    yield 'blog.blog', {}
+    yield 'blog.load_top_stories', {}
+    yield 'blog.sitemap', {}
 
 
 @sitemap_bp.route('/sitemap.xml', methods=['GET'])
