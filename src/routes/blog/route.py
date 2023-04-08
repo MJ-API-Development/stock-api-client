@@ -145,10 +145,9 @@ def create_sidebar():
 @cached
 def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     """
-
-    : param stock_code (str): ticker symbol for the company you want to fetch the news for
+       ** get_financial_news_by_ticker**
+        : param stock_code (str): ticker symbol for the company you want to fetch the news for
     """
-
     url = f'https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}'
     headers = {'Content-Type': 'application/json' }
 
