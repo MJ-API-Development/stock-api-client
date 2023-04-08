@@ -8,7 +8,18 @@
 <div class="container">
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Select Ticker Symbol</h3>
+        <h3 class="card-title">Financial News API - Blog Articles</h3>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('blog.load_top_stories') }}">
+            <label for="ticker"><strong>Select Ticker</strong></label>
+            <select class="form-control" name="ticker" id="ticker">
+                {% for ticker in tickers %}
+                    <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ ticker }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-dark"><i class="fa fa-file-text"> </i> Load Articles</button>
+        </form>
     </div>
 </div>
 

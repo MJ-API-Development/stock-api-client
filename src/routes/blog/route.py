@@ -1,11 +1,14 @@
+import functools
 import itertools
 import os
+import random
 from pprint import pprint
 
 import markdown
 import requests
-from flask import render_template, request, send_from_directory, Blueprint, url_for
+from flask import render_template, request, send_from_directory, Blueprint, url_for, flash
 
+from src.cache import  cached
 from src.config import config_instance
 from src.main import github_blog
 from src.routes.blog.github import submit_sitemap_to_google_search_console
@@ -14,6 +17,7 @@ github_blog_route = Blueprint('blog', __name__)
 
 
 @github_blog_route.route('/blog', methods={"GET"})
+@cached
 def blog():
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
@@ -31,39 +35,54 @@ def blog():
     return render_template('blog/blog_post.html', document=html_content)
 
 
-@github_blog_route.route('/blog/top-stories', methods=['GET'])
+@github_blog_route.route('/blog/top-stories', methods=['GET', 'POST'])
 def load_top_stories():
     """
-        using our financial news API
-        display a list of top stories
-    :return:
+    Using our financial news API to display a list of top stories
     """
-    tickers = ['MSFT']
+    DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
+    meme_tickers = ['AAPL', 'AMZN', 'GOOGL', 'TSLA', 'FB', 'NVDA', 'NFLX', 'MSFT',
+                    'JPM', 'V', 'BAC', 'WMT', 'JNJ', 'PG', 'KO', 'PEP', 'CSCO',
+                    'INTC', 'ORCL', 'AMD']
 
-    _top_stories = [get_financial_news_by_ticker(stock_code=ticker) for ticker in tickers]
-    top_stories = itertools.chain(*_top_stories)
+    # If the form has been submitted, get the selected ticker symbol
+
+    selected_ticker = request.form.get('ticker', random.choice(meme_tickers))
+
+    # Use a set to avoid duplicate stories
     created_stories = []
-    for story in top_stories:
-        good_image_url: str = select_resolution(story.get('thumbnail', []))
-        if good_image_url is None:
-            good_image_url = url_for('static', filename='images/placeholder.jpg')
-        new_story = {
-            'title': story.get('title').title(),
-            'publisher': story.get('publisher').title(),
-            'datetime_published': story.get('datetime_published'),
-            'link': story.get('link'),
-            'related_tickers': story.get('related_tickers', []),
-            'thumbnail_url': good_image_url,
-        }
-        created_stories.append(new_story)
+    uuids = set()
 
-    # sort stories by date published in ascending order
-    created_stories = sorted(created_stories, key=lambda k: k['datetime_published'])
+    for story in get_financial_news_by_ticker(stock_code=selected_ticker):
+        # Use dict.get() method with a default value to avoid errors if a key is missing
+        # Use a named constant for default image url to improve code readability and usability
+        good_image_url = select_resolution(story.get('thumbnail', [])) or DEFAULT_IMAGE_URL
 
-    return render_template('blog/top_stories.html', stories=created_stories)
+        # Use a uuid to identify each story and avoid duplicates
+        uuid = story.get('uuid')
+        if uuid not in uuids:
+            new_story = {
+                'uuid': uuid,
+                'title': story.get('title', '').title(),
+                'publisher': story.get('publisher', '').title(),
+                'datetime_published': story.get('datetime_published'),
+                'link': story.get('link', ''),
+                'related_tickers': story.get('related_tickers', []),
+                'thumbnail_url': good_image_url,
+            }
+            created_stories.append(new_story)
+            uuids.add(uuid)
+
+    created_stories.sort(key=lambda _story: _story['datetime_published'])
+
+    return render_template('blog/top_stories.html',
+                           stories=created_stories,
+                           tickers=meme_tickers,
+                           selected_ticker=selected_ticker)
 
 
 @github_blog_route.route('/blog/<path:blog_path>', methods=["GET"])
+@cached
 def blog_post(blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
@@ -83,6 +102,7 @@ def blog_post(blog_path: str):
 
 # route to serve static files (e.g., images) from the blog
 @github_blog_route.route('/blog/static/<path:file_path>')
+@cached
 def blog_static(file_path):
     """static files will only be images """
     # get the content of the file from GitHub
@@ -122,6 +142,7 @@ def create_sidebar():
     return 'OK', 200
 
 
+@cached
 def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     """
 
@@ -129,20 +150,18 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     """
 
     url = f'https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}'
-    headers = {
-        'Content-Type': 'application/json'
-    }
+    headers = {'Content-Type': 'application/json' }
 
     params = {'api_key': config_instance().EOD_STOCK_API_KEY}
     response = requests.get(url, headers=headers, params=params)
 
     if response.headers['Content-Type'] != 'application/json':
-        raise Exception
+        return []
 
     response_data: dict[str, str | dict] = response.json()
 
     if not response_data['status']:
-        raise Exception(response_data['message'])
+        return []
 
     return response_data['payload']
 
