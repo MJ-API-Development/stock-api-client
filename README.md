@@ -8,11 +8,11 @@ EOD Stock API offers several subscription plans that cater to the varying needs 
 ## Documentation
 EOD Stock API provides comprehensive API documentation that includes code samples, detailed explanations, and use-case examples. You can access the API documentation through the following links:
 
-[Redoc Documentation](https://eod-stock-api.site/redoc)
-[OpenAPI Specifications](https://eod-stock-api.site/open-api)
-[Github Documentation](https://eod-stock-api.site/github-docs)
-[PyPI SDK - Intelligent Stock Market API](https://pypi.org/project/Intelligent-Stock-Market-API/)
-[PyPI-SDK - Intelligent Stock Market API Documentation](https://github.com/MJ-API-Development/stock-api-pythonsdk)
+- [Redoc Documentation](https://eod-stock-api.site/redoc)
+- [OpenAPI Specifications](https://eod-stock-api.site/open-api)
+- [Github Documentation](https://eod-stock-api.site/github-docs)
+- [PyPI SDK - Intelligent Stock Market API](https://pypi.org/project/Intelligent-Stock-Market-API/)
+- [PyPI-SDK - Intelligent Stock Market API Documentation](https://github.com/MJ-API-Development/stock-api-pythonsdk)
 
 
 ## Getting Started
