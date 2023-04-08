@@ -21,6 +21,11 @@ def sw():
     return send_from_directory('static', 'js/sw.js')
 
 
+@app.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
+
+
 app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
@@ -44,4 +49,3 @@ if __name__ == '__main__':
         app.run(debug=True, use_reloader=True, host="127.0.0.1", port=8081)
     else:
         app.run(debug=True, use_reloader=True, host="0.0.0.0", port=8081)
-
