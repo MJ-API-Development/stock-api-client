@@ -3,26 +3,29 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
                     <ul class="nav side-menu">
-                        <li><a><i class="fa fa-user"></i> Account <span class="fa fa-chevron-down"></span></a>
+                        <li><a href="{{ url_for('home.home') }}" title="EOD STOCK API - Intelligent Stock Market API" data-toggle="tooltip" data-placement="right"><i class="fa fa-home"></i> EOD Stock API </a>
+                        </li>
+
+                        <li><a title="EOD STOCK API - Account" data-toggle="tooltip" data-placement="right"><i class="fa fa-user"></i> Account <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                                 <li><a href="{{ url_for('auth.login') }}" title="Login or Create an Account" data-toggle="tooltip" data-placement="right">Login</a></li>
                                 <li><a href="{{ url_for('account.account') }}" title="Account" data-toggle="tooltip" data-placement="right">Account</a></li>
                             </ul>
                         </li>
-                        <li title="Manual Data Entry"><a><i class="fa fa-file-text"></i> Documentations <span class="fa fa-chevron-down"></span></a>
+                        <li title="Manual Data Entry"><a title="EOD STOCK API - Documentations" data-toggle="tooltip" data-placement="right"><i class="fa fa-file-text"></i> Documentations <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                                 <li><a href="{{ url_for('docs.redoc') }}" title="Redoc API Documentations" data-toggle="tooltip" data-placement="right">Redoc</a></li>
                                 <li><a href="{{ url_for('docs.openapi_html') }}" title="Open API Documentations" data-toggle="tooltip" data-placement="right">Open API Specifications</a></li>
                                 <li><a href="{{ url_for('docs.github_docs') }}" title="Github Documentations" data-toggle="tooltip" data-placement="right">Github Documentations</a></li>
                             </ul>
                         </li>
-                        <li><a><i class="fa fa-server"></i> API <span class="fa fa-chevron-down"></span></a>
+                        <li><a title="EOD STOCK API - Server Status" data-toggle="tooltip" data-placement="right"><i class="fa fa-server"></i> API <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                                 <li><a href="{{ url_for('home.status') }}" title="Status Check our Server Availability" data-toggle="tooltip" data-placement="right">Status</a></li>
                                 <li><a href="{{ url_for('docs.redoc') }}" title="Play Ground" data-toggle="tooltip" data-placement="right">Play Ground</a></li>
                             </ul>
                         </li>
-                        <li><a><i class="fa fa-file-text"> </i> Blog <span class="fa fa-chevron-down"> </span> </a>
+                        <li><a title="EOD STOCK API - Developer Blogs & Financial News API" data-toggle="tooltip" data-placement="right"><i class="fa fa-file-text"> </i> Blog <span class="fa fa-chevron-down"> </span> </a>
                             <ul class="nav child_menu">
                                 <li><a href="{{ url_for('blog.blog') }}" title="Developers Blog - Learn the Best Ways of Using Our API" data-toggle="tooltip" data-placement="right">Developers Blog</a></li>
                                 <li><a href="{{ url_for('blog.load_top_stories') }}" title="News API - Top Stories - Utilizing Our Financial News API" data-toggle="tooltip" data-placement="right">News API - Top Stories</a></li>
