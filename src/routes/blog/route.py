@@ -47,7 +47,7 @@ def load_top_stories():
 
     # If the form has been submitted, get the selected ticker symbol
 
-    selected_ticker = request.form.get('ticker', random.choice(meme_tickers))
+    selected_ticker = request.args.get('ticker', random.choice(meme_tickers))
 
     # Use a set to avoid duplicate stories
     created_stories = []
