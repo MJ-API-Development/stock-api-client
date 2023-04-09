@@ -87,6 +87,6 @@ def create_app(config=config_instance()) -> Flask:
                                    redirect(url_for('auth.login')))
 
         app.register_error_handler(UnAuthenticatedError,
-                                   redirect(url_for('auth.login')))
+                                   redirect(url_for('home.home')))
 
     return app

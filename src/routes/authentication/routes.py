@@ -44,9 +44,13 @@ def user_details(func):
         # Just Obtain user details no need to verify the token
         if token is None:
             user_data = get_uuid_cookie(_request=request)
+            if user_data is None:
+                user_data = {}
+
             kwargs['user_data'] = user_data
             response = func(*args, **kwargs)
-            response.headers['X-Auth-Token'] = create_authentication_token(user_data=user_data)
+            # response.headers['X-Auth-Token'] = create_authentication_token(user_data=user_data)
+            user_session[user_data.get('uuid')] = user_data
             return response
 
         auth_logger.info(f"Token Issued from backend : {token}")
@@ -61,10 +65,10 @@ def user_details(func):
             # Add X-Auth-Token header to response
             response.headers['X-Auth-Token'] = token
             return response
+
         else:
             kwargs['user_data'] = {}
             response = func(*args, **kwargs)
-            response.headers['X-Auth-Token'] = ""
             return response
 
     return wrapper
@@ -215,11 +219,17 @@ def logout(user_data: dict[str, str]):
     """
 
     uuid = user_data.get('uuid')
-
+    # removes login information from session
     user_session.update({f"{uuid}": {}})
     # TODO - consider sending the message to the gateway indicating the action to logout
     flash('You have been logged out.', 'success')
-    return redirect(url_for('auth.login'))
+    response = make_response(render_template('login.html'), 200)
+    # set the session cookie to expire
+    response.set_cookie('uuid', '', max_age=0)
+    # removing the authentication token
+    response.headers.set('X-Auth-Token', '')
+    # user completely logged out bye bye
+    return response
 
 
 def create_authentication_token(user_data: dict[str, str]):
@@ -308,3 +318,5 @@ def get_uuid_cookie(_request: Request):
         return json.loads(cookie) if cookie is not None else None
     except json.JSONDecodeError:
         return None
+
+
