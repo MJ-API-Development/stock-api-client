@@ -158,11 +158,12 @@ def python_sdk_docs(user_data: dict[str, str], path: str):
 @docs_route.route('/sdk/src/docs/<string:path>', methods=['GET'])
 @user_details
 @cached
-def github_links(user_details: dict[str, str], path: str):
+def github_links(user_data: dict[str, str], path: str):
     """
     **github_links**
         this handles user clicking links on local documentation and then
         downloads the correct document from github
+    :param user_data:
     :param path:
     :return:
     """
@@ -176,7 +177,7 @@ def github_links(user_details: dict[str, str], path: str):
                 return render_template("docs/error/docs.html")
 
         html_content = markdown.markdown(response.content.decode('utf-8'))
-        context = dict(user_details=user_details, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
+        context = dict(user_data=user_data, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)
 
 

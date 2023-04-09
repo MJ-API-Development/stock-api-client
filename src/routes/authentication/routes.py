@@ -87,13 +87,15 @@ def auth_required(func):
         # if uuid is None:
         token = request.headers.get('X-Auth-Token', None)
         if token is None:
+            # Token not found lets try a cookie
             user_data = get_uuid_cookie(_request=request)
             if user_data is None:
                 raise UnAuthenticatedError()
-            kwargs['user_data'] = user_data
-            response = func(*args, **kwargs)
-            response.headers['X-Auth-Token'] = create_authentication_token(user_data=user_data)
-            return response
+
+            token = create_authentication_token(user_data=user_data)
+            user_session[user_data['uuid']] = user_data
+
+        # verify token authenticity
 
         payload = verify_authentication_token(token=token)
         _uuid = payload.get('uuid', None)
@@ -240,7 +242,7 @@ def create_authentication_token(user_data: dict[str, str]):
         'password': user_data.get('password_hash'),
         'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
     }
-
+    # TODO consider checking if user exist with the gateway before creating the token
     # Encode the payload using a secret key
     token = jwt.encode(payload=payload, key=config_instance().SECRET_KEY, algorithm='HS256')
     auth_logger.info(f"CREATED Token : {token}")
