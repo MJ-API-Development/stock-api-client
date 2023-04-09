@@ -151,16 +151,22 @@ const register_user = async (mode) => {
         credentials: "same-origin",
     });
 
-
     let response = await fetch(request);
-    if (response.status !== 201) {
+
+    if (response.statusCode !== 200) {
+
         const data = response.json();
-        if (data.status && data.account && data.account.uuid) {
+        if (data.status) {
             // TODO - add to account details
+            document.getElementById('message-subscribe').innerHTML = data.message;
+        }else{
+            document.getElementById('message-subscribe').innerHTML = data.message;
         }
+
     } else {
-        console.log(response.statusText)
+        document.getElementById('message-subscribe').innerHTML = data.message;
     }
+
 };
 
 // Attach the submitForm function to the form's submit event

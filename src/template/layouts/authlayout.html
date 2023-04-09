@@ -38,6 +38,13 @@
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
+            <div>
+              <a href="/">
+                <h1><i class="fa fa-line-chart"></i> Intelligent Stock Market API</h1>
+              </a>
+              <p>©2023 All Rights Reserved. EOD Stock API .</p>
+            </div>
+
             <form id="auth_form" method="POST" action="{{ url_for('auth.login') }}">
               <h1 class="title"> Login</h1>
               <div>
@@ -52,22 +59,11 @@
                 <a class="btn btn-default submit" type="submit" href="{{ url_for('auth.login') }}" id="submit_login">Log in</a>
                 <a class="btn btn-default" href="#signup">Create Account?</a>
                 <div class="clearfix"></div>
-                  <hr>
               <span class="title" id="message"></span>
               </div>
-
               <div class="clearfix"></div>
-
               <div class="separator">
                 <div class="clearfix"></div>
-                <br />
-
-                <div>
-                  <a href="/">
-                    <h1><i class="fa fa-line-chart"></i> Intelligent Stock Market API</h1>
-                  </a>
-                  <p>©2023 All Rights Reserved. EOD Stock API .</p>
-                </div>
               </div>
             </form>
           </section>
@@ -75,6 +71,13 @@
 
         <div id="register" class="animate form registration_form">
           <section class="login_content">
+            <div>
+              <a href="/">
+                <h1><i class="fa fa-line-chart"></i> Intelligent Stock Market API</h1>
+              </a>
+              <p>©2023 All Rights Reserved. EOD Stock API .</p>
+            </div>
+
           <form id="registration_form" method="POST" action="{{ url_for('auth.register') }}">
             <h1>Create Account</h1>
             <div>
@@ -101,8 +104,7 @@
               <a class="btn btn-dark" type="btn" id="submit_registration">Register</a>
               <a class="btn btn-dark" type="btn" href="#signin">Already have an account?</a>
               <div class="clearfix"></div>
-              <hr>
-              <span class="title" id="message"></span>
+              <span class="title" id="message-subscribe"></span>
             </div>
           </form>
 

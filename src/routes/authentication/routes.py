@@ -7,7 +7,7 @@ from functools import wraps
 import jwt
 import requests
 from flask import request, render_template, redirect, Blueprint, flash, abort, jsonify, make_response, \
-    Request
+    Request, url_for
 
 from src.cache import cached
 from src.config import config_instance
@@ -113,9 +113,12 @@ def auth_required(func):
     return wrapper
 
 
-@auth_handler.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
+@auth_handler.route('/register', methods=['POST'])
+@user_details
+def register(user_data: dict[str, str]):
+
+    if not user_data:
+
         user_data = request.get_json()
 
         account_base = AccountCreate(**user_data)
@@ -144,17 +147,16 @@ def register():
             flash('Account created successfully. Please log in.', 'success')
             uuid = response_data.get('payload', {}).get('uuid')
             if uuid:
-                user_session.update({f"{uuid}": response_data.get('payload', {})})
+                user_session[uuid] = response_data.get('payload', {})
 
-            message: str = "Account created successfully. Please log in.'"
-            payload = dict(status=True, payload=response_data.get('payload'), message=message)
-            return jsonify(payload)
+            return jsonify(response_data)
         else:
-            payload = dict(status=False, message=response_data.get("message", payload={}))
+            payload = dict(status=False, message=response_data.get("message"), payload={})
             return jsonify(payload)
 
-    elif request.method == "GET":
-        return render_template('login.html')
+    else:
+        payload = dict(status=False, message="You are already logged in", payload={})
+        return jsonify(payload)
 
 
 @auth_handler.route('/login', methods=['GET', 'POST'])
@@ -306,6 +308,7 @@ def verify_signature(response):
     """this is authentication for the client and gateway communication"""
     secret_key = config_instance().SECRET_KEY
     data_header = response.headers.get('X-SIGNATURE', '')
+    auth_logger.info(f'Verifying Signature : {data_header}')
     data_str, signature_header = data_header.split('|')
     _signature = hmac.new(secret_key.encode('utf-8'), data_str.encode('utf-8'), hashlib.sha256).hexdigest()
     return hmac.compare_digest(signature_header, _signature)
