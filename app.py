@@ -1,8 +1,9 @@
 import logging
 import socket
-from flask import Flask, request, send_from_directory, make_response, render_template
+
+from flask import Flask, request, send_from_directory, render_template
 from flask_cors import CORS
-import requests
+
 from src.config.config import config_instance
 from src.main import create_app
 
