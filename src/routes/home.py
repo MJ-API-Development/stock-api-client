@@ -8,7 +8,6 @@ home_route = Blueprint('home', __name__)
 
 
 @home_route.route('/')
-@functools.lru_cache(maxsize=128)
 @user_details
 def home(user_data: dict[str, str]):
     if user_data is None:
