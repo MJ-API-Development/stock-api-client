@@ -1,0 +1,29 @@
+#cookie-popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #243346;
+    padding: 10px;
+    z-index: 9999;
+}
+
+#cookie-popup p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 10px;
+}
+
+#cookie-popup button {
+    font-size: 14px;
+    background-color: #243346;
+    border: #e05e5e 1px solid;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#cookie-popup button:hover {
+    background-color: #0062cc;
+}

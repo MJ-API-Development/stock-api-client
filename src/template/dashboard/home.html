@@ -1,4 +1,7 @@
 {% extends "layouts/layout.html" %}
+{% block headers %}
+    <link href="{{ url_for('static', filename='css/cookie.css') }}" rel="stylesheet">
+{% endblock %}
 {% block content %}
           <div class="right_col" role="main">
 <div class="col-md-12">
@@ -369,6 +372,20 @@
     <a href="https://www.cloudflare.com/" target="_blank" title="Secured by Cloudflare">
         <img src="{{ url_for('static', filename='images/cloudflare/logo/png/white.png') }}" alt="Secured by Cloudflare" width="170" height="45">
     </a>
+
+<div id="cookie-popup">
+    <p> We use cookies to personalize content,
+        to provide social media features and to analyze our traffic.</p>
+
+        <p>We also share information about your use of our site with our,
+        advertising and analytics partners who may combine it with other information
+            that you’ve provided to them or that they’ve collected from your use of their services.</p>
+
+        <p>By continuing to use our website, you consent to our use of cookies.</p>
+
+    <button id="cookie-accept">Accept</button>
+</div>
+
 </div>
 
 </div>

@@ -1,6 +1,6 @@
 import logging
 import socket
-from flask import Flask, request, send_from_directory, make_response
+from flask import Flask, request, send_from_directory, make_response, render_template
 from flask_cors import CORS
 import requests
 from src.config.config import config_instance
@@ -24,6 +24,16 @@ def sw():
 @app.route('/robots.txt')
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
+
+
+@app.route('/terms')
+def terms_of_use():
+    return render_template('terms.html')
+
+
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy.html')
 
 
 app.logger.setLevel(logging.INFO)
