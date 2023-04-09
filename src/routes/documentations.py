@@ -5,6 +5,7 @@ import markdown
 import requests
 from flask import Blueprint, render_template, request, make_response, send_from_directory
 
+from src.cache import cached
 from src.routes.authentication.routes import user_details
 
 docs_route = Blueprint('docs', __name__)
@@ -20,7 +21,7 @@ def inject_specifications() -> dict[str, str]:
     return dict(json_data=file_contents)
 
 
-@functools.cache
+@cached
 def documentations_routes(params: dict[str, str]) -> dict:
     """
         will return a map of paths
@@ -47,7 +48,7 @@ def documentations_routes(params: dict[str, str]) -> dict:
 
 
 @docs_route.route('/redoc', methods=['GET'])
-@functools.lru_cache(maxsize=1)
+@cached
 def redoc():
     """
         **redoc**
@@ -63,7 +64,7 @@ def redoc():
 
 
 @docs_route.route('/redoc.standalone.js')
-@functools.lru_cache(maxsize=1)
+@cached
 def send_js():
     """
     **send_js**
@@ -73,7 +74,7 @@ def send_js():
 
 
 @docs_route.route('/openapi.json', methods=['GET'])
-@functools.cache
+@cached
 def openapi_json():
     """
     **openapi_json**
@@ -90,8 +91,9 @@ def openapi_json():
 
 
 @docs_route.route('/openapi', methods=['GET'])
-@functools.lru_cache(maxsize=1)
-def openapi_html():
+@user_details
+@cached
+def openapi_html(user_data: dict[str, str]):
     """
     **openapi_html**
         display openapi json documentation in an html document
@@ -101,13 +103,14 @@ def openapi_html():
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site/open-api"
     openapi_data = requests.get(url)
-    context = dict(**inject_specifications(), BASE_URL="https://client.eod-stock-api.site")
+    context = dict(**inject_specifications(), user_data=user_data, BASE_URL="https://client.eod-stock-api.site")
     return render_template('docs/docs-openapi.html', **context)
 
 
 @docs_route.route('/github-docs', methods=['GET'])
-@functools.lru_cache(maxsize=1)
-def github_docs():
+@user_details
+@cached
+def github_docs(user_data: dict[str, str]):
     """
         **github_docs**
             github documentations this endpoint fetches the documentation directly from github
@@ -116,25 +119,27 @@ def github_docs():
     url = "https://raw.githubusercontent.com/MJ-API-Development/Intelligent-EOD-Stock-Financial-News-API/main/README.md"
     response = requests.get(url)
     html_content = markdown.markdown(response.content.decode('utf-8'))
-    context = dict(document=html_content, BASE_URL="https://client.eod-stock-api.site")
+    context = dict(user_data=user_data, document=html_content, BASE_URL="https://client.eod-stock-api.site")
     return render_template('docs/github-docs.html', **context)
 
 
 @docs_route.route('/sdk', methods=['GET'])
-@functools.lru_cache(maxsize=1)
-def sdk_docs():
+@user_details
+@cached
+def sdk_docs(user_data: dict[str, str]):
     """
         **sdk_docs**
 
         documentation python and node sdk
     """
-    context = dict(BASE_URL="https://client.eod-stock-api.site")
+    context = dict(user_data=user_data, BASE_URL="https://client.eod-stock-api.site")
     return render_template('docs/sdk.html', **context)
 
 
 @docs_route.route('/sdk/<string:path>', methods=['GET'])
-@functools.lru_cache(maxsize=1024)
-def python_sdk_docs(path: str):
+@user_details
+@cached
+def python_sdk_docs(user_data: dict[str, str], path: str):
     """
     **python_sdk_docs**
 
@@ -146,13 +151,14 @@ def python_sdk_docs(path: str):
         response = requests.get(url)
         html_content = markdown.markdown(response.content.decode('utf-8'))
 
-        context = dict(github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
+        context = dict(user_data=user_data, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)
 
 
 @docs_route.route('/sdk/src/docs/<string:path>', methods=['GET'])
-@functools.lru_cache(maxsize=1024)
-def github_links(path: str):
+@user_details
+@cached
+def github_links(user_details: dict[str, str], path: str):
     """
     **github_links**
         this handles user clicking links on local documentation and then
@@ -170,7 +176,7 @@ def github_links(path: str):
                 return render_template("docs/error/docs.html")
 
         html_content = markdown.markdown(response.content.decode('utf-8'))
-        context = dict(github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
+        context = dict(user_details=user_details, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)
 
 
