@@ -8,14 +8,16 @@ from flask import render_template, request, send_from_directory, Blueprint, url_
 from src.cache import cached
 from src.config import config_instance
 from src.main import github_blog
+from src.routes.authentication.routes import user_details
 from src.routes.blog.github import submit_sitemap_to_google_search_console
 
 github_blog_route = Blueprint('blog', __name__)
 
 
 @github_blog_route.route('/blog', methods={"GET"})
+@user_details
 @cached
-def blog():
+def blog(user_data: dict[str, str]):
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
@@ -27,13 +29,14 @@ def blog():
     html_content = markdown.markdown(content)
     # process the content to replace any links to images and other resources with links to the static directory
     # content = process_content(content)
-
     # render the content as HTML and return it
-    return render_template('blog/blog_post.html', document=html_content)
+    context = dict(user_data=user_data, document=html_content)
+    return render_template('blog/blog_post.html', **context)
 
 
 @github_blog_route.route('/blog/top-stories', methods=['GET', 'POST'])
-def load_top_stories():
+@user_details
+def load_top_stories(user_data: dict):
     """
     Using our financial news API to display a list of top stories
     """
@@ -71,16 +74,17 @@ def load_top_stories():
             uuids.add(uuid)
 
     created_stories.sort(key=lambda _story: _story['datetime_published'])
-
-    return render_template('blog/top_stories.html',
-                           stories=created_stories,
+    context = dict(stories=created_stories,
                            tickers=meme_tickers,
-                           selected_ticker=selected_ticker)
+                           selected_ticker=selected_ticker, user_data=user_data)
+
+    return render_template('blog/top_stories.html', **context)
 
 
 @github_blog_route.route('/blog/<path:blog_path>', methods=["GET"])
+@user_details
 @cached
-def blog_post(blog_path: str):
+def blog_post(user_data: str, blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
@@ -94,7 +98,8 @@ def blog_post(blog_path: str):
     # content = process_content(content)
 
     # render the content as HTML and return it
-    return render_template('blog/blog_post.html', document=html_content)
+    context = dict(user_data=user_data, document=html_content)
+    return render_template('blog/blog_post.html', **context)
 
 
 # route to serve static files (e.g., images) from the blog
