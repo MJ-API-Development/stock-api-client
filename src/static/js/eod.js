@@ -127,7 +127,7 @@ self.addEventListener('load', async () => {
 })
 
 // set the time in milliseconds
-const popupTimeout = 5000; // 5 seconds
+const popupTimeout = 45000; // 45 seconds
 
 // function to remove the cookie pop-up
 function removePopup() {
