@@ -16,6 +16,8 @@ def generate_sitemap():
     yield 'blog.blog', {}
     yield 'blog.load_top_stories', {}
     yield 'blog.sitemap', {}
+    yield 'home.terms', {}
+    yield 'home.privacy_policy', {}
 
 
 @sitemap_bp.route('/sitemap.xml', methods=['GET'])

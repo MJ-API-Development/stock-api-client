@@ -1,6 +1,6 @@
 import functools
 
-from flask import Blueprint, render_template, Request, request
+from flask import Blueprint, render_template, Request, request, send_from_directory
 
 from src.routes.authentication.routes import user_details
 
@@ -36,3 +36,20 @@ def pricing(user_data: dict[str, str]):
 
     context = dict(user_data=user_data, BASE_URL="eod-stock-api.site")
     return render_template('index.html', **context)
+
+
+@home_route.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(home_route.static_folder, request.path[1:])
+
+
+@home_route.route('/terms')
+def terms_of_use():
+    return render_template('terms.html')
+
+
+@home_route.route('/privacy')
+def privacy_policy():
+    return render_template('privacy.html')
+
+
