@@ -8,7 +8,7 @@ import markdown
 import requests
 from flask import render_template, request, send_from_directory, Blueprint, url_for, flash
 
-from src.cache import  cached
+from src.cache import cached
 from src.config import config_instance
 from src.main import github_blog
 from src.routes.blog.github import submit_sitemap_to_google_search_console
@@ -164,9 +164,10 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     return response_data['payload']
 
 
-def select_resolution(thumbnals: list[dict[str, int | str]]) -> str:
+@cached
+def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
     # Access the resolutions of the thumbnail image
-    thumbnail_resolutions = thumbnals['resolutions']
+    thumbnail_resolutions = thumbnails['resolutions']
 
     # Sort the resolutions by height in descending order
     sorted_resolutions = sorted(thumbnail_resolutions, key=lambda x: x['height'], reverse=True)
