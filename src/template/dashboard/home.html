@@ -389,6 +389,8 @@
           <!-- /page content -->
 {% endblock %}
 {% block scripts %}
+    <script src="{{ url_for('static', filename='js/cookie.js') }}"> </script>
     <script src="{{ url_for('static', filename='js/eod.js') }}"> </script>
     <script src="{{ url_for('static', filename='js/subscribe.js') }}"> </script>
+
 {% endblock %}
