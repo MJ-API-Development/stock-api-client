@@ -150,7 +150,6 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     """
     url = f'https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}'
     headers = {'Content-Type': 'application/json'}
-
     params = {'api_key': config_instance().EOD_STOCK_API_KEY}
     response = requests.get(url, headers=headers, params=params)
 

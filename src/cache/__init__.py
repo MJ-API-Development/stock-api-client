@@ -94,9 +94,9 @@ def cached(f):
         cache_key = f.__name__ + str(args) + str(kwargs)
         cached_result = route_cache.get(cache_key)
         if cached_result:
-            return pickle.loads(cached_result)
+            return cached_result
         result = f(*args, **kwargs)
-        route_cache.set(cache_key, pickle.dumps(result))
+        route_cache.set(cache_key, result)
         return result
 
     return decorated_function
