@@ -16,7 +16,7 @@ def generate_sitemap():
     yield 'blog.blog', {}
     yield 'blog.load_top_stories', {}
     yield 'blog.sitemap', {}
-    yield 'home.terms', {}
+    yield 'home.terms_of_use', {}
     yield 'home.privacy_policy', {}
 
 
