@@ -1,7 +1,7 @@
 import functools
 from pprint import pprint
 
-from flask import Blueprint, render_template, Request, request, send_from_directory
+from flask import Blueprint, render_template, Request, request, send_from_directory, url_for
 
 from src.routes.authentication.routes import user_details
 
@@ -44,9 +44,8 @@ def pricing(user_data: dict[str, str]):
 
 
 @home_route.route('/robots.txt')
-def static_from_root():
-
-    return send_from_directory(home_route.static_folder, request.path[1:])
+def robots():
+    return send_from_directory('static', 'robots.txt')
 
 
 @home_route.route('/terms')
