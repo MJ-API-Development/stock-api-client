@@ -1,12 +1,9 @@
-import functools
-import itertools
 import os
 import random
-from pprint import pprint
 
 import markdown
 import requests
-from flask import render_template, request, send_from_directory, Blueprint, url_for, flash
+from flask import render_template, request, send_from_directory, Blueprint, url_for
 
 from src.cache import cached
 from src.config import config_instance
