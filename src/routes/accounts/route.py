@@ -1,7 +1,10 @@
+import hmac
+
 import requests
 from flask import request, render_template, session, Blueprint, abort, jsonify
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, AccountResponseSchema
+from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
 from src.main import user_session
 from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature, \
@@ -12,7 +15,7 @@ account_logger = init_logger("account_logger")
 
 
 @account_handler.route('/account', methods=['GET'])
-@user_details
+@auth_required
 def account(user_data: dict[str, str]):
     if user_data is None:
         user_data = {}
@@ -21,10 +24,11 @@ def account(user_data: dict[str, str]):
 
 
 @account_handler.route('/account/<string:uuid>', methods=['GET'])
-def get_account(uuid: str):
+@auth_required
+def get_account(user_data: dict[str, str], uuid: str):
     """user data must already be contained on the
     session so just return that data"""
-    user_data = user_session.get(uuid)
+
     if uuid and (user_data is not None):
         account_logger.info(f"User data : {user_data}")
         payload = dict(status=True, payload=user_data, message="successfully found user data")
@@ -63,10 +67,14 @@ def get_account(uuid: str):
 
 @account_handler.route('/account/<string:uuid>', methods=['PUT'])
 @auth_required
-def update_account(uuid: str):
+def update_account(user_data: dict[str, str], uuid: str):
     """check if user data is valid then update"""
-    user_data = request.get_json()
-    user_data.update(dict(uuid=uuid))
+
+    if hmac.compare_digest(uuid, user_data['uuid']):
+        raise UnAuthenticatedError(description="Unable to determine the authenticity of your account please try logout and then back in")
+
+    new_user_data = request.get_json()
+    new_user_data.update(dict(uuid=uuid))
     account_data = AccountModel(**user_data)
     _headers = get_headers(account_data.dict())
 

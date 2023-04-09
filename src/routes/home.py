@@ -44,7 +44,7 @@ def pricing(user_data: dict[str, str]):
 
 
 @home_route.route('/robots.txt')
-def static_from_root(user_data: dict[str, str]):
+def static_from_root():
 
     return send_from_directory(home_route.static_folder, request.path[1:])
 
@@ -62,6 +62,9 @@ def terms_of_use(user_data: dict[str, str]):
 @home_route.route('/privacy')
 @user_details
 def privacy_policy(user_data: dict[str, str]):
+    if user_data is None:
+        user_data = {}
+    context = dict(user_data=user_data)
     return render_template('privacy.html', **context)
 
 
