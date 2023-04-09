@@ -154,15 +154,8 @@ const register_user = async (mode) => {
     let response = await fetch(request);
 
     if (response.statusCode !== 200) {
-
-        const data = response.json();
-        if (data.status) {
-            // TODO - add to account details
-            document.getElementById('message-subscribe').innerHTML = data.message;
-        }else{
-            document.getElementById('message-subscribe').innerHTML = data.message;
-        }
-
+        const data = await response.json();
+        document.getElementById('message-subscribe').innerHTML = data.message;
     } else {
         document.getElementById('message-subscribe').innerHTML = data.message;
     }

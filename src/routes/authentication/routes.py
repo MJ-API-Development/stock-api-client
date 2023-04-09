@@ -144,7 +144,6 @@ def register(user_data: dict[str, str]):
 
         response_data = response.json()
         if response_data and response_data.get('status', False):
-            flash('Account created successfully. Please log in.', 'success')
             uuid = response_data.get('payload', {}).get('uuid')
             if uuid:
                 user_session[uuid] = response_data.get('payload', {})
