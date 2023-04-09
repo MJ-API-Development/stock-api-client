@@ -96,7 +96,8 @@ class GithubBlog:
         blog_files = {}
         contents = self.repo.get_contents(directory)
         for content_file in contents:
-            if content_file.type == "dir":
+            # TODO add an extra security measure here to prevent adding sensitive files to blogs
+            if content_file.type == "dir" and not content_file.name.lower().startswith(".idea"):
                 # If the content file is a directory, recursively call this method
                 subdir_files = self.blog_directories(content_file.path)
                 blog_files[content_file.name] = subdir_files
