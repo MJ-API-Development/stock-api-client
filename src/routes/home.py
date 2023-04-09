@@ -48,6 +48,11 @@ def robots():
     return send_from_directory('static', 'robots.txt')
 
 
+@home_route.route('/Robots.txt')
+def robots():
+    return send_from_directory('static', 'robots.txt')
+
+
 @home_route.route('/terms')
 @user_details
 def terms_of_use(user_data: dict[str, str]):
