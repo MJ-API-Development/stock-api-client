@@ -299,7 +299,6 @@ def is_authorized(uuid):
         abort(401)
     payload = response_data.get('payload', {})
     authorized = payload.get('is_authorized', False)
-    print(f"Authorized : {authorized}")
     return authorized, response_data
 
 
