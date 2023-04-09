@@ -4,7 +4,8 @@ import json
 import jwt
 import requests
 from werkzeug.exceptions import HTTPException
-from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort, jsonify, make_response
+from flask import request, render_template, redirect, url_for, session, Blueprint, flash, abort, jsonify, make_response, \
+    Request
 from functools import wraps
 import hmac
 import hashlib
@@ -13,6 +14,7 @@ from src.databases.models.schemas.account import AccountModel, AccountCreate
 from src.exceptions import UnresponsiveServer, InvalidSignatureError, ServerInternalError, UnAuthenticatedError
 from src.logger import init_logger
 from src.main import user_session
+import http.cookies
 
 auth_handler = Blueprint("auth", __name__)
 
@@ -29,6 +31,84 @@ def get_headers(user_data: dict) -> dict[str, str]:
     secret_key = config_instance().SECRET_KEY
     signature = create_header(secret_key, user_data)
     return {'X-SIGNATURE': signature, 'Content-Type': 'application/json'}
+
+
+def user_details(func):
+    """
+        Returns the user details if the user is logged in and authorized to access this route
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        token = request.headers.get('X-Auth-Token', None)
+        auth_logger.info(f"Request Header : {request.headers}")
+        # Just Obtain user details no need to verify the token
+        if token is None:
+            user_data = get_uuid_cookie(_request=request)
+            kwargs['user_data'] = user_data
+            response = func(*args, **kwargs)
+            response.headers['X-Auth-Token'] = create_authentication_token(user_data=user_data)
+            return response
+
+        auth_logger.info(f"Token Issued from backend : {token}")
+        payload = jwt.decode(jwt=token, key=config_instance().SECRET_KEY, algorithms=['HS256'])
+
+        _uuid = payload.get('uuid', None)
+
+        if user_session.get(_uuid):
+            # User is authorized, so add user details to kwargs and call the wrapped function
+            kwargs['user_data'] = user_session[_uuid]
+            response = func(*args, **kwargs)
+            # Add X-Auth-Token header to response
+            response.headers['X-Auth-Token'] = token
+            return response
+        else:
+            kwargs['user_data'] = {}
+            response = func(*args, **kwargs)
+            response.headers['X-Auth-Token'] = ""
+            return response
+
+    return wrapper
+
+
+def auth_required(func):
+    """will not allow the user to access the route if the user is not logged in and not authorized for the route"""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        # if request.headers.get('Content-Type')  == 'application/json':
+        #     request_data = request.get_json()
+
+        # uuid = request_data.get('uuid', kwargs.get('uuid'))
+        # if uuid is None:
+        token = request.headers.get('X-Auth-Token', None)
+        if token is None:
+            user_data = get_uuid_cookie(_request=request)
+            if user_data is None:
+                raise UnAuthenticatedError()
+            kwargs['user_data'] = user_data
+            response = func(*args, **kwargs)
+            response.headers['X-Auth-Token'] = create_authentication_token(user_data=user_data)
+            return response
+
+        payload = verify_authentication_token(token=token)
+        _uuid = payload.get('uuid', None)
+
+        if _uuid not in user_session:
+            return redirect('/login')
+
+        authorized, response_data = is_authorized(_uuid)
+
+        if response_data and response_data.get('status', False) and authorized:
+            kwargs['user_data'] = user_session[_uuid]
+            response = func(*args, **kwargs)
+            # Add X-Auth-Token header to response
+            response.headers['X-Auth-Token'] = token
+            return response
+        else:
+            abort(401)
+
+    return wrapper
 
 
 @auth_handler.route('/register', methods=['GET', 'POST'])
@@ -126,19 +206,20 @@ def login():
         return render_template('login.html')
 
 
-@auth_handler.route('/logout', methods=['POST'])
-def logout():
+@auth_handler.route('/logout', methods=['GET'])
+@auth_required
+def logout(user_data: dict[str, str]):
     """
         convert to JSON based messages , the flow will be handled by the front page
     :return:
     """
-    request_data = request.get_json()
-    uuid = request_data.get('uuid')
+
+    uuid = user_data.get('uuid')
 
     user_session.update({f"{uuid}": {}})
     # TODO - consider sending the message to the gateway indicating the action to logout
     flash('You have been logged out.', 'success')
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
 
 
 def create_authentication_token(user_data: dict[str, str]):
@@ -181,73 +262,6 @@ def verify_authentication_token(token: str):
         raise UnAuthenticatedError()
 
 
-def user_details(func):
-    """
-        Returns the user details if the user is logged in and authorized to access this route
-    """
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        token = request.headers.get('X-Auth-Token', None)
-        # Just Obtain user details no need to verify the token
-        if token is None or token == "":
-            kwargs['user_data'] = {}
-            return func(*args, **kwargs)
-        auth_logger.info(f"Token Issued from backend : {token}")
-        payload = jwt.decode(jwt=token, key=config_instance().SECRET_KEY, algorithms=['HS256'])
-
-        _uuid = payload.get('uuid', None)
-
-        if user_session.get(_uuid):
-            # User is authorized, so add user details to kwargs and call the wrapped function
-            kwargs['user_data'] = user_session[_uuid]
-            response = func(*args, **kwargs)
-            # Add X-Auth-Token header to response
-            # response.headers['X-Auth-Token'] = token
-            return response
-        else:
-            kwargs['user_data'] = {}
-            response = func(*args, **kwargs)
-            # response.headers['X-Auth-Token'] = ""
-            return response
-
-    return wrapper
-
-
-def auth_required(func):
-    """will not allow the user to access the route if the user is not logged in and not authorized for the route"""
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-
-        # if request.headers.get('Content-Type')  == 'application/json':
-        #     request_data = request.get_json()
-
-        # uuid = request_data.get('uuid', kwargs.get('uuid'))
-        # if uuid is None:
-        token = request.headers.get('X-Auth-Token', None)
-        if token is None:
-            raise UnAuthenticatedError()
-
-        payload = verify_authentication_token(token=token)
-        _uuid = payload.get('uuid', None)
-
-        if _uuid not in user_session:
-            return redirect('/login')
-
-        authorized, response_data = is_authorized(_uuid)
-
-        if response_data and response_data.get('status', False) and authorized:
-            kwargs['user_data'] = user_session[_uuid]
-            response = func(*args, **kwargs)
-            # Add X-Auth-Token header to response
-            response.headers['X-Auth-Token'] = token
-            return response
-        else:
-            abort(401)
-
-    return wrapper
-
-
 @functools.lru_cache(maxsize=1024)
 def is_authorized(uuid):
     """
@@ -284,3 +298,13 @@ def verify_signature(response):
     data_str, signature_header = data_header.split('|')
     _signature = hmac.new(secret_key.encode('utf-8'), data_str.encode('utf-8'), hashlib.sha256).hexdigest()
     return hmac.compare_digest(signature_header, _signature)
+
+
+def get_uuid_cookie(_request: Request):
+    """will obtain a secure cookie from request"""
+    # Get the "Cookie" header from the request headers
+    cookie = _request.cookies.get('uuid', None)
+    try:
+        return json.loads(cookie) if cookie is not None else None
+    except json.JSONDecodeError:
+        return None

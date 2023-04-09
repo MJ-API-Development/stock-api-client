@@ -5,11 +5,14 @@
                     <ul class="nav side-menu">
                         <li><a href="{{ url_for('home.home') }}" title="EOD STOCK API - Intelligent Stock Market API" data-toggle="tooltip" data-placement="right"><i class="fa fa-home"></i> EOD Stock API </a>
                         </li>
-
                         <li><a title="EOD STOCK API - Account" data-toggle="tooltip" data-placement="right"><i class="fa fa-user"></i> Account <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li><a href="{{ url_for('auth.login') }}" title="Login or Create an Account" data-toggle="tooltip" data-placement="right">Login</a></li>
-                                <li><a href="{{ url_for('account.account') }}" title="Account" data-toggle="tooltip" data-placement="right">Account</a></li>
+                                {% if user_data and user_data['uuid'] %}
+                                    <li><a href="{{ url_for('auth.logout') }}" title="Logout" data-toggle="tooltip" data-placement="right">Logout</a></li>
+                                    <li><a href="{{ url_for('account.account') }}" title="Account" data-toggle="tooltip" data-placement="right">Account</a></li>
+                                {% else %}
+                                    <li><a href="{{ url_for('auth.login') }}" title="Login or Create an Account" data-toggle="tooltip" data-placement="right">Login</a></li>
+                                {% endif %}
                             </ul>
                         </li>
                         <li title="Manual Data Entry"><a title="EOD STOCK API - Documentations" data-toggle="tooltip" data-placement="right"><i class="fa fa-file-text"></i> Documentations <span class="fa fa-chevron-down"></span></a>
@@ -35,10 +38,10 @@
                     <ul class="nav side-menu">
                         <li title="Manual Data Entry"><a href="{{ url_for('contact.contact')}}" title="Contact - Let us know how we can help you out" data-toggle="tooltip" data-placement="right"><i class="fa fa-envelope"></i> Contact</a></li>
                     </ul>
-
               </div>
               </div>
             <!-- /menu footer buttons -->
+{% if user_data and user_data['uuid'] %}
             <div class="sidebar-footer hidden-small">
               <a data-toggle="tooltip" data-placement="top" title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -49,8 +52,27 @@
               <a data-toggle="tooltip" data-placement="top" title="Lock">
                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
               </a>
+
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="{{ url_for('auth.logout') }}">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div>
+{% else %}
+            <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+              </a>
+
               <a data-toggle="tooltip" data-placement="top" title="Login" href="{{ url_for('auth.login') }}">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
+
+{% endif %}
             <!-- /menu footer buttons -->

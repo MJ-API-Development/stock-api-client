@@ -4,16 +4,20 @@ from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, AccountResponseSchema
 from src.logger import init_logger
 from src.main import user_session
-from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature
+from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature, \
+    user_details
 
 account_handler = Blueprint("account", __name__)
 account_logger = init_logger("account_logger")
 
 
 @account_handler.route('/account', methods=['GET'])
-def account():
-    if request.method == "GET":
-        return render_template('dashboard/account.html')
+@user_details
+def account(user_data: dict[str, str]):
+    if user_data is None:
+        user_data = {}
+    context = dict(user_data=user_data)
+    return render_template('dashboard/account.html', **context)
 
 
 @account_handler.route('/account/<string:uuid>', methods=['GET'])
