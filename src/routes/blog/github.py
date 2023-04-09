@@ -93,23 +93,40 @@ class GithubBlog:
                 self.blog_files[_key] = value
 
     def blog_directories(self, directory=""):
+        """
+        Recursively searches for blog files in a given directory and its subdirectories,
+        and returns a dictionary of file names and URLs.
+        """
         blog_files = {}
+
+        # Get the contents of the given directory using the GitHub API
         contents = self.repo.get_contents(directory)
+
         for content_file in contents:
-            # TODO add an extra security measure here to prevent adding sensitive files to blogs
             if content_file.type == "dir" and not content_file.name.lower().startswith(".idea"):
-                # If the content file is a directory, recursively call this method
+                # If the content file is a directory, recursively call this method to get its files
                 subdir_files = self.blog_directories(content_file.path)
+                # Add the subdirectory files to the parent directory's dictionary
                 blog_files[content_file.name] = subdir_files
-            else:
-                # If the content file is a file, add it to the dictionary of blog files
+            elif content_file.type == "file":
+                # If the content file is a file, check if it's a blog file and add it to the dictionary
                 file_name = content_file.name
-                if file_name.casefold() not in self.ignore_files:
-                    file_url = content_file.download_url
-                    if file_url not in blog_files:  # Check if the file URL has already been added
-                        blog_files[file_url] = file_name
+                file_url = content_file.download_url
+                if self._is_blog_file(file_name) and file_url not in blog_files:
+                    blog_files[file_url] = file_name
 
         return blog_files
+
+    def _is_blog_file(self, file_name):
+        """
+        Checks if a given file name is a valid blog file by checking its extension
+        and ensuring it's not in the ignore_files list.
+        """
+        if not file_name.casefold().endswith(".md"):
+            return False
+        if file_name.casefold() in self.ignore_files:
+            return False
+        return True
 
     def sitemap(self):
         """
@@ -163,7 +180,7 @@ class GithubBlog:
 
         for blog_url, value in blog_urls.items():
             self._logger.info("testing against : {}".format(blog_url))
-            if blog_url.casefold().startswith(_url):
+            if blog_url and blog_url.casefold().startswith(_url):
 
                 suffix = urlparse(blog_url).path[-3:].lower()
                 if (suffix == ".md") or (suffix[-1] == "/"):
