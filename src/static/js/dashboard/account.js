@@ -33,7 +33,7 @@ showApiKeyBtn.addEventListener('click', function() {
     showApiKeyBtn.innerHTML = '<i class="fa fa-eye"></i>';
   }
 });
-
+/** Copy API Key  **/
 copyApiKeyBtn.addEventListener('click', function() {
   apiKeyEl.focus();
   apiKeyEl.select();
@@ -41,7 +41,9 @@ copyApiKeyBtn.addEventListener('click', function() {
   alert('API Key copied to clipboard');
 });
 
-
+/**
+ * adding event listener to update account details
+ */
 updateAccountButton.addEventListener('click', async (e) => {
   e.preventDefault();
 
@@ -77,24 +79,33 @@ updateAccountButton.addEventListener('click', async (e) => {
 /**
  * Update API KeY Button
  */
-update_api_key_button.addEventListener('click', async (e) => {
-  e.preventDefault();
-  const path = '/update-api-key';
-  const request = new Request(path, {
-    method: "POST",
-    body: JSON.stringify(account_data),
-    headers: new Headers({'Content-type': 'application/json'}),
-    mode: 'cors',
-    credentials: 'same-origin',
-  });
-  const response = await fetch(request);
-  if (response.headers.get('Content-type') === 'application/json') {
-    const payload = await response.json();
-    document.getElementById('api_key').innerHTML = payload.api_key;
+/**
+ * Update API KeY Button
+ */
+(function() {
+  if (update_api_key_button) {
+    update_api_key_button.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const path = '/update-api-key';
+      const request = new Request(path, {
+        method: "POST",
+        body: JSON.stringify(account_data),
+        headers: new Headers({'Content-type': 'application/json'}),
+        mode: 'cors',
+        credentials: 'same-origin',
+      });
+      const response = await fetch(request);
+      if (response.headers.get('Content-type') === 'application/json') {
+        const payload = await response.json();
+        document.getElementById('api_key').innerHTML = payload.api_key;
+      }
+    });
   }
-});
+})();
 
-
+/**
+ * Adding load event listener to fetch account data
+ */
 self.addEventListener('load', async (e) => {
   /**
    * reloads the account data from the backend
