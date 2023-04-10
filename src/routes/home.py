@@ -44,7 +44,7 @@ def robots():
 
 
 @home_route.route('/Robots.txt')
-def robots():
+def _robots():
     return send_from_directory('static', 'robots.txt')
 
 

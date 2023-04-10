@@ -158,7 +158,6 @@ def user_details(func):
 
 def auth_required(func):
     """will not allow the user to access the route if the user is not logged in and not authorized for the route"""
-
     @wraps(func)
     def wrapper(*args, **kwargs):
 

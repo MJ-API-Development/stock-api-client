@@ -1,9 +1,7 @@
 import os
-
 import markdown
 import requests
 from flask import Blueprint, render_template, request, make_response, send_from_directory
-
 from src.cache import cached
 from src.routes.authentication.routes import user_details
 
@@ -42,8 +40,6 @@ def documentations_routes(params: dict[str, str]) -> dict:
         'playground': render_template('docs/playground.html', **context)
     }
     return _routes.get(path, _index)
-
-# TODO - consider using a memory cache for this endpoints
 
 
 @docs_route.route('/redoc', methods=['GET'])
@@ -100,8 +96,6 @@ def openapi_html(user_data: dict[str, str]):
     :return:
     """
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
-    url = "https://gateway.eod-stock-api.site/open-api"
-    openapi_data = requests.get(url)
     context = dict(**inject_specifications(), user_data=user_data, BASE_URL="https://client.eod-stock-api.site")
     return render_template('docs/docs-openapi.html', **context)
 
@@ -143,7 +137,7 @@ def python_sdk_docs(user_data: dict[str, str], path: str):
     **python_sdk_docs**
 
         display python sdk documentation this endpoints directly downloads a fresh
-        document from github
+        document from GitHub
     """
     if path.casefold() == "python":
         url = 'https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/README.md'
@@ -166,18 +160,16 @@ def github_links(user_data: dict[str, str], path: str):
     :param path:
     :return:
     """
-    path = request.full_path
-    if path.startswith("/sdk/src/docs/"):
-        url = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
-        with requests.Session() as session:
-            try:
-                response = session.get(url)
-            except requests.ConnectionError as e:
-                return render_template("docs/error/docs.html")
+    url = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
+    with requests.Session() as session:
+        try:
+            response = session.get(url)
+        except requests.ConnectionError as e:
+            return render_template("docs/error/docs.html")
 
-        html_content = markdown.markdown(response.content.decode('utf-8'))
-        context = dict(user_data=user_data, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
-        return render_template('docs/python-docs.html', **context)
+    html_content = markdown.markdown(response.content.decode('utf-8'))
+    context = dict(user_data=user_data, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
+    return render_template('docs/python-docs.html', **context)
 
 
 @docs_route.route('/docs/<string:path>', methods=['GET', 'POST'])

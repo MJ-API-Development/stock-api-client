@@ -1,14 +1,14 @@
 import hmac
-
 import requests
-from flask import request, render_template, session, Blueprint, abort, jsonify
+
+from flask import request, render_template, Blueprint, abort, jsonify
+
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, AccountResponseSchema
 from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
 from src.main import user_session
-from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature, \
-    user_details
+from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature
 
 account_handler = Blueprint("account", __name__)
 account_logger = init_logger("account_logger")

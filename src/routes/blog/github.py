@@ -5,6 +5,7 @@ import requests
 from flask import render_template, Response
 from github import Github
 
+from src.cache import cached
 from src.config import config_instance
 from src.logger import init_logger
 
@@ -66,6 +67,7 @@ class GithubBlog:
             # Do something if there has not been an update
             pass
 
+    @cached
     def fetch_all_blog_files(self):
         """
         Fetch the blog files from the GitHub repository.
@@ -91,6 +93,7 @@ class GithubBlog:
             if _key not in [key for key, _ in self.blog_files.items()]:
                 self.blog_files[_key] = value
 
+    @cached
     def blog_directories(self, directory=""):
         """
         Recursively searches for blog files in a given directory and its subdirectories,
@@ -127,6 +130,7 @@ class GithubBlog:
             return False
         return True
 
+    @cached
     def sitemap(self):
         """
         Generate a sitemap.xml file for the blog
@@ -146,6 +150,7 @@ class GithubBlog:
                                           formatted_date=date.today().isoformat())
         return Response(sitemap_content, mimetype='application/xml')
 
+    @cached
     def get_blog_file(self, url: str) -> str | None:
         """
             Returns the content of the blog file corresponding to the given URL

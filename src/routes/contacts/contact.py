@@ -1,10 +1,10 @@
-import functools
 import json
 import time
 
 import flask
 import requests
 from flask import Blueprint, render_template, request, abort, jsonify
+
 from src.config import config_instance
 from src.databases.models.schemas.contacts import Contacts
 from src.exceptions import BadResponseError

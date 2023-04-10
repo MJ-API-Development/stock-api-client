@@ -1,11 +1,14 @@
-import functools
+import json
+from typing import Callable
+
 import json
 from typing import Callable
 
 import flask
-from flask import Blueprint, render_template, redirect, request, jsonify, request, abort
 import requests
+from flask import Blueprint, render_template, redirect, jsonify, request, abort
 
+from src.cache import cached
 from src.config import config_instance
 from src.databases.models.schemas.subscriptions import PayPalSubscriptionModel
 from src.exceptions import UnresponsiveServer, ServerInternalError
@@ -20,7 +23,7 @@ paypal_settings_cache: dict[str, dict[str, str | int]] = {}
 cache_get_paypal_settings: Callable = paypal_settings_cache.get
 
 
-@functools.lru_cache(maxsize=1)
+@cached
 def get_all_plans() -> list[dict[str, str]]:
     """
         will fetch all plans from the gateway
@@ -53,7 +56,7 @@ def get_all_plans() -> list[dict[str, str]]:
     return all_plan_details
 
 
-@functools.lru_cache(maxsize=12)
+@cached
 def get_plan_details(plan_id: str) -> dict[str, str | int]:
     """
         **get_plan_details**
@@ -85,7 +88,7 @@ def get_plan_details(plan_id: str) -> dict[str, str | int]:
     return _plan_details
 
 
-@functools.lru_cache(maxsize=1024)
+@cached
 def get_user_data(uuid: str) -> dict[str, str | int]:
     """
         given uuid obtain user details from the gateway server
@@ -115,6 +118,7 @@ def get_user_data(uuid: str) -> dict[str, str | int]:
     return user_data
 
 
+@cached
 def get_paypal_settings(uuid: str) -> dict[str, str | int]:
     """
     Given UUID obtain PayPal settings from the gateway server.
@@ -225,6 +229,7 @@ def subscribe(user_data: dict[str, str]) -> flask.Response:
 
 
 @plan_routes.route('/plans-all', methods=["GET"])
+@cached
 def plans_all() -> flask.Response:
     """
         this endpoint will be called by the front page to get details

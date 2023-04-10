@@ -1,9 +1,8 @@
-from typing import Callable
-
-from flask import Flask, make_response, jsonify, session, redirect, url_for
+from flask import Flask, make_response, jsonify, redirect, url_for
 from flask_cors import CORS
 from flask_sitemap import Sitemap
 from jwt import ExpiredSignatureError
+
 from src.config import config_instance
 from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
