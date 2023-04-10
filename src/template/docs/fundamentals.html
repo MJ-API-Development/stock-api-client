@@ -1,44 +1,278 @@
 {% extends "layouts/layout.html" %}
-
 {% block content %}
 <div class="right_col" role="main">
-  <div class="col-md-12">
-    <h2 class="mb-4">EOD Stock API - Fundamentals Documentation</h2>
+<div class="container">
 
-    <div class="card-deck">
-      <div class="card">
-          <div class="card-header">
-              <h5 class="card-title">Company Overview</h5>
-          </div>
-        <div class="card-body">
+<h3>Fundamentals Data Documentation</h3>
+<p>This API provides fundamental data for companies based on their stock code. The endpoint for accessing the data is:</p>
 
-          <p class="card-text">Get detailed information about a company, including its name, description, and logo.</p>
-          <a href="#" class="btn btn-primary stretched-link">View Documentation</a>
-        </div>
-      </div>
+<h3> Endpoint </h3>
+<code>
+    https://gateway.eod-stock-api.site/api/v1/fundamental/company/{stock_code}
+</code>
+<div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python Code</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Response</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
 
-      <div class="card">
-          <div class="card-header">
-              <h5 class="card-title">Financial Statements</h5>
-          </div>
-        <div class="card-body">
+                        <h3>Using Python Requests</h3>
+                        <p>You can easily use python requests to access our api here is a simplified example below</p>
+<pre id="code">
+<code>
+    import requests
 
-          <p class="card-text">Access a company's financial statements, including its balance sheet, income statement, and cash flow statement.</p>
-          <a href="#" class="btn btn-primary stretched-link">View Documentation</a>
-        </div>
-      </div>
+    def get_company_info(stock_code, api_key):
+    url = f"https://gateway.eod-stock-api.site/api/v1/fundamental/company/{stock_code}"
+    params = {"api_key": api_key}
+    response = requests.get(url, params=params)
 
-      <div class="card">
-          <div class="card-header">
-              <h5 class="card-title">Valuation Ratios</h5>
-          </div>
-        <div class="card-body">
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Error {response.status_code}: {response.reason}")
+        return None
+</code>
+</pre>
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
 
-          <p class="card-text">Retrieve a company's valuation ratios, including its price-to-earnings ratio and price-to-book ratio.</p>
-          <a href="#" class="btn btn-primary stretched-link">View Documentation</a>
-        </div>
-      </div>
-    </div>
-  </div>
+                        <h3>Response Format</h3>
+                        <p>The response is in JSON format and has the following structure:</p>
+                        <pre id="response-code" >
+<code>
+{
+  "message": "success",
+  "payload": {
+    "address": {
+      "city": "Cupertino",
+      "country": "US",
+      "fundamental_id": "en_0c99a8a8c3e9129ba3cf7cc2f13872e8",
+      "state": "CA",
+      "street": "One Apple Park Way",
+      "zip": "95014"
+    },
+    "analyst_rankings": {
+      "buy": 26,
+      "fundamental_id": "en_0c99a8a8c3e9129ba3cf7cc2f13872e8",
+      "hold": 6,
+      "rating": 1.97,
+      "sell": 1,
+      "strong_buy": 23,
+      "strong_sell": 0,
+      "target_price": 166.97
+    },
+    "balance_sheets": {
+      "annual_balance_sheets": {
+        "balance_sheet": {
+          "accounts_payable": 42296000000,
+          "accumulated_amortization": -21887000000,
+          "accumulated_depreciation": 53506000000,
+          "accumulated_other_comprehensive_income": 227000000,
+          "additional_paid_in_capital": 0,
+          "balance_sheet_id": "balance-sheet-AAPL-annual-2021-09-25",
+          "capital_lease_obligations": 11648000000,
+          "capital_surplus": 0,
+          "cash": 193760000000,
+          "cash_and_short_term_investments": 196290000000,
+          "common_stock": 1.08E+11,
+          "common_stock_shares_outstanding": 16673532000,
+          "common_stock_total_equity": 74940000000,
+          "currency": "USD",
+          "date": "2021-09-25",
+          "deferred_long_term_liability": 10893000000,
+          "earnings_assets": 0.0762,
+          "fundamental_id": "en_0c99a8a8c3e9129ba3cf7cc2f13872e8",
+          "good_will": 54090000000,
+          "intangible_assets": 9440000000,
+          "inventory": 5357000000,
+          "long_term_debt": 77117000000,
+          "long_term_debt_total": 94936000000,
+          "long_term_investments": 233080000000,
+          "negative_good_will": 0,
+          "net_debt": -73853000000,
+          "net_invested_capital": 276411000000,
+          "net_receivables": 39916000000,
+          "net_tangible_assets": 34626000000,
+          "networking_capital": 42654000000,
+          "non_controlling_interest_in_consolidated_equity": 0,
+          "non_current_assets_other": 25945000000,
+          "non_current_liabilities_other": 50880000000,
+          "non_current_liabilities_total": 125963000000,
+          "other_assets": 13557000000,
+          "other_current_assets": 10995000000,
+          "other_liability": 0,
+          "other_stock_holder_equity": -16460000000,
+          "preferred_stock_redeemable": 0,
+          "preferred_stock_total_equity": 0,
+          "property_plant_and_equipment_gross": 58919000000,
+          "property_plant_equipment": 22707000000,
+          "retained_earnings": 47321000000,
+          "retained_earnings_total_equity": 65339000000,
+          "short_long_term_debt_total": 201000
+"total_assets": 354054000000,
+    "total_current_assets": 114949000000,
+    "total_current_liabilities": 105392000000,
+    "total_equity": 65339000000,
+    "total_liabilities": 288715000000,
+    "total_non_current_assets": 239105000000,
+    "total_non_current_liabilities": 183323000000,
+    "working_capital": 8557000000
+},
+"financials": [
+    {
+        "date": "2020-09-26",
+        "revenue": 274515000000,
+        "cost_of_revenue": 169559000000,
+        "gross_profit": 104956000000,
+        "research_and_development_expenses": 18752000000,
+        "selling_general_and_administrative_expenses": 19916000000,
+        "operating_expenses": 38668000000,
+        "operating_income": 66316000000,
+        "interest_expense": -2872000000,
+        "income_before_tax": 67091000000,
+        "income_tax_expense": 9859000000,
+        "net_income": 57411000000,
+        "net_income_non_controlling_interests": 0,
+        "net_income_discontinued_operations": 0,
+        "net_income_common_stockholders": 57411000000,
+        "eps": 3.28
+    },
+    {
+        "date": "2019-09-28",
+        "revenue": 260174000000,
+        "cost_of_revenue": 161782000000,
+        "gross_profit": 98392000000,
+        "research_and_development_expenses": 16217000000,
+        "selling_general_and_administrative_expenses": 18245000000,
+        "operating_expenses": 34462000000,
+        "operating_income": 63103000000,
+        "interest_expense": -357000000,
+        "income_before_tax": 65737000000,
+        "income_tax_expense": 10481000000,
+        "net_income": 55256000000,
+        "net_income_non_controlling_interests": 0,
+        "net_income_discontinued_operations": 0,
+        "net_income_common_stockholders": 55256000000,
+        "eps": 2.97
+    },
+    {
+        "date": "2018-09-29",
+        "revenue": 265595000000,
+        "cost_of_revenue": 163756000000,
+        "gross_profit": 101839000000,
+        "research_and_development_expenses": 14236000000,
+        "selling_general_and_administrative_expenses": 16705000000,
+        "operating_expenses": 30941000000,
+        "operating_income": 70898000000,
+        "interest_expense": -324000000,
+        "income_before_tax": 72903000000,
+        "income_tax_expense": 13372000000,
+        "net_income": 59531000000,
+        "net_income_non_controlling_interests": 0,
+        "net_income_discontinued_operations": 0,
+        "net_income_common_stockholders": 59531000000,
+        "eps": 2.98
+    }],
+"dividend_rate": 0.88,
+          "dividend_yield": 0.52,
+          "earnings_per_share": 5.1,
+          "ebitda": 111817000000,
+          "eps_estimate_current_year": 6.55,
+          "eps_estimate_next_quarter": 2.22,
+          "eps_estimate_next_year": 7.24,
+          "fifty_two_week_high": 157.26,
+          "fifty_two_week_low": 90.14,
+          "forward_annual_dividend_rate": 0.92,
+          "forward_annual_dividend_yield": 0.54,
+          "forward_pe_ratio": 23.52,
+          "full_time_employees": 147000,
+          "gross_profit": 104956000000,
+          "held_percent_institutions": 58.89,
+          "market_capitalization": 2461610000000,
+          "net_income": 57411000000,
+          "operating_income": 66288000000,
+          "payout_ratio": 16.88,
+          "pe_ratio": 29.81,
+          "price_book_ratio": 13.39,
+          "price_earnings_growth_ratio": 2.37,
+          "price_sales_ratio": 8.72,
+          "profit_margin": 21.69,
+          "quick_ratio": 1.18,
+          "revenue": 274515000000,
+          "revenue_per_share": 16.45,
+          "total_assets": 354054000000,
+          "total_cash": 19557000000,
+          "total_cash_per_share": 1.17,
+          "total_debt": 112098000000,
+          "total_liabilities": 170252000000,
+          "total_stockholders_equity": 183802000000,
+          "trailing_annual_dividend_rate": 0.82,
+          "trailing_annual_dividend_yield": 0.48,
+          "trailing_pe_ratio": 29.59,
+          "two_hundred_day_average": 131.99
+}
+</code>
+</pre>
+
+                  </div>
+                </div>
+              </div>
+  <!-- /.card -->
 </div>
+
+<div class="container">
+
+       <h3 class="card-title"> What is Company Fundamental Data</h3>
+
+
+    <div class="card-body">
+      <p class="card-text">When analyzing a company, one of the most important aspects to consider is its fundamental data. Fundamental data refers to the financial and economic information that is used to evaluate a company's performance and determine its investment potential. This information can be found in a company's financial statements, which are required by law to be published periodically.</p>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Income Statement</h5>
+      <p class="card-text">This statement shows a company's revenue, expenses, and profit over a specific period of time. It provides insight into how the company is performing financially, including its profitability and revenue growth.</p>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Balance Sheet</h5>
+      <p class="card-text">The balance sheet shows a company's assets, liabilities, and equity at a specific point in time. This statement provides information about the company's financial health, including its liquidity and solvency.</p>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Cash Flow Statement</h5>
+      <p class="card-text">This statement shows the inflows and outflows of cash from a company's operations, investments, and financing activities. It provides information about a company's ability to generate cash, pay dividends, and fund capital expenditures.</p>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Key Financial Ratios</h5>
+      <p class="card-text">These ratios are used to analyze a company's financial performance relative to its peers and the industry as a whole. Examples include the price-to-earnings ratio, return on equity, and debt-to-equity ratio.</p>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Economic Data</h5>
+      <p class="card-text">This includes macroeconomic indicators such as GDP, inflation, and interest rates. These factors can impact a company's performance, so it's important to consider them when analyzing fundamental data.</p>
+    </div>
+    <div class="card-body">
+      <p class="card-text">Fundamental data is used by investors and analysts to determine a company's value and potential for growth. By analyzing financial statements and economic data, they can make informed decisions about buying, holding, or selling a company's stock.</p>
+    </div>
+    <div class="card-body">
+      <p class="card-text">It's important to note that fundamental data is just one piece of the puzzle when it comes to investing. Other factors, such as market trends, political events, and company-specific news, can also impact a stock's performance. Therefore, it's important to conduct thorough research and analysis before making any investment decisions.</p>
+    </div>
+    <div class="card-body">
+      <p class="card-text">In conclusion, understanding company fundamental data is crucial for anyone looking to invest in the stock market. By analyzing a company's financial statements and economic data, investors can make informed decisions about the company's potential for growth and profitability.</p>
+    </div>
+    </div>
+</div>
+
+
+</div>
+</div>
+
+
 {% endblock %}

@@ -1,47 +1,175 @@
 {% extends "layouts/layout.html" %}
 
 {% block content %}
+
 <div class="right_col" role="main">
+
     <div class="col-md-12">
         <h2>EOD Stock API - Documentations - Exchanges</h2>
+        <p>The EOD Stock API provides access to historical and real-time stock market data. One of the main features of the API is the ability to retrieve exchange data. The exchange data endpoint returns a list of exchanges available on the EOD platform.</p>
+        <h3>Endpoint</h3>
+        <p>The endpoint for retrieving exchange data is:</p>
+        <code>https://gateway.eod-stock-api.site/api/exchanges/?api_key=YOUR_API_KEY</code>
+        <p>Replace <code>YOUR_API_KEY</code> with your own API KEY.</p>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        NASDAQ
-                    </div>
-                    <div class="card-body">
-                        <p>Documentation for accessing stock data from the NASDAQ exchange.</p>
-                        <a href="#" class="btn btn-primary">View Documentation</a>
-                    </div>
-                </div>
-            </div>
+<div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python Code</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-nodejs" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Node JS Code</a>
+                  </li>
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        NYSE
-                    </div>
-                    <div class="card-body">
-                        <p>Documentation for accessing stock data from the New York Stock Exchange.</p>
-                        <a href="#" class="btn btn-primary">View Documentation</a>
-                    </div>
-                </div>
-            </div>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Response</a>
+                  </li>
+                </ul>
+              </div>
+<div class="card-body">
+<div class="tab-content" id="custom-tabs-one-tabContent">
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        Tokyo Stock Exchange
-                    </div>
-                    <div class="card-body">
-                        <p>Documentation for accessing stock data from the Tokyo Stock Exchange.</p>
-                        <a href="#" class="btn btn-primary">View Documentation</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+    <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+
+
+<pre>
+    <code>
+    import requests
+
+    def get_exchange_data(api_key):
+        """
+        Makes a GET request to the exchange data endpoint and returns the response data.
+
+        Args:
+        api_key (str): Your API key.
+
+        Returns:
+        dict: The response data from the endpoint.
+
+        Raises:
+        requests.exceptions.HTTPError: If the API returns an error status code.
+        """
+        url = f"https://gateway.eod-stock-api.site/api/exchanges/?api_key={api_key}"
+        with requests.Session() as session:
+            response = session.get(url)
+            response.raise_for_status() # Raise an HTTPError if status code is unsuccessful
+        return response.json()
+    </code>
+</pre>
+
+</div>
+
+<div class="tab-pane fade" id="custom-tabs-one-nodejs" role="tabpanel" aria-labelledby="custom-tabs-one-nodejs">
+
+<pre>
+    <code>
+      const axios = require('axios');
+
+      async function getExchangeData(apiKey) {
+        /**
+         * Makes a GET request to the EOD exchange data endpoint and returns the response data.
+         *
+         * @param {string} apiKey - Your EOD API key.
+         * @returns {Promise< Object>} The response data from the endpoint.
+         * @throws {Error} If the API returns an error status code.
+         */
+        try {
+          const response = await axios.get(`https://gateway.eod-stock-api.site/api/exchanges/?api_key=${apiKey}`);
+          return response.data;
+        } catch (error) {
+          throw new Error(error.response.data);
+        }
+      }
+    </code>
+  </pre>
+</div>
+
+
+    <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+        <h3>Response</h3>
+        <p>The response from the exchange data endpoint is a JSON object with two keys: <code>message</code> and <code>payload</code>. The <code>message</code> key provides information about the response, while the <code>payload</code> key contains an array of exchanges, with each exchange represented as an object with several properties, including:</p>
+        <ul>
+            <li><code>code</code>: a short code representing the exchange</li>
+            <li><code>name</code>: the name of the exchange</li>
+            <li><code>country</code>: the country where the exchange is located</li>
+            <li><code>currency_symbol</code>: the currency symbol used by the exchange</li>
+            <li><code>exchange_id</code>: a unique identifier for the exchange on the EOD platform</li>
+            <li><code>operating_mic</code>: the Market Identifier Code (MIC) used by the exchange</li>
+        </ul>
+        <p>An example response from the exchange data endpoint is:</p>
+
+        <pre class="python"><code>
+{
+    "message": "Exchange listings returned",
+    "payload": [
+        {
+            "code": "BA",
+            "country": "Argentina",
+            "currency_symbol": "ARS",
+            "exchange_id": "dd1bMl6JRVX6gLt8",
+            "name": "Buenos Aires Exchange",
+            "operating_mic": "XBUE"
+        },
+        {
+            "code": "AU",
+            "country": "Australia",
+            "currency_symbol": "AUD",
+            "exchange_id": "BdnsU0dKgX96qa2M",
+            "name": "Australia Exchange",
+            "operating_mic": "XASX"
+        },
+        {
+            "code": "VI",
+            "country": "Austria",
+            "currency_symbol": "EUR",
+            "exchange_id": "IDcezGJXeSorS8ux",
+            "name": "Vienna Exchange",
+            "operating_mic": "XWBO"
+        }]
+}
+        </code>
+        </pre>
+
+</div>
+
+</div>
+</div>
+</div>
+      <h3>What is Exchange Information?</h3>
+        <p>Exchange information refers to data related to stock exchanges and the securities traded on those exchanges. This information can include data on stock prices, trading volumes, market capitalization, and other metrics that can be used to gauge market trends and investor sentiment. </p>
+        <p>Exchange information is typically made available through various sources, including financial news outlets, market data providers, and APIs provided by exchanges themselves. </p>
+
+        <h3>Why is Exchange Information Important?</h3>
+        <p>Exchange information is important for several reasons, including:</p>
+
+        <h4>Market Analysis</h4>
+        <p>Exchange information can be used to conduct market analysis, providing investors with insights into trends and patterns in the market. By analyzing historical market data, investors can identify patterns and trends that can inform investment decisions.</p>
+
+        <h4>Investment Decision-Making</h4>
+        <p>Exchange information can also be used to inform investment decisions. By analyzing data related to individual securities and market trends, investors can make informed decisions about buying or selling securities.</p>
+
+        <h4>Risk Management</h4>
+        <p>Exchange information can also be used to manage risk. By monitoring market data and identifying potential risks, investors can take steps to mitigate those risks and protect their investments.</p>
+
+        <h3>How Can Exchange Information be Accessed?</h3>
+        <p>Exchange information can be accessed through various sources, including:</p>
+
+        <h4>Financial News Outlets</h4>
+        <p>Financial news outlets, such as Bloomberg and Reuters, provide up-to-date market data and analysis.</p>
+
+        <h4>Market Data Providers</h4>
+        <p>Market data providers, such as Morningstar and Thomson Reuters, provide comprehensive market data and analysis.</p>
+
+        <h4>Exchange APIs</h4>
+        <p>Exchanges themselves also provide APIs that allow developers to access market data directly. These APIs can be used to build applications that provide real-time market data and analysis.</p>
+
+        <h3>Conclusion</h3>
+        <p>Exchange information is a critical component of financial markets, providing investors with insights into market trends and investment opportunities. By leveraging exchange information, investors can make informed investment decisions and manage risk effectively. Whether accessed through financial news outlets, market data providers, or exchange APIs, exchange information is a valuable resource for investors seeking to navigate today's complex financial landscape.</p>
+    </div>
+
+
     </div>
 </div>
 {% endblock %}
