@@ -52,6 +52,17 @@ function setAccountCookie(account_data) {
   document.cookie = `${cookieName}=${cookieValue}${secureFlag}; path=/; SameSite=Strict`;
 }
 
+// Function to read the cookie and get the account data
+function getAccountFromCookie() {
+  const cookieName = 'uuid';
+  const cookieValue = `; ${document.cookie}`;
+  const parts = cookieValue.split(`; ${cookieName}=`);
+  if (parts.length === 2) {
+      const cookie_data = parts.pop().split(';').shift();
+      return JSON.parse(cookie_data);
+  }
+  return null;
+}
 
 function canRegisterServiceWorker() {
     /** checks if its safe to instance a service worker */
