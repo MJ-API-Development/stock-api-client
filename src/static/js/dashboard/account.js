@@ -1,4 +1,6 @@
 // APIKeys Script
+// noinspection JSUnresolvedVariable
+
 const apiKeyEl = document.getElementById('api_key');
 const showApiKeyBtn = document.getElementById('show_api_key');
 const copyApiKeyBtn = document.getElementById('copy_api_key');
@@ -12,6 +14,7 @@ const surname_dom = document.getElementById('surname');
 const cell_dom = document.getElementById('cell');
 const email_dom = document.getElementById('email');
 
+const update_api_key_button = document.getElementById('update_api_key_button');
 
 //
 
@@ -69,6 +72,28 @@ updateAccountButton.addEventListener('click', async (e) => {
     await updateUI(account_data);
   }
 });
+
+
+/**
+ * Update API KeY Button
+ */
+update_api_key_button.addEventListener('click', async (e) => {
+  e.preventDefault();
+  const path = '/update-api-key';
+  const request = new Request(path, {
+    method: "POST",
+    body: JSON.stringify(account_data),
+    headers: new Headers({'Content-type': 'application/json'}),
+    mode: 'cors',
+    credentials: 'same-origin',
+  });
+  const response = await fetch(request);
+  if (response.headers.get('Content-type') === 'application/json') {
+    const payload = await response.json();
+    document.getElementById('api_key').innerHTML = payload.api_key;
+  }
+});
+
 
 self.addEventListener('load', async (e) => {
   /**

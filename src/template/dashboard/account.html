@@ -50,19 +50,19 @@
             </div>
         </div>
         <!-- PAYMENT METHODS -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title"> <i class="fa fa-cc-paypal"> </i> Payment Method</h3>
-          </div>
-          <div class="card-body">
-              <div class="text-body">Attached Paypal Account</div>
-              <hr>
-              <ol class="list-group">
-                  <li class="list-group-item"><input type="text" class="form-control" id="paypal" />  </li>
-              </ol>
-              <button class="btn btn-check btn-dark"> <i class="fa fa-paypal"> </i> Update PayPal Account </button>
-          </div>
-        </div>
+{#        <div class="card">#}
+{#          <div class="card-header">#}
+{#            <h3 class="card-title"> <i class="fa fa-cc-paypal"> </i> Payment Method</h3>#}
+{#          </div>#}
+{#          <div class="card-body">#}
+{#              <div class="text-body">Attached Paypal Account</div>#}
+{#              <hr>#}
+{#              <ol class="list-group">#}
+{#                  <li class="list-group-item"><input type="text" class="form-control" id="paypal" />  </li>#}
+{#              </ol>#}
+{#              <button class="btn btn-check btn-dark"> <i class="fa fa-paypal"> </i> Update PayPal Account </button>#}
+{#          </div>#}
+{#        </div>#}
 
       </div>
       <div class="col-md-6">
@@ -74,26 +74,36 @@
           </div>
           <div class="card-body">
             <div class="form-group">
+            {% if user_data and user_data['apikey'] %}
                 <div class="card-text" id="subscription_details">
                     <strong>loading...</strong>
                 </div>
-
-                <ul class="list-group-item">
-                    <li class="list-group-item"> <label for="plans_select">Available Plans </label>
-                            <select id="plans_select" class="form-control">
-                                   <option>Basic - $ 19.99</option>
-                                   <option>Professional- $ 49.99</option>
-                                   <option>Business - $ 199.99</option>
-                                   <option>Enterprise - $ 399.99</option>
-                            </select>
-                        </li>
-                </ul>
-
+            {% endif %}
                 <div class="input-group">
-                    <button class="btn btn-dark"><i class="fa fa-server"> </i> Update Plan </button>
+                    {% if user_data and user_data['apikey'] %}
+                        <button class="btn btn-dark"><i class="fa fa-server"> </i> Update Plan </button>
+                    {% else %}
+                            <form method="POST" action="{{ url_for('apikeys.regenerate_api_key') }}">
+                            <span> You are not yet subscribed to any plan please select a plan to subscribe</span>
+                            <ul class="list-group">
+                                <li class="list-group-item"> <label for="plans_select">Select Plan to Subscribe </label>
+                                        <select id="plans_select" class="form-control">
+                                               <option>Basic - $ 9.99</option>
+                                               <option>Professional- $ 19.99</option>
+                                               <option>Business - $ 49.99</option>
+                                               <option>Enterprise - $ 99.99</option>
+                                        </select>
+                                    </li>
+                            </ul>
+
+                              <button type="submit" class="btn btn-dark"> <i class="fa fa-key"> </i>  Subscribe</button>
+                            </form>
+
+                    {% endif %}
                 </div>
             </div>
             <div class="form-group">
+              <span class="card-text">API Keys</span>
               <div class="input-group">
                 <input type="password" id="api_key" class="form-control" value="{{ api_key }}" readonly disabled onkeydown="return false;">
                 <span class="input-group-btn">
@@ -107,7 +117,12 @@
               </div>
             </div>
             <form method="POST" action="{{ url_for('apikeys.regenerate_api_key') }}">
-              <button type="submit" class="btn btn-primary"> <i class="fa fa-key"> </i>  Regenerate API Key</button>
+                {% if user_data and user_data['apikey'] %}
+                    <button id="update_api_key_button" type="button" class="btn btn-primary"> <i class="fa fa-key"> </i>  Create New API Key</button>
+                {% else %}
+{#                    <button id="" type="button" class="btn btn-primary" disabled> <i class="fa fa-key"> </i>  API Key</button>#}
+                    <span class="card-text"> Please subscribe to get an API Key</span>
+                {% endif %}
             </form>
           </div>
         </div>
