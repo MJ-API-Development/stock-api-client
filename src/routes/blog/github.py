@@ -153,38 +153,33 @@ class GithubBlog:
         """
         self._logger.info("original url is {}".format(url))
         url = f"{self.swap_to_github_url(url)}"
-        self._logger.info("swapped url is {}".format(url))
         _found_url = self._locate_url(_url=url, blog_urls=self.blog_files)
         if _found_url is not None:
-            self._logger.info("found url is {}".format(_found_url))
             file_name = self.blog_files[_found_url]
             content_file = self.repo.get_contents(file_name)
             return content_file.decoded_content.decode('utf-8')
         else:
             for dir_name, files in self.blog_files.items():
                 _found_url = self._locate_url(_url=url, blog_urls=files)
-                self._logger.info("found url is {}".format(_found_url))
+
                 if _found_url is not None:
                     file_name = files[_found_url]
                     content_file = self.repo.get_contents(dir_name + "/" + file_name)
                     return content_file.decoded_content.decode("utf-8")
             return None
 
-    def _locate_url(self, _url: str, blog_urls: dict[str, str]) -> str | None:
+    @staticmethod
+    def _locate_url(_url: str, blog_urls: dict[str, str]) -> str | None:
         if not isinstance(blog_urls, dict):
             return
         if not _url.endswith("/") and not _url.endswith(".md"):
             _url += "/"
         _url = _url.casefold()
-        self._logger.info("on locate starting with {}".format(_url))
 
         for blog_url, value in blog_urls.items():
-            self._logger.info("testing against : {}".format(blog_url))
             if blog_url and blog_url.casefold().startswith(_url):
-
                 suffix = urlparse(blog_url).path[-3:].lower()
                 if (suffix == ".md") or (suffix[-1] == "/"):
-                    self._logger.info("found against : {}".format(blog_url))
                     return blog_url
         return
 
@@ -201,10 +196,8 @@ class GithubBlog:
         Given a blog URL, returns the corresponding URL for GitHub.
         """
         github_url = None
-        self._logger.info("swapping with github : {}".format(self.github_url))
         if url.casefold().startswith(self.blog_url.casefold()):
             github_url = url.replace(self.blog_url, self.github_url)
-        self._logger.info("swapped against : {}".format(github_url))
         return github_url
 
     def remove_github_url(self, filename: str) -> str:
@@ -239,12 +232,10 @@ class GithubBlog:
             :param _self:
             :return:
             """
-
             return _link.replace(_self.blog_url, "")
 
         for link in links:
             name = remove_blog_link(self, link)
-            print(name)
 
             if name.endswith('.md'):
                 # this is a file link
@@ -284,7 +275,7 @@ class GithubBlog:
                 single_files.append({f"{self.swap_to_blog_url(key)}": f"{value}"})
 
         folders.extend(single_files)
-        print(f"folders contains {len(folders)}")
+
         links = []
         for files in folders:
             if isinstance(files, dict):
@@ -292,5 +283,5 @@ class GithubBlog:
                     links.append(url)
             else:
                 links.append(files)
-        print(f"link contains {len(links)}")
+
         return self.create_menu(links=links)

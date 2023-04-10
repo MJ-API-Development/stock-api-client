@@ -159,7 +159,6 @@ const register_user = async (mode) => {
     } else {
         document.getElementById('message-subscribe').innerHTML = data.message;
     }
-
 };
 
 // Attach the submitForm function to the form's submit event

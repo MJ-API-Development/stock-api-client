@@ -1,10 +1,8 @@
 import os
 import random
-
 import markdown
 import requests
 from flask import render_template, request, send_from_directory, Blueprint, url_for
-
 from src.cache import cached
 from src.config import config_instance
 from src.main import github_blog
@@ -40,7 +38,9 @@ def load_top_stories(user_data: dict):
     """
     Using our financial news API to display a list of top stories
     """
+
     DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
+
     meme_tickers = ['AAPL', 'AMZN', 'GOOGL', 'TSLA', 'FB', 'NVDA', 'NFLX', 'MSFT',
                     'JPM', 'V', 'BAC', 'WMT', 'JNJ', 'PG', 'KO', 'PEP', 'CSCO',
                     'INTC', 'ORCL', 'AMD']
@@ -57,7 +57,6 @@ def load_top_stories(user_data: dict):
         # Use dict.get() method with a default value to avoid errors if a key is missing
         # Use a named constant for default image url to improve code readability and usability
         good_image_url = select_resolution(story.get('thumbnail', [])) or DEFAULT_IMAGE_URL
-
         # Use a uuid to identify each story and avoid duplicates
         uuid = story.get('uuid')
         if uuid not in uuids:
@@ -75,12 +74,13 @@ def load_top_stories(user_data: dict):
 
     created_stories.sort(key=lambda _story: _story['datetime_published'])
     context = dict(stories=created_stories,
-                           tickers=meme_tickers,
-                           selected_ticker=selected_ticker, user_data=user_data)
+                   tickers=meme_tickers,
+                   selected_ticker=selected_ticker, user_data=user_data)
 
     return render_template('blog/top_stories.html', **context)
 
 
+# noinspection PyUnusedLocal
 @github_blog_route.route('/blog/<path:blog_path>', methods=["GET"])
 @user_details
 @cached
@@ -109,7 +109,6 @@ def blog_static(file_path):
     """static files will only be images """
     # get the content of the file from GitHub
     content = github_blog.get_blog_file(file_path)
-
     # return the file content with appropriate headers
     return send_from_directory(os.path.dirname(file_path), content, as_attachment=False)
 
@@ -117,7 +116,7 @@ def blog_static(file_path):
 @github_blog_route.route('/blog/sitemap.xml', methods=['GET'])
 def sitemap():
     """
-    Route to serve the sitemap.xml file for the blog
+        Route to serve the sitemap.xml file for the blog
     """
     github_blog.update_blog()
     sitemap_content = github_blog.sitemap()
@@ -132,7 +131,7 @@ def check_commits():
 @github_blog_route.route('/_admin/blog/submit-sitemap', methods=['GET'])
 def submit_sitemap():
     sitemap_url = 'https://eod-stock-api.site/blog/sitemap.xml'
-    response = submit_sitemap_to_google_search_console(sitemap_url)
+    _ = submit_sitemap_to_google_search_console(sitemap_url)
     return github_blog.sitemap()
 
 
