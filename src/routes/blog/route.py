@@ -49,7 +49,7 @@ def load_top_stories(user_data: dict):
     # If the form has been submitted, get the selected ticker symbol
 
     selected_ticker = request.args.get('ticker', random.choice(meme_tickers))
-
+    print(selected_ticker)
     # Use a set to avoid duplicate stories
     created_stories = []
     uuids = set()
@@ -153,17 +153,24 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     url = f'https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}'
     headers = {'Content-Type': 'application/json'}
     params = {'api_key': config_instance().EOD_STOCK_API_KEY}
-    response = requests.get(url, headers=headers, params=params)
+
+    with requests.Session() as session:
+        try:
+            response = requests.get(url, headers=headers, params=params)
+        except requests.exceptions.ConnectionError:
+            return []
+        except requests.exceptions.Timeout:
+            return []
 
     if response.headers['Content-Type'] != 'application/json':
         return []
 
     response_data: dict[str, str | dict] = response.json()
 
-    if not response_data['status']:
+    if response_data and not response_data.get('status', False):
         return []
 
-    return response_data['payload']
+    return response_data.get('payload', [])
 
 
 @cached

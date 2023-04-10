@@ -169,25 +169,6 @@ async function update_subscription_details(subscription){
   const maxRequests = planDetails.maxRequests;
   const monthlyPayment = subscription.subscription_id;
   const dateLastPayment = new Date().toLocaleDateString(); // this value needs to be obtained from the subscription data
-  // const resourceList = planDetails.resources.map(resource => {
-  //   const parts = resource.split('.');
-  //   let displayText = parts.join(' > ');
-  //   displayText = displayText.charAt(0).toUpperCase() + displayText.slice(1); // capitalize the first letter
-  //   return `<li>${displayText}</li>`;
-  // }).join('');
-  //
-  // // subscription_details_dom.innerHTML = `
-  // //   <li class="list-group-item" > Plan Details: ${planType} </li>
-  // //   <li class="list-group-item"> Date Subscribed: ${dateSubscribed} </li>
-  // //   <li class="list-group-item"> Remaining Balance: ${monthlyRequestLimit} </li>
-  // //  <li class="list-group-item"> Resources:</li>
-  // //   <ul>
-  // //     ${resourceList}
-  // //   </ul>
-  // //   <li class="list-group-item"> Rate Limiting: ${planDetails.rate_limit} </li>
-  // //   <li class="list-group-item"> Monthly Payment: ${monthlyPayment} </li>
-  // //   <li class="list-group-item"> Date Last Payment: ${dateLastPayment} </li>
-  // // `;
 
   const resources = planDetails.resources.map(resource => {
     const resourceSplit = resource.split('.');
