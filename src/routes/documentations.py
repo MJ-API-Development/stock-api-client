@@ -43,7 +43,6 @@ def documentations_routes(params: dict[str, str]) -> dict:
 
 
 @docs_route.route('/redoc', methods=['GET'])
-@cached
 def redoc():
     """
         **redoc**
@@ -69,7 +68,6 @@ def send_js():
 
 
 @docs_route.route('/openapi.json', methods=['GET'])
-@cached
 def openapi_json():
     """
     **openapi_json**

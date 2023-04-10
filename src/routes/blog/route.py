@@ -33,7 +33,6 @@ def blog(user_data: dict[str, str]):
 
 
 @github_blog_route.route('/blog/top-stories', methods=['GET', 'POST'])
-@cached
 @user_details
 def load_top_stories(user_data: dict):
     """

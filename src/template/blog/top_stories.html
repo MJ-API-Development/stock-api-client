@@ -42,7 +42,7 @@
         <h3 class="card-title">Financial News API - Blog Articles</h3>
     </div>
     <div class="card-body">
-        <form method="GET" action="{{ url_for('blog.load_top_stories') }}" enctype="application/x-www-form-urlencoded">
+        <form id="story" method="GET" action="{{ url_for('blog.load_top_stories') }}" enctype="application/x-www-form-urlencoded">
             <label for="ticker"><strong>Select Ticker</strong></label>
             <select class="form-control" name="ticker" id="ticker">
                 {% for ticker in tickers %}
