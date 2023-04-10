@@ -18,6 +18,8 @@ def generate_sitemap():
     yield 'blog.sitemap', {}
     yield 'home.terms_of_use', {}
     yield 'home.privacy_policy', {}
+    yield 'docs.documentations', {'path': 'exchanges'},
+    yield 'docs.documentations', {'path': 'fundamentals'}
 
 
 @sitemap_bp.route('/sitemap.xml', methods=['GET'])

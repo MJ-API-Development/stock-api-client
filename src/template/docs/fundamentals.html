@@ -331,5 +331,12 @@ const getCompanyInfo = async (stockCode, apiKey) => {
     </div>
     </div>
 </div>
+
+<div class="card-footer">
+    <h3>Related Documentations</h3>
+    <a href="{{ url_for('docs.documentations', path='exchanges') }}"> <button id="next-doc-button" class="btn btn-dark">
+        <i class="fa fa-link"> </i>
+        Exchanges </button></a>
+</div>
 </div>
 {% endblock %}
