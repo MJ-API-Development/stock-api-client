@@ -17,21 +17,52 @@
                     <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python Code</a>
                   </li>
                   <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-node" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Node Code</a>
+                  </li>
+
+                  <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Response</a>
                   </li>
                 </ul>
               </div>
               <div class="card-body">
                 <div class="tab-content" id="custom-tabs-one-tabContent">
+
                   <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
 
-                        <h3>Using Python Requests</h3>
-                        <p>You can easily use python requests to access our api here is a simplified example below</p>
+<h3>Using Python Requests</h3>
+<p>You can easily use python requests to access our api here is a simplified example below</p>
 <pre id="code">
 <code>
-    import requests
+"""
+Retrieve information about a company identified by its stock code from the EOD Stock API.
 
-    def get_company_info(stock_code, api_key):
+:param stock_code: The stock code of the company to retrieve information for.
+:type stock_code: str
+
+:param api_key: The API key to use to access the EOD Stock API.
+:type api_key: str
+
+:return: A dictionary containing information about the company, or None if an error occurred.
+:rtype: dict or None
+"""
+
+import requests
+
+def get_company_info(stock_code: str, api_key: str) -> dict or None:
+    """
+    Retrieve information about a company identified by its stock code from the EOD Stock API.
+
+    :param stock_code: The stock code of the company to retrieve information for.
+    :type stock_code: str
+
+    :param api_key: The API key to use to access the EOD Stock API.
+    :type api_key: str
+
+    :return: A dictionary containing information about the company, or None if an error occurred.
+    :rtype: dict or None
+    """
+
     url = f"https://gateway.eod-stock-api.site/api/v1/fundamental/company/{stock_code}"
     params = {"api_key": api_key}
     response = requests.get(url, params=params)
@@ -41,10 +72,43 @@
     else:
         print(f"Error {response.status_code}: {response.reason}")
         return None
+
 </code>
 </pre>
                   </div>
-                  <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+
+                    <div class="tab-pane fade" id="custom-tabs-one-node" role="tabpanel" aria-labelledby="custom-tabs-one-node">
+<pre>
+<code lang="node">
+/**
+ * Retrieve information about a company identified by its stock code from the EOD Stock API.
+ *
+ * @param {string} stockCode - The stock code of the company to retrieve information for.
+ * @param {string} apiKey - The API key to use to access the EOD Stock API.
+ * @returns {Object|null} A dictionary containing information about the company, or null if an error occurred.
+ */
+const getCompanyInfo = async (stockCode, apiKey) => {
+  try {
+    const url = `https://gateway.eod-stock-api.site/api/v1/fundamental/company/${stockCode}`;
+    const params = { api_key: apiKey };
+    const response = await axios.get(url, { params });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error(`Error ${response.status}: ${response.statusText}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    return null;
+  }
+};
+
+</code>
+</pre>
+                    </div>
+                    <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
 
                         <h3>Response Format</h3>
                         <p>The response is in JSON format and has the following structure:</p>
@@ -232,9 +296,7 @@
 
 <div class="container">
 
-       <h3 class="card-title"> What is Company Fundamental Data</h3>
-
-
+<h3 class="card-title"> What is Company Fundamental Data</h3>
     <div class="card-body">
       <p class="card-text">When analyzing a company, one of the most important aspects to consider is its fundamental data. Fundamental data refers to the financial and economic information that is used to evaluate a company's performance and determine its investment potential. This information can be found in a company's financial statements, which are required by law to be published periodically.</p>
     </div>
@@ -269,10 +331,5 @@
     </div>
     </div>
 </div>
-
-
 </div>
-</div>
-
-
 {% endblock %}

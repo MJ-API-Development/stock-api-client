@@ -19,7 +19,7 @@
                     <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python Code</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-nodejs" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Node JS Code</a>
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-nodejs" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Node</a>
                   </li>
 
                   <li class="nav-item">
@@ -35,28 +35,28 @@
 
 
 <pre>
-    <code>
-    import requests
+    <code lang="python">
+import requests
 
-    def get_exchange_data(api_key):
-        """
-        Makes a GET request to the exchange data endpoint and returns the response data.
+def get_exchange_data(api_key):
+    """
+    Makes a GET request to the exchange data endpoint and returns the response data.
 
-        Args:
-        api_key (str): Your API key.
+    Args:
+    api_key (str): Your API key.
 
-        Returns:
-        dict: The response data from the endpoint.
+    Returns:
+    dict: The response data from the endpoint.
 
-        Raises:
-        requests.exceptions.HTTPError: If the API returns an error status code.
-        """
-        url = f"https://gateway.eod-stock-api.site/api/exchanges/?api_key={api_key}"
-        with requests.Session() as session:
-            response = session.get(url)
-            response.raise_for_status() # Raise an HTTPError if status code is unsuccessful
-        return response.json()
-    </code>
+    Raises:
+    requests.exceptions.HTTPError: If the API returns an error status code.
+    """
+    url = f"https://gateway.eod-stock-api.site/api/exchanges/?api_key={api_key}"
+    with requests.Session() as session:
+        response = session.get(url)
+        response.raise_for_status() # Raise an HTTPError if status code is unsuccessful
+    return response.json()
+</code>
 </pre>
 
 </div>
@@ -64,25 +64,25 @@
 <div class="tab-pane fade" id="custom-tabs-one-nodejs" role="tabpanel" aria-labelledby="custom-tabs-one-nodejs">
 
 <pre>
-    <code>
-      const axios = require('axios');
+<code lang="node">
+  const axios = require('axios');
 
-      async function getExchangeData(apiKey) {
-        /**
-         * Makes a GET request to the EOD exchange data endpoint and returns the response data.
-         *
-         * @param {string} apiKey - Your EOD API key.
-         * @returns {Promise< Object>} The response data from the endpoint.
-         * @throws {Error} If the API returns an error status code.
-         */
-        try {
-          const response = await axios.get(`https://gateway.eod-stock-api.site/api/exchanges/?api_key=${apiKey}`);
-          return response.data;
-        } catch (error) {
-          throw new Error(error.response.data);
-        }
-      }
-    </code>
+  async function getExchangeData(apiKey) {
+    /**
+     * Makes a GET request to the EOD exchange data endpoint and returns the response data.
+     *
+     * @param {string} apiKey - Your EOD API key.
+     * @returns {Promise< Object>} The response data from the endpoint.
+     * @throws {Error} If the API returns an error status code.
+     */
+    try {
+      const response = await axios.get(`https://gateway.eod-stock-api.site/api/exchanges/?api_key=${apiKey}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data);
+    }
+  }
+</code>
   </pre>
 </div>
 
