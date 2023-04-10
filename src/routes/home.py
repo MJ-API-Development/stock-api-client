@@ -1,8 +1,5 @@
-import functools
 from pprint import pprint
-
-from flask import Blueprint, render_template, Request, request, send_from_directory, url_for
-
+from flask import Blueprint, render_template, send_from_directory
 from src.routes.authentication.routes import user_details
 
 home_route = Blueprint('home', __name__)
@@ -22,7 +19,6 @@ def home(user_data: dict[str, str]):
 
 
 @home_route.route('/status')
-@functools.lru_cache(maxsize=128)
 @user_details
 def status(user_data: dict[str, str]):
     if user_data is None:
@@ -33,7 +29,6 @@ def status(user_data: dict[str, str]):
 
 
 @home_route.route('/pricing')
-@functools.lru_cache(maxsize=128)
 @user_details
 def pricing(user_data: dict[str, str]):
     if user_data is None:
@@ -70,5 +65,4 @@ def privacy_policy(user_data: dict[str, str]):
         user_data = {}
     context = dict(user_data=user_data)
     return render_template('privacy.html', **context)
-
 

@@ -1,11 +1,10 @@
-import json
-import os
 from datetime import date
 from urllib.parse import urlparse
 
 import requests
 from flask import render_template, Response
 from github import Github
+
 from src.config import config_instance
 from src.logger import init_logger
 

@@ -1,9 +1,8 @@
 
 import requests
 from flask import Blueprint, jsonify
-from requests.exceptions import ConnectionError, ConnectTimeout
+
 from src.logger import init_logger
-from src.routes.authentication.routes import user_details
 
 status_bp = Blueprint('status', __name__)
 status_logger = init_logger('status_logger')
