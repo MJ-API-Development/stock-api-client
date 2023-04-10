@@ -58,9 +58,9 @@ def redoc():
 
 
 @docs_route.route('/redoc.standalone.js')
-@cached
 def send_js():
     """
+    # NOTE IMPORTANT DO NOT CACHE
     **send_js**
         helps avoid cors errors - by sending the redoc js file directly from our static folder
     """
