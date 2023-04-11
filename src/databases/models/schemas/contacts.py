@@ -1,17 +1,17 @@
 import re
 import time
-
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Field
+from src.databases.models.schemas import contains_malicious_patterns
+from src.utils import create_id
 
 
 # noinspection PyMethodParameters
 class Contacts(BaseModel):
     """
         ORM Model for Contacts
-
     """
-    uuid: str | None
-    contact_id: str | None
+    uuid: str | None 
+    contact_id: str = Field(default_factory=lambda: create_id())
     name: str | None
     email: str | None
     message: str
@@ -33,11 +33,9 @@ class Contacts(BaseModel):
         """
         if len(message) < 10 or len(message) > 500:
             raise ValueError("Message should be between 10 and 500 characters")
-
         # Regex pattern to match common attack patterns
-        attack_pattern = r"(select|update|delete|drop|create|alter|insert|into|from|where|union|having|or|and|exec|script|javascript)"
-        if re.search(attack_pattern, message, re.IGNORECASE):
-            raise ValueError("Message contains common attack pattern")
+        if contains_malicious_patterns(_input=message):
+            raise ValueError("Message contains suspicious patterns")
         return message
 
     @validator('name')
@@ -54,4 +52,6 @@ class Contacts(BaseModel):
         name_pattern = r"^[a-zA-Z]{1,25}([-']{1}[a-zA-Z]{1,25}){0,2}$"
         if not re.match(name_pattern, name):
             raise ValueError("Invalid Name")
+        if contains_malicious_patterns(_input=name):
+            raise ValueError("Name contains suspicious characters")
         return name
