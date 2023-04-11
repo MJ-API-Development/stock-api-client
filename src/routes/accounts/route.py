@@ -17,8 +17,6 @@ account_logger = init_logger("account_logger")
 @account_handler.route('/account', methods=['GET'])
 @auth_required
 def account(user_data: dict[str, str]):
-    if user_data is None:
-        user_data = {}
     context = dict(user_data=user_data)
     return render_template('dashboard/account.html', **context)
 

@@ -163,7 +163,7 @@ def github_links(user_data: dict[str, str], path: str):
     with requests.Session() as session:
         try:
             response = session.get(url)
-        except requests.ConnectionError as e:
+        except requests.ConnectionError:
             return render_template("docs/error/docs.html")
 
     html_content = markdown.markdown(response.content.decode('utf-8'))

@@ -19,8 +19,6 @@ def regenerate_api_key(user_data: dict[str, str]):
     :return:
     """
     account_data = request.get_json()
-    print("ACCOUNT")
-    print(account_data)
     base_url: str = config_instance().GATEWAY_SETTINGS.BASE_URL
     apikey = account_data.get('apikey', {}).get('api_key')
 

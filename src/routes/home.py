@@ -8,7 +8,7 @@ home_route = Blueprint('home', __name__)
 @home_route.route('/')
 @user_details
 def home(user_data: dict[str, str]):
-    context = dict(user_data=user_data, total_exchanges=75, BASE_URL="client.eod-stock-api.site")
+    context = dict(user_data=user_data, total_exchanges=75, BASE_URL="eod-stock-api.site")
     return render_template('index.html', **context)
 
 

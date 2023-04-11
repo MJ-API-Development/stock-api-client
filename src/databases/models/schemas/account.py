@@ -14,6 +14,7 @@ class AccountModel(BaseModel):
     is_admin: bool = False
     is_deleted: bool = False
 
+    @classmethod
     @root_validator(pre=True)
     def split_name(cls, values):
         name = values.get('name', None)
