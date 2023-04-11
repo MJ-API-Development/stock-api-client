@@ -43,7 +43,7 @@ class Contacts(BaseModel):
     @validator('name')
     def validate_secure_name(cls, name):
         """
-        Validates the name field using a more secure name validation
+            Validates the name field using a more secure name validation
         """
         if len(name) < 2 or len(name) > 50:
             raise ValueError("Name should be between 2 and 50 characters")
