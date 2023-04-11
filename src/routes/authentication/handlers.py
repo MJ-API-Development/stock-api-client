@@ -143,8 +143,8 @@ def user_details(func):
 
         _uuid = payload.get('uuid', None)
 
-        if user_session.get(_uuid):
-            kwargs['user_data'] = user_session[_uuid]
+        if _uuid and user_session.get(_uuid, False):
+            kwargs['user_data'] = user_session.get(_uuid, {})
             response = func(*args, **kwargs)
             return response
 
@@ -184,7 +184,7 @@ def auth_required(func):
 
         _uuid = payload.get('uuid', None)
 
-        if _uuid not in user_session:
+        if _uuid is None or _uuid not in user_session:
             return redirect('/login')
 
         authorized, response_data = is_authorized(_uuid)
