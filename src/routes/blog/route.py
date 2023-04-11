@@ -1,15 +1,47 @@
 import os
 import random
+import time
+
 import markdown
 import requests
 from flask import render_template, request, send_from_directory, Blueprint, url_for
 from src.cache import cached
 from src.config import config_instance
+from src.logger import init_logger
 from src.main import github_blog
 from src.routes.authentication.routes import user_details
 from src.routes.blog.github import submit_sitemap_to_google_search_console
 
 github_blog_route = Blueprint('blog', __name__)
+blog_logger = init_logger('blog_logger')
+
+storyType = dict[str, float | list[dict[str, str]]]
+
+stories: dict[str, storyType] = {}
+
+# ONE HOUR Timeout
+CACHE_TIMEOUT = 60 * 60
+
+
+def add_to_stories(_ticker: str, _stories: list[dict[str, str]]) -> list[dict[str, str]]:
+    global stories
+    stories[_ticker] = {'articles': _stories, 'timestamp': time.monotonic()}
+
+
+def get_from_stories(_ticker: str) -> list[dict[str, str]]:
+    global stories
+    story_dict: storyType = stories.get(_ticker, {})
+    now = time.monotonic()
+    if now - story_dict.get('timestamp', 0) < CACHE_TIMEOUT:
+        return story_dict.get('articles', [])
+    return []
+
+
+def return_any_stories() -> tuple[str, list[dict[str, str]]]:
+    global stories
+    for ticker, story_dict in stories.items():
+        return ticker, story_dict.get('articles', [])
+    return None, []
 
 
 @github_blog_route.route('/blog', methods={"GET"})
@@ -47,11 +79,35 @@ def load_top_stories(user_data: dict):
 
     # If the form has been submitted, get the selected ticker symbol
 
-    selected_ticker = request.args.get('ticker', random.choice(meme_tickers))
-    print(selected_ticker)
+    selected_ticker = request.args.get('ticker', False)
+    if not selected_ticker:
+        blog_logger.info('No ticker selected')
+        ticker, created_stories = return_any_stories()
+        if ticker and created_stories:
+            blog_logger.info(f'Found Random Story with ticker : {ticker}')
+            context = dict(stories=created_stories,
+                           tickers=meme_tickers.remove(ticker),
+                           selected_ticker=selected_ticker, user_data=user_data)
+
+            return render_template('blog/top_stories.html', **context)
+        blog_logger.info('Did not find any random story')
+
+    if selected_ticker:
+        blog_logger.info(f'Ticker Was Selected : {selected_ticker}')
+        created_stories: list[dict[str, str]] = get_from_stories(_ticker=selected_ticker)
+        if created_stories:
+            blog_logger.info(f'Found some old articles within the cache timeout : {selected_ticker}')
+            context = dict(stories=created_stories,
+                           tickers=meme_tickers.remove(selected_ticker),
+                           selected_ticker=selected_ticker, user_data=user_data)
+
+            return render_template('blog/top_stories.html', **context)
+
     # Use a set to avoid duplicate stories
     created_stories = []
     uuids = set()
+
+    selected_ticker = selected_ticker or random.choice(meme_tickers)
 
     for story in get_financial_news_by_ticker(stock_code=selected_ticker):
         # Use dict.get() method with a default value to avoid errors if a key is missing
@@ -73,9 +129,12 @@ def load_top_stories(user_data: dict):
             uuids.add(uuid)
 
     created_stories.sort(key=lambda _story: _story['datetime_published'])
+
     context = dict(stories=created_stories,
                    tickers=meme_tickers,
                    selected_ticker=selected_ticker, user_data=user_data)
+
+    add_to_stories(_ticker=selected_ticker, _stories=created_stories)
 
     return render_template('blog/top_stories.html', **context)
 
@@ -88,7 +147,12 @@ def blog_post(user_data: str, blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
-    _url = f"{scheme}{request.host}{request.path}"
+    _path = request.path
+    if _path.endswith(".html"):
+        _path = _path.replace(".html", ".md")
+
+    _url = f"{scheme}{request.host}{_path}"
+
     # get the content of the blog post
     content = github_blog.get_blog_file(url=_url)
     if content is None:
@@ -155,7 +219,9 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
 
     with requests.Session() as session:
         try:
-            response = requests.get(url, headers=headers, params=params)
+            blog_logger.info(f"get financial searching related articles for symbol : {stock_code}")
+            response = session.get(url, headers=headers, params=params)
+            blog_logger.info(f"get financial news found : {response.text}")
         except requests.exceptions.ConnectionError:
             return []
         except requests.exceptions.Timeout:

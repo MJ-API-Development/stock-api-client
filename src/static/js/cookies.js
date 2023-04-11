@@ -1,15 +1,15 @@
 
 const cookieName = 'cookie-accepted';
 
-// document.addEventListener('load', async () => {
-//     if (document.cookie.indexOf("cookie-accepted=true") !== -1) {
-//       // Cookie has been accepted, don't display pop-up
-//       document.getElementById("cookie-popup").style.display = "none";
-//     } else {
-//       // Cookie has not been accepted, display pop-up
-//       document.getElementById("cookie-popup").style.display = "block";
-//     }
-// });
+document.addEventListener('load', async () => {
+    if (document.cookie.indexOf("cookie-accepted=true") !== -1) {
+      // Cookie has been accepted, don't display pop-up
+      document.getElementById("cookie-popup").style.display = "none";
+    } else {
+      // Cookie has not been accepted, display pop-up
+      document.getElementById("cookie-popup").style.display = "block";
+    }
+});
 
 function removePopup() {
     const popup = document.getElementById("cookie-popup");

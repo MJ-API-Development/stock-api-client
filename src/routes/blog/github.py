@@ -133,7 +133,8 @@ class GithubBlog:
     @cached
     def sitemap(self):
         """
-        Generate a sitemap.xml file for the blog
+        **sitemap**
+             Generate a sitemap.xml file for the blog
         """
         folders = []
         single_files = []
@@ -146,8 +147,12 @@ class GithubBlog:
                 single_files.append({f"{self.swap_to_blog_url(key)}": f"{value}"})
 
         folders.extend(single_files)
-        sitemap_content = render_template('blog/sitemap.xml', pages=folders, root_url=self.blog_url,
+        sitemap = [{key[:-3] + '.html' if key.endswith('.md') else key: value} for folder_dict in folders for key, value
+                   in folder_dict.items()]
+
+        sitemap_content = render_template('blog/sitemap.xml', pages=sitemap, root_url=self.blog_url,
                                           formatted_date=date.today().isoformat())
+
         return Response(sitemap_content, mimetype='application/xml')
 
     @cached
