@@ -1,2 +1,4 @@
 User-agent: *
+Sitemap: https://eod-stock-api.site/sitemap.xml
+Sitemap: https://eod-stock-api.site/blog/sitemap.xml
 Disallow: /_admin
