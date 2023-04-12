@@ -195,7 +195,9 @@ def check_commits():
 @github_blog_route.route('/_admin/blog/submit-sitemap', methods=['GET'])
 def submit_sitemap():
     sitemap_url = 'https://eod-stock-api.site/blog/sitemap.xml'
+    home_sitemap_url = 'https://eod-stock-api.site/sitemap.xml'
     _ = submit_sitemap_to_google_search_console(sitemap_url)
+    _ = submit_sitemap_to_google_search_console(home_sitemap_url)
     return github_blog.sitemap()
 
 
