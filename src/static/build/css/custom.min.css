@@ -2072,7 +2072,7 @@ h2 {
     color: #C0392B;
     border: 1px solid #C0392B;
     padding: 6px 10px 5px;
-    font-size: 15px;
+    font-size: 16px;
     margin-right: 7px
 }
 
@@ -2289,7 +2289,7 @@ table.tile_info {
 table.tile_info td {
     text-align: left;
     padding: 1px;
-    font-size: 15px
+    font-size: 16px
 }
 
 table.tile_info td p {
@@ -2347,7 +2347,7 @@ h3.degrees {
     content: "o";
     position: relative;
     top: -12px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 300
 }
 
@@ -2440,7 +2440,7 @@ table.jambo_table tbody tr.selected td {
     width: 250px;
     height: 30px;
     margin-left: -125px;
-    margin-top: -15px;
+    margin-top: -16px;
     padding: 14px 0 2px 0;
     border: 1px solid #ddd;
     text-align: center;
@@ -2909,7 +2909,7 @@ span.right {
 
 @media (min-width: 768px) {
     .tile_count .tile_stats_count span {
-        font-size:15px
+        font-size:16px
     }
 }
 
@@ -3140,7 +3140,7 @@ h4.graph_title {
 }
 
 table.tile_info {
-    padding: 10px 15px
+    padding: 10px 16px
 }
 
 table.tile_info span.right {
@@ -3156,8 +3156,8 @@ table.tile_info span.right {
 
 .tile_header {
     border-bottom: transparent;
-    padding: 7px 15px;
-    margin-bottom: 15px;
+    padding: 7px 16px;
+    margin-bottom: 16px;
     background: #E7E7E7
 }
 
@@ -3187,7 +3187,7 @@ a.star {
 }
 
 .list-btn-mail {
-    margin-bottom: 15px
+    margin-bottom: 16px
 }
 
 .list-btn-mail.active {
@@ -3212,7 +3212,7 @@ a.star {
 }
 
 .button-mail {
-    margin: 0 0 15px !important;
+    margin: 0 0 16px !important;
     text-align: left;
     width: 100%
 }
@@ -3254,7 +3254,7 @@ button,.buttons,.btn,.modal-footer .btn+.btn {
 }
 
 .mail_list h3 {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
     margin: 0px 0 6px
 }
@@ -3431,7 +3431,7 @@ legend {
     height: 23px;
     color: #bbb;
     line-height: 24px;
-    font-size: 15px;
+    font-size: 16px;
     top: 0px;
     width: 34px;
     text-align: center
@@ -3530,7 +3530,7 @@ input.parsley-error,textarea.parsley-error,select.parsley-error {
     max-width: 170px;
     white-space: pre;
     position: relative;
-    left: -15px;
+    left: -16px;
     opacity: 0;
     z-index: 1;
     -webkit-transition: 0.15s ease-out;
@@ -3574,8 +3574,8 @@ input.parsley-error,textarea.parsley-error,select.parsley-error {
     background: #fff;
     color: #777;
     position: relative;
-    padding: 45px 15px 15px;
-    margin: 15px 0 0 0;
+    padding: 45px 16px 16px;
+    margin: 16px 0 0 0;
     background-color: #fff;
     border-radius: 0 0 4px 4px;
     -webkit-box-shadow: none;
@@ -3585,8 +3585,8 @@ input.parsley-error,textarea.parsley-error,select.parsley-error {
 .well .markup::after {
     content: "Example";
     position: absolute;
-    top: 15px;
-    left: 15px;
+    top: 16px;
+    left: 16px;
     font-size: 12px;
     font-weight: bold;
     color: #bbb;
@@ -3653,7 +3653,7 @@ a.btn-success,a.btn-primary,a.btn-warning,a.btn-danger {
 
 .btn.btn-app {
     position: relative;
-    padding: 15px 5px;
+    padding: 16px 5px;
     margin: 0 0 10px 10px;
     min-width: 80px;
     height: 60px;
@@ -3741,7 +3741,7 @@ textarea:focus {
 .bs-glyphicons li {
     float: left;
     width: 25%;
-    height: 115px;
+    height: 116px;
     padding: 10px;
     font-size: 10px;
     line-height: 1.4;
@@ -3817,7 +3817,7 @@ span.tag a {
     width: 80px;
     margin: 0px;
     font-family: helvetica;
-    font-size: 15px;
+    font-size: 16px;
     border: 1px solid transparent;
     padding: 3px;
     background: transparent;
@@ -3866,7 +3866,7 @@ ul.bar_tabs>li {
 ul.bar_tabs>li.active {
     border-right: 6px solid #D3D6DA;
     border-top: 0;
-    margin-top: -15px
+    margin-top: -16px
 }
 
 ul.bar_tabs>li a {
@@ -3906,7 +3906,7 @@ ul.timeline li {
     margin: 0;
     border-left: 3px solid #e8e8e8;
     overflow: visible;
-    padding: 10px 15px;
+    padding: 10px 16px;
     margin-left: 105px
 }
 
@@ -3921,7 +3921,7 @@ ul.timeline li {
 
 .timeline .tags {
     position: absolute;
-    top: 15px;
+    top: 16px;
     left: 0;
     width: 84px
 }
@@ -3929,7 +3929,7 @@ ul.timeline li {
 .timeline .tag {
     display: block;
     height: 30px;
-    font-size: 15px;
+    font-size: 16px;
     padding: 8px
 }
 
@@ -4136,7 +4136,7 @@ ul.widget_tally .count {
 
 .pie_bg {
     border-bottom: 1px solid rgba(101,204,182,0.16);
-    padding-bottom: 15px;
+    padding-bottom: 16px;
     border-radius: 4px;
     filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0)";
     filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
@@ -4370,7 +4370,7 @@ ul.stats-overview {
 ul.stats-overview li {
     display: inline-block;
     text-align: center;
-    padding: 0 15px;
+    padding: 0 16px;
     width: 30%;
     font-size: 14px;
     border-right: 1px solid #e8e8e8
@@ -4424,7 +4424,7 @@ ul.project_files li a i {
     background: #1ABB9C;
     height: 110px;
     color: #fff;
-    padding: 15px 0 0;
+    padding: 16px 0 0;
     text-align: center
 }
 
@@ -4448,7 +4448,7 @@ ul.project_files li a i {
 
 .pricing_features {
     background: #FAFAFA;
-    padding: 20px 15px;
+    padding: 20px 16px;
     min-height: 230px;
     font-size: 13.5px
 }
@@ -4458,7 +4458,7 @@ ul.project_files li a i {
 }
 
 .pricing_footer {
-    padding: 10px 15px;
+    padding: 10px 16px;
     background-color: #f5f5f5;
     border-top: 1px solid #ddd;
     text-align: center;
@@ -4467,7 +4467,7 @@ ul.project_files li a i {
 }
 
 .pricing_footer p {
-    font-size: 15px;
+    font-size: 16px;
     padding: 10px 0 2px;
     display: block
 }
@@ -4493,14 +4493,14 @@ ul.project_files li a i {
     position: relative;
     display: block;
     text-align: center;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #fff;
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
     padding: 7px 0;
     left: -5px;
-    top: 15px;
+    top: 16px;
     width: 120px;
     line-height: 20px;
     background-color: #555;
@@ -4840,7 +4840,7 @@ ul.project_files li a i {
 
 .product_gallery a img {
     width: 100%;
-    margin-top: 15px
+    margin-top: 16px
 }
 
 .product_price {
@@ -4945,12 +4945,12 @@ a.hiddenanchor {
 
 .alignleft {
     float: left;
-    margin-right: 15px
+    margin-right: 16px
 }
 
 .alignright {
     float: right;
-    margin-left: 15px
+    margin-left: 16px
 }
 
 .clearfix:after,form:after {
@@ -5066,7 +5066,7 @@ a.hiddenanchor {
 
 .login_content form div a {
     font-size: 12px;
-    margin: 10px 15px 0 0
+    margin: 10px 16px 0 0
 }
 
 .reset_pass {
@@ -5096,7 +5096,7 @@ a.hiddenanchor {
     box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
     border-radius: 0 0 5px 5px;
     border-top: 1px solid #CFD5D9;
-    padding: 15px 0
+    padding: 16px 0
 }
 
 .login_content form input[type="submit"],#content form .submit {
@@ -5249,7 +5249,7 @@ fieldset {
 }
 
 .cropper .docs-preview {
-    margin-right: -15px
+    margin-right: -16px
 }
 
 .cropper .img-preview {
@@ -5349,7 +5349,7 @@ fieldset {
 
 @media (max-width: 400px) {
     .cropper .btn-group-crop {
-        margin-right:-15px !important
+        margin-right:-16px !important
     }
 
     .item {
@@ -5714,7 +5714,7 @@ ul.verticle_bars li {
 
 .custom-notifications {
     position: fixed;
-    margin: 15px;
+    margin: 16px;
     right: 0;
     float: right;
     width: 400px;
@@ -5751,7 +5751,7 @@ ul.notifications {
 }
 
 .tabbed_notifications .text {
-    padding: 5px 15px;
+    padding: 5px 16px;
     height: 140px;
     border-radius: 7px;
     -webkit-box-shadow: 6px 6px 6px rgba(0,0,0,0.3);
