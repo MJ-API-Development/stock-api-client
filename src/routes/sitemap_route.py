@@ -19,7 +19,11 @@ def generate_sitemap():
     yield 'home.terms_of_use', {}
     yield 'home.privacy_policy', {}
     yield 'docs.documentations', {'path': 'exchanges'},
-    yield 'docs.documentations', {'path': 'fundamentals'}
+    yield 'docs.documentations', {'path': 'fundamentals'},
+    yield 'blog.financial_news', {'country': 'meme'},
+    yield 'blog.financial_news', {'country': 'us'},
+    yield 'blog.financial_news', {'country': 'canada'},
+    yield 'blog.financial_news', {'country': 'brazil'}
 
 
 @sitemap_bp.route('/sitemap.xml', methods=['GET'])
