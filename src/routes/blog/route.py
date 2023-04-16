@@ -34,6 +34,9 @@ def add_to_stories(_ticker: str, _stories: list[dict[str, str]]) -> list[dict[st
 def get_from_stories(_ticker: str) -> list[dict[str, str]]:
     global stories
     story_dict: storyType = stories.get(_ticker, {})
+    if not story_dict:
+        return []
+
     now = time.monotonic()
     if now - story_dict.get('timestamp', 0) < CACHE_TIMEOUT:
         return story_dict.get('articles', [])
@@ -83,28 +86,6 @@ def load_top_stories(user_data: dict):
     # If the form has been submitted, get the selected ticker symbol
 
     selected_ticker = request.args.get('ticker', False)
-    if not selected_ticker:
-        blog_logger.info('No ticker selected')
-        ticker, created_stories = return_any_stories()
-        if ticker and created_stories:
-            blog_logger.info(f'Found Random Story with ticker : {ticker}')
-            context = dict(stories=created_stories,
-                           tickers=meme_tickers.remove(ticker),
-                           selected_ticker=selected_ticker, user_data=user_data)
-
-            return render_template('blog/top_stories.html', **context)
-        blog_logger.info('Did not find any random story')
-
-    if selected_ticker:
-        blog_logger.info(f'Ticker Was Selected : {selected_ticker}')
-        created_stories: list[dict[str, str]] = get_from_stories(_ticker=selected_ticker)
-        if created_stories:
-            blog_logger.info(f'Found some old articles within the cache timeout : {selected_ticker}')
-            context = dict(stories=created_stories,
-                           tickers=meme_tickers.remove(selected_ticker),
-                           selected_ticker=selected_ticker, user_data=user_data)
-
-            return render_template('blog/top_stories.html', **context)
 
     # Use a set to avoid duplicate stories
     created_stories = []
@@ -226,11 +207,12 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
         try:
             blog_logger.info(f"get financial searching related articles for symbol : {stock_code}")
             response = session.get(url, headers=headers, params=params)
-
-            blog_logger.info(f"get financial news found : {response.text}")
+            response.raise_for_status()
         except requests.exceptions.ConnectionError:
             return []
         except requests.exceptions.Timeout:
+            return []
+        except requests.exceptions.HTTPError:
             return []
 
     if response.headers['Content-Type'] != 'application/json':
