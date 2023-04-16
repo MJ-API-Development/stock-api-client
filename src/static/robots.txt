@@ -1,4 +1,8 @@
 User-agent: *
 Sitemap: https://eod-stock-api.site/sitemap.xml
 Sitemap: https://eod-stock-api.site/blog/sitemap.xml
+Sitemap: https://eod-stock-api.site/blog/financial-news/us/sitemap.xml
+Sitemap: https://eod-stock-api.site/blog/financial-news/canada/sitemap.xml
+Sitemap: https://eod-stock-api.site/blog/financial-news/meme/sitemap.xml
+Sitemap: https://eod-stock-api.site/blog/financial-news/brazil/sitemap.xml
 Disallow: /_admin

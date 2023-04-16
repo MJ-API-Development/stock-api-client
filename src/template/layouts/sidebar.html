@@ -36,6 +36,14 @@
                                 <li><a href="{{ url_for('blog.load_top_stories') }}" title="News API - Top Stories - Utilizing Our Financial News API" data-toggle="tooltip" data-placement="right">News API - Top Stories</a></li>
                             </ul>
                         </li>
+                        <li><a title="EOD STOCK API - Financial News API" data-toggle="tooltip" data-placement="right"><i class="fa fa-file-text"> </i> Financial News <span class="fa fa-chevron-down"> </span> </a>
+                            <ul class="nav child_menu">
+                                <li><a href="{{ url_for('blog.financial_news', country='meme') }}" title="Financial News - Meme Stocks" data-toggle="tooltip" data-placement="right">Meme Stocks</a></li>
+                                <li><a href="{{ url_for('blog.financial_news', country='us') }}" title="Financial News - US Stocks" data-toggle="tooltip" data-placement="right">US Stocks</a></li>
+                                <li><a href="{{ url_for('blog.financial_news', country='canada') }}" title="Financial News - Canadian Stocks" data-toggle="tooltip" data-placement="right">Canadian Stocks</a></li>
+                                <li><a href="{{ url_for('blog.financial_news', country='brazil') }}" title="Financial News - Brazilian Stocks" data-toggle="tooltip" data-placement="right">Brazilian Stocks</a></li>
+                            </ul>
+                        </li>
                     </ul>
                     <ul class="nav side-menu">
                         <li title="Manual Data Entry"><a href="{{ url_for('contact.contact')}}" title="Contact - Let us know how we can help you out" data-toggle="tooltip" data-placement="right"><i class="fa fa-envelope"></i> Contact</a></li>

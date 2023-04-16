@@ -40,13 +40,16 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Financial News API - Blog Articles</h3>
+        {% if _introduction %}
+        <spam> {{ _introduction| safe }} </spam>
+        {% endif %}
     </div>
     <div class="card-body">
-        <form id="story" method="GET" action="{{ url_for('blog.load_top_stories') }}" enctype="application/x-www-form-urlencoded">
+        <form id="story" method="GET" action="" enctype="application/x-www-form-urlencoded">
             <label for="ticker"><strong>Select Ticker</strong></label>
             <select class="form-control" name="ticker" id="ticker">
-                {% for ticker in tickers %}
-                    <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ ticker }}</option>
+                {% for ticker, company_name in tickers.items() %}
+                    <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ ticker }} - {{ company_name }}</option>
                 {% endfor %}
             </select>
             <button id="load_articles" type="submit" class="btn btn-dark"><i class="fa fa-file-text"> </i> Load Articles</button>
