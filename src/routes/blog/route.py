@@ -5,7 +5,7 @@ import time
 import markdown
 import requests
 import requests_cache
-from flask import render_template, request, send_from_directory, Blueprint, url_for
+from flask import render_template, request, send_from_directory, Blueprint, url_for, Response
 from src.cache import cached
 from src.config import config_instance
 from src.logger import init_logger
@@ -24,6 +24,15 @@ stories: dict[str, storyType] = {}
 CACHE_TIMEOUT = 60 * 60 * 3
 
 blog_requests_session = requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT)
+
+
+def get_meme_tickers() -> list[str]:
+    """
+    :return:
+    """
+    return ['AAPL', 'AMZN', 'GOOGL', 'TSLA', 'FB', 'NVDA', 'NFLX', 'MSFT',
+            'JPM', 'V', 'BAC', 'WMT', 'JNJ', 'PG', 'KO', 'PEP', 'CSCO',
+            'INTC', 'ORCL', 'AMD']
 
 
 def add_to_stories(_ticker: str, _stories: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -79,9 +88,7 @@ def load_top_stories(user_data: dict):
 
     DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
 
-    meme_tickers = ['AAPL', 'AMZN', 'GOOGL', 'TSLA', 'FB', 'NVDA', 'NFLX', 'MSFT',
-                    'JPM', 'V', 'BAC', 'WMT', 'JNJ', 'PG', 'KO', 'PEP', 'CSCO',
-                    'INTC', 'ORCL', 'AMD']
+    meme_tickers = get_meme_tickers()
 
     # If the form has been submitted, get the selected ticker symbol
 
@@ -171,6 +178,17 @@ def sitemap():
     return sitemap_content
 
 
+@github_blog_route.route('/blog/financial-news/sitemap.xml', methods=['GET'])
+def financial_news_sitemap():
+    """
+    Creates a sitemap for financial news articles.
+    :return: a string representing the sitemap XML.
+    """
+    # get the list of all the tickers
+    sitemap_content = create_financial_news_sitemap()
+    return Response(sitemap_content, mimetype='application/xml')
+
+
 @github_blog_route.route('/_admin/blog/update-blog', methods=['GET'])
 def check_commits():
     github_blog.check_for_updates()
@@ -180,8 +198,10 @@ def check_commits():
 def submit_sitemap():
     sitemap_url = 'https://eod-stock-api.site/blog/sitemap.xml'
     home_sitemap_url = 'https://eod-stock-api.site/sitemap.xml'
+    financial_news_sitemap_url = 'https://eod-stock-api.site/blog/financial-news/sitemap.xml'
     _ = submit_sitemap_to_google_search_console(sitemap_url)
     _ = submit_sitemap_to_google_search_console(home_sitemap_url)
+    _ = submit_sitemap_to_google_search_console(financial_news_sitemap_url)
     return github_blog.sitemap()
 
 
@@ -242,3 +262,18 @@ def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
         highest_resolution_url = highest_resolution['url']
         return highest_resolution_url
     return None
+
+
+def create_financial_news_sitemap():
+
+    tickers = get_meme_tickers()
+    urls = [f"https://eod-stock-api.site/blog/top-stories?ticker={ticker}" for ticker in tickers]
+
+    # create the sitemap
+    sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for url in urls:
+        sitemap += f'<url><loc>{url}</loc></url>\n'
+    sitemap += '</urlset>'
+
+    return sitemap
