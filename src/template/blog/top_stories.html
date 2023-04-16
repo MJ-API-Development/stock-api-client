@@ -1,20 +1,31 @@
 {% extends "layouts/layout.html" %}
 {% block headers %}
 <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "WebSite",
-      "name": "EOD Stock API - Financial News API - Stock Market News",
-      "description": "EOD Stock API provides reliable and accurate End of Day stock data, financial news API, social media trend data for stocks, and much more.",
-      "url": "https://eod-stock-api.site",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "name": "Search for financial news",
-        "target": "https://eod-stock-api.site/financial-news/{{ country }}?ticker={ticker}",
-        "query-input": "required search_ticker=ticker"
-      }
-    }
+{
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "name": "EOD Stock API - Financial News API - Stock Market News",
+  "description": "EOD Stock API provides reliable and accurate End of Day stock data, financial news API, social media trend data for stocks, and much more.",
+  "url": "https://eod-stock-api.site",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://eod-stock-api.site/financial-news/{{ country }}?ticker={ticker}",
+      "encodingType": "application/x-www-form-urlencoded",
+      "httpMethod": "GET",
+      "actionPlatform": [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform",
+        "http://schema.org/IOSPlatform",
+        "http://schema.org/AndroidPlatform"
+      ]
+    },
+    "query-input": "required name=ticker"
+  }
+}
 </script>
+
 
 
 {% endblock %}
