@@ -4,6 +4,7 @@ import time
 
 import markdown
 import requests
+import requests_cache
 from flask import render_template, request, send_from_directory, Blueprint, url_for
 from src.cache import cached
 from src.config import config_instance
@@ -20,7 +21,9 @@ storyType = dict[str, float | list[dict[str, str]]]
 stories: dict[str, storyType] = {}
 
 # ONE HOUR Timeout
-CACHE_TIMEOUT = 60 * 60
+CACHE_TIMEOUT = 60 * 60 * 3
+
+blog_requests_session = requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT)
 
 
 def add_to_stories(_ticker: str, _stories: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -219,10 +222,11 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     headers = {'Content-Type': 'application/json'}
     params = {'api_key': config_instance().EOD_STOCK_API_KEY}
 
-    with requests.Session() as session:
+    with requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT) as session:
         try:
             blog_logger.info(f"get financial searching related articles for symbol : {stock_code}")
             response = session.get(url, headers=headers, params=params)
+
             blog_logger.info(f"get financial news found : {response.text}")
         except requests.exceptions.ConnectionError:
             return []
