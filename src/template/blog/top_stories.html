@@ -11,7 +11,7 @@
         "@type": "SearchAction",
         "name": "Search for financial news",
         "target": "https://eod-stock-api.site/financial-news/{{ country }}?ticker={ticker}",
-        "query": "ticker=ticker"
+        "query-input": "required search_ticker=ticker"
       }
     }
 </script>
@@ -67,7 +67,7 @@
             <label for="ticker"><strong>Select Ticker</strong></label>
             <select class="form-control" name="ticker" id="ticker">
                 {% for ticker, company_name in tickers.items() %}
-                    <option value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ ticker }} - {{ company_name }}</option>
+                    <option name="search_ticker" value="{{ ticker }}" {% if selected_ticker == ticker %}selected{% endif %}>{{ ticker }} - {{ company_name }}</option>
                 {% endfor %}
             </select>
             <button id="load_articles" type="submit" class="btn btn-dark"><i class="fa fa-file-text"> </i> Load Articles</button>
