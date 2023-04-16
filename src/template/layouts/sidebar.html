@@ -2,55 +2,55 @@
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
-                    <ul class="nav side-menu">
-                        <li><a href="{{ url_for('home.home') }}" title="EOD STOCK API - Intelligent Stock Market API" data-toggle="tooltip" data-placement="right"><i class="fa fa-home"></i> EOD Stock API </a>
+                    <ul itemscope itemtype="https://schema.org/SiteNavigationElement" class="nav side-menu">
+                        <li><a href="{{ url_for('home.home') }}" title="EOD STOCK API - Intelligent Stock Market API" data-toggle="tooltip" data-placement="right" itemprop="url"><i class="fa fa-home"></i> <span itemprop="name">EOD Stock API</span> </a>
                         </li>
-                        <li><a title="EOD STOCK API - Account" data-toggle="tooltip" data-placement="right"><i class="fa fa-user"></i> Account <span class="fa fa-chevron-down"></span></a>
+                        <li><a title="EOD STOCK API - Account" data-toggle="tooltip" data-placement="right" itemprop="url"><i class="fa fa-user"></i>  <span itemprop="name"> Account</span> <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                                 {% if user_data and user_data['uuid'] %}
-                                    <li><a href="{{ url_for('auth.logout') }}" title="Logout" data-toggle="tooltip" data-placement="right">Logout</a></li>
-                                    <li><a href="{{ url_for('account.account') }}" title="Account" data-toggle="tooltip" data-placement="right">Account</a></li>
+                                    <li><a href="{{ url_for('auth.logout') }}" title="Logout" data-toggle="tooltip" data-placement="right" itemprop="url"> <span itemprop="name">Logout</span></a></li>
+                                    <li><a href="{{ url_for('account.account') }}" title="Account" data-toggle="tooltip" data-placement="right" itemprop="url"> <span itemprop="name">Account</span></a></li>
                                 {% else %}
-                                    <li><a href="{{ url_for('auth.login') }}" title="Login or Create an Account" data-toggle="tooltip" data-placement="right">Login</a></li>
+                                    <li><a href="{{ url_for('auth.login') }}" title="Login or Create an Account" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Login</span></a></li>
                                 {% endif %}
                             </ul>
                         </li>
-                        <li title="Manual Data Entry"><a title="EOD STOCK API - Documentations" data-toggle="tooltip" data-placement="right"><i class="fa fa-file-text"></i> Documentations <span class="fa fa-chevron-down"></span></a>
+                        <li title="Manual Data Entry"><a title="EOD STOCK API - Documentations" data-toggle="tooltip" data-placement="right" itemprop="url"><i class="fa fa-file-text"></i> <span itemprop="name">Documentations</span> <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li><a href="{{ url_for('docs.redoc') }}" title="Redoc API Documentations" data-toggle="tooltip" data-placement="right">Redoc</a></li>
-                                <li><a href="{{ url_for('docs.openapi_html') }}" title="Open API Documentations" data-toggle="tooltip" data-placement="right">Open API Specifications</a></li>
-                                <li><a href="{{ url_for('docs.github_docs') }}" title="Github Documentations" data-toggle="tooltip" data-placement="right">Github Documentations</a></li>
-                                <li><a href="{{ url_for('docs.documentations', path='fundamentals') }}" data-toggle="tooltip" data-placement="right">Fundamentals Documentations</a></li>
-                                <li><a href="{{ url_for('docs.documentations', path='exchanges') }}" data-toggle="tooltip" data-placement="right">Exchanges Documentations</a></li>
+                                <li><a href="{{ url_for('docs.redoc') }}" title="Redoc API Documentations" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Redoc</span></a></li>
+                                <li><a href="{{ url_for('docs.openapi_html') }}" title="Open API Documentations" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Open API Specifications</span></a></li>
+                                <li><a href="{{ url_for('docs.github_docs') }}" title="Github Documentations" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Github Documentations</span></a></li>
+                                <li><a href="{{ url_for('docs.documentations', path='fundamentals') }}" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Fundamentals Documentations</span></a></li>
+                                <li><a href="{{ url_for('docs.documentations', path='exchanges') }}" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Exchanges Documentations</span></a></li>
                             </ul>
                         </li>
-                        <li><a title="EOD STOCK API - Server Status" data-toggle="tooltip" data-placement="right"><i class="fa fa-server"></i> API <span class="fa fa-chevron-down"></span></a>
+                        <li><a title="EOD STOCK API - Server Status" data-toggle="tooltip" data-placement="right" itemprop="url"><i class="fa fa-server"></i> <span itemprop="name">API</span> <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li><a href="{{ url_for('home.status') }}" title="Status Check our Server Availability" data-toggle="tooltip" data-placement="right">Status</a></li>
-                                <li><a href="{{ url_for('docs.redoc') }}" title="Play Ground" data-toggle="tooltip" data-placement="right">Play Ground</a></li>
+                                <li><a href="{{ url_for('home.status') }}" title="Status Check our Server Availability" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Status</span></a></li>
+                                <li><a href="{{ url_for('docs.redoc') }}" title="Play Ground" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Play Ground</span></a></li>
                             </ul>
                         </li>
-                        <li><a title="EOD STOCK API - Developers Blogs & Financial News API" data-toggle="tooltip" data-placement="right"><i class="fa fa-file-text"> </i> Developers Blog <span class="fa fa-chevron-down"> </span> </a>
+                        <li><a title="EOD STOCK API - Developers Blogs & Financial News API" data-toggle="tooltip" data-placement="right" itemprop="url"><i class="fa fa-file-text"> </i> <span itemprop="name">Developers Blog</span> <span class="fa fa-chevron-down"> </span> </a>
                             <ul class="nav child_menu">
-                                <li><a href="{{ url_for('blog.blog') }}" title="Developers Blog - Learn the Best Ways of Using Our API" data-toggle="tooltip" data-placement="right">Developers Blog</a></li>
-                                <li><a href="/blog/developers/python_sdk.html" title="Developers Blog - Python Intelligent Stock Market SDK" data-toggle="tooltip" data-placement="right">Intelligent Stock Market SDK</a></li>
-                                <li><a href="/blog/developers/python_requests.html" title="Developers Blog - Python Requests" data-toggle="tooltip" data-placement="right">Using Python Requests</a></li>
-                                <li><a href="/blog/developers/python_requests_exchanges.html" title="Developers Blog - Exchange Lists" data-toggle="tooltip" data-placement="right">Exchange Lists</a></li>
-                                <li><a href="/blog/developers/financial_news_requests.html" title="Developers Blog - Requests + Financial News API" data-toggle="tooltip" data-placement="right">Requests &amp; Financial News API</a></li>
-                                <li><a href="{{ url_for('blog.load_top_stories') }}" title="News API - Top Stories - Utilizing Our Financial News API" data-toggle="tooltip" data-placement="right">News API - Top Stories</a></li>
+                                <li><a href="{{ url_for('blog.blog') }}" title="Developers Blog - Learn the Best Ways of Using Our API" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Developers Blog</span></a></li>
+                                <li><a href="/blog/developers/python_sdk.html" title="Developers Blog - Python Intelligent Stock Market SDK" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Intelligent Stock Market SDK</span></a></li>
+                                <li><a href="/blog/developers/python_requests.html" title="Developers Blog - Python Requests" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Using Python Requests</span></a></li>
+                                <li><a href="/blog/developers/python_requests_exchanges.html" title="Developers Blog - Exchange Lists" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Exchange Lists</span></a></li>
+                                <li><a href="/blog/developers/financial_news_requests.html" title="Developers Blog - Requests + Financial News API" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Requests &amp; Financial News API</span></a></li>
+                                <li><a href="{{ url_for('blog.load_top_stories') }}" title="News API - Top Stories - Utilizing Our Financial News API" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">News API - Top Stories</span></a></li>
                             </ul>
                         </li>
-                        <li><a title="EOD STOCK API - Financial News API" data-toggle="tooltip" data-placement="right"><i class="fa fa-file-text"> </i> Financial News <span class="fa fa-chevron-down"> </span> </a>
+                        <li><a title="EOD STOCK API - Financial News API" data-toggle="tooltip" data-placement="right" itemprop="url"><i class="fa fa-file-text"> </i> <span itemprop="name">Financial News</span> <span class="fa fa-chevron-down"> </span> </a>
                             <ul class="nav child_menu">
-                                <li><a href="{{ url_for('blog.financial_news', country='meme') }}" title="Financial News - Meme Stocks" data-toggle="tooltip" data-placement="right">Meme Stocks</a></li>
-                                <li><a href="{{ url_for('blog.financial_news', country='us') }}" title="Financial News - US Stocks" data-toggle="tooltip" data-placement="right">US Stocks</a></li>
-                                <li><a href="{{ url_for('blog.financial_news', country='canada') }}" title="Financial News - Canadian Stocks" data-toggle="tooltip" data-placement="right">Canadian Stocks</a></li>
-                                <li><a href="{{ url_for('blog.financial_news', country='brazil') }}" title="Financial News - Brazilian Stocks" data-toggle="tooltip" data-placement="right">Brazilian Stocks</a></li>
+                                <li><a href="{{ url_for('blog.financial_news', country='meme') }}" title="Financial News - Meme Stocks" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Meme Stocks</span></a></li>
+                                <li><a href="{{ url_for('blog.financial_news', country='us') }}" title="Financial News - US Stocks" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">US Stocks</span></a></li>
+                                <li><a href="{{ url_for('blog.financial_news', country='canada') }}" title="Financial News - Canadian Stocks" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Canadian Stocks</span></a></li>
+                                <li><a href="{{ url_for('blog.financial_news', country='brazil') }}" title="Financial News - Brazilian Stocks" data-toggle="tooltip" data-placement="right" itemprop="url"><span itemprop="name">Brazilian Stocks</span></a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav side-menu">
-                        <li title="Manual Data Entry"><a href="{{ url_for('contact.contact')}}" title="Contact - Let us know how we can help you out" data-toggle="tooltip" data-placement="right"><i class="fa fa-envelope"></i> Contact</a></li>
+                        <li title="Manual Data Entry"><a href="{{ url_for('contact.contact')}}" title="Contact - Let us know how we can help you out" data-toggle="tooltip" data-placement="right" itemprop="url"><i class="fa fa-envelope"></i> <span itemprop="name">Contact</span></a></li>
                     </ul>
               </div>
               </div>

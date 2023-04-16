@@ -381,6 +381,7 @@ def financial_news(user_data: dict, country: str):
     context = dict(stories=created_stories,
                    tickers=country_tickers,
                    _introduction=_introduction,
+                   country=country,
                    selected_ticker=selected_ticker, user_data=user_data)
 
     add_to_stories(_ticker=selected_ticker,

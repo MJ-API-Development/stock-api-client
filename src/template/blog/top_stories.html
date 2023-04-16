@@ -1,5 +1,21 @@
 {% extends "layouts/layout.html" %}
+{% block headers %}
+<script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": "EOD Stock API - Financial News API - Stock Market News",
+      "description": "EOD Stock API provides reliable and accurate End of Day stock data, financial news API, social media trend data for stocks, and much more.",
+      "url": "https://eod-stock-api.site",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://eod-stock-api.site/financial-news/{{ country }}?ticker={ticker}",
+        "query-input": "ticker=ticker"
+      }
+    }
+</script>
 
+{% endblock %}
 {% block title %}
     <title>EOD Stock API - Blog - Financial News API - Top Stories</title>
 {%  endblock %}
