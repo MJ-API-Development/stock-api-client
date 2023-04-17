@@ -1,4 +1,5 @@
-<sitemapindex xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="utf-8" ?>
+<sitemapindex>
     <sitemap>
         <loc>https://eod-stock-api.site/sitemap.xml</loc>
     </sitemap>

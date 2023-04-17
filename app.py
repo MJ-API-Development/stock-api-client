@@ -22,7 +22,7 @@ def sw():
     return send_from_directory('static', 'js/sw.js')
 
 
-@app.route('/sitemap-index.xml', methods=['GET'])
+@app.route('/sitemap_index.xml', methods=['GET'])
 def sitemap_index():
     """
         sitemap index
