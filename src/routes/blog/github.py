@@ -1,29 +1,12 @@
 from datetime import date
 from urllib.parse import urlparse
 
-import requests
 from flask import render_template, Response
 from github import Github
 
 from src.cache import cached
-from src.config import config_instance
 from src.logger import init_logger
-
-
-def submit_sitemap_to_google_search_console(sitemap_url):
-    """
-    Submit the sitemap to Google Search Console
-    """
-    api_endpoint = f"https://www.google.com/ping?sitemap={sitemap_url}"
-    # Define the request headers
-    headers = {
-        'Content-Type': 'application/xml',
-        'User-Agent': 'Mozilla/5.0 (Windows; U; Windows)',
-    }
-    params = {'key': config_instance().SEARCH_CONSOLE_API_KEY}
-    response = requests.get(api_endpoint, headers=headers, params=params)
-
-    return response
+from src.routes.blog.sitemaps import submit_sitemap_to_google_search_console
 
 
 class GithubBlog:

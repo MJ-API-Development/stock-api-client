@@ -1,5 +1,8 @@
 from datetime import datetime
 
+import requests
+
+from src.config import config_instance
 from src.routes.blog.tickers import get_meme_tickers, get_meme_tickers_us, get_meme_tickers_canada, \
     get_meme_tickers_brazil
 
@@ -28,6 +31,8 @@ def create_financial_news_sitemap(country: str = None) -> str:
         urls = [f"https://eod-stock-api.site/blog/financial-news/brazil?ticker={ticker}" for ticker in tickers]
     else:
         meme_tickers = get_meme_tickers()
+        tickers = [symbol for symbol, name in meme_tickers.items()]
+        urls = [f"https://eod-stock-api.site/blog/financial-news/meme?ticker={ticker}" for ticker in tickers]
 
     names = [name for symbol, name in meme_tickers.items()]
 
@@ -43,3 +48,19 @@ def create_financial_news_sitemap(country: str = None) -> str:
     sitemap += '</urlset>'
 
     return sitemap
+
+
+def submit_sitemap_to_google_search_console(sitemap_url):
+    """
+    Submit the sitemap to Google Search Console
+    """
+    api_endpoint = f"https://www.google.com/ping?sitemap={sitemap_url}"
+    # Define the request headers
+    headers = {
+        'Content-Type': 'application/xml',
+        'User-Agent': 'Mozilla/5.0 (Windows; U; Windows)',
+    }
+    params = {'key': config_instance().SEARCH_CONSOLE_API_KEY}
+    response = requests.get(api_endpoint, headers=headers, params=params)
+
+    return response
