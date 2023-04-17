@@ -11,7 +11,9 @@ google_dance = make_google_blueprint(client_id=config_instance().GOOGLE_SETTINGS
                                      redirect_url="https://eod-stock-api.site/google/authorized",
                                      redirect_to="/account",
                                      authorized_url="/google/authorized",
-                                     scope=["profile", "email"])
+                                     scope=["https://www.googleapis.com/auth/userinfo.email",
+                                            "https://www.googleapis.com/auth/userinfo.profile",
+                                            "openid"])
 
 
 @google_dance.route("/login/google")
