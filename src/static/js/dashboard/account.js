@@ -130,7 +130,7 @@ self.addEventListener('load', async (e) => {
     await refresh_account_details(response);
 
   } else {
-    redirectToLogin();
+    // redirectToLogin();
   }
 });
 
