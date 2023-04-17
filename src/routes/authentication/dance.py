@@ -21,9 +21,13 @@ def login_google():
     if not google.authorized:
         return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
-    assert resp.ok, resp.text
-    return "You are {email} on Google".format(email=resp.json()["email"])
+    user_info = resp.json()
+    email = user_info["email"]
+    oauth_id = user_info["sub"]
+    auth_logger.info("User {email} logged in with google".format(email=email))
 
+    return do_login_auth(email=email, password=oauth_id)
+    # return "You are {email} on Google".format(email=resp.json()["email"])
 
 @google_dance.route("/google/authorized")
 def google_authorized():
