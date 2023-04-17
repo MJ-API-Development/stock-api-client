@@ -77,10 +77,23 @@ class GithubSettings(BaseSettings):
         env_file_encoding = 'utf-8'
 
 
+class GoogleSettings(BaseSettings):
+    GOOGLE_ANALYTICS_ID: str = Field(..., env="GOOGLE_ANALYTICS_ID")
+    GOOGLE_ANALYTICS_DOMAIN: str = Field(..., env="GOOGLE_ANALYTICS_DOMAIN")
+    GOOGLE_CLIENT_ID: str = Field(..., env="GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET: str = Field(..., env="GOOGLE_CLIENT_SECRET")
+
+    class Config:
+        case_sensitive = True
+        env_file = '.env.development'
+        env_file_encoding = 'utf-8'
+
+
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
     CELERY_SETTINGS = CelerySettings()
     SECRET_KEY: str = Field(..., env="SECRET_TOKEN")
+
     DATABASE_SETTINGS: DatabaseSettings = DatabaseSettings()
     DEVELOPMENT_SERVER_NAME: str = Field(default="DESKTOP-T9V7F59")
     LOGGING: Logging = Logging()
@@ -89,6 +102,7 @@ class Settings(BaseSettings):
     SERVER_NAME: str = Field(default_factory=get_server_name)
     APPLICATION_ROOT: str = Field(default="/")
     PREFERRED_URL_SCHEME: str = Field(default="https://")
+    GOOGLE_SETTINGS: GoogleSettings = GoogleSettings()
     GITHUB_SETTINGS: GithubSettings = GithubSettings()
     SEARCH_CONSOLE_API_KEY: str = Field(..., env="SEARCH_CONSOLE_API_KEY")
     EOD_STOCK_API_KEY: str = Field(..., env="EOD_STOCK_API_KEY")

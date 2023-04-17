@@ -15,7 +15,7 @@ COPY ./requirements.txt /var/www/app/requirements.txt
 RUN pip install -r /var/www/app/requirements.txt
 RUN pip install gunicorn
 COPY . /var/www/app
-ENV PORT 8080
+ENV PORT 8000
 EXPOSE $PORT
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT run:app  --workers 2 --threads 8 --timeout 3600

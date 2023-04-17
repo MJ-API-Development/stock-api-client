@@ -6,6 +6,7 @@ from jwt import ExpiredSignatureError
 from src.config import config_instance
 from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
+from src.routes.authentication.dance import google_dance
 from src.routes.blog.github import GithubBlog
 
 user_session = {}
@@ -62,6 +63,7 @@ def create_app(config=config_instance()) -> Flask:
         app.register_blueprint(plan_routes)
         app.register_blueprint(sitemap_bp)
         app.register_blueprint(github_blog_route)
+        app.register_blueprint(google_dance)
 
         # Handle API Errors, all errors are re raised as HTTPException
         from src.exceptions import (InvalidSignatureError, ServerInternalError, UnresponsiveServer)

@@ -6020,3 +6020,44 @@ ul.notifications {
 #slash {
     display: none;
 }
+
+.btn-google {
+    background-color: #00243F;
+    border: none;
+    color: floralwhite;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 50px;
+}
+
+.btn-google:hover {
+    background-color: #357AE8;
+}
+
+.btn-google i {
+    margin-right: 10px;
+}
+
+.btn-email {
+    background-color: #88000F;
+    border: none;
+    color: floralwhite;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 50px;
+}
+
+.btn-email:hover {
+    background-color: #8a4182;
+}
+
+.btn-email i {
+    margin-right: 10px;
+}
+
