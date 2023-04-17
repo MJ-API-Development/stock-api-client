@@ -1,10 +1,7 @@
 from flask import Blueprint, render_template, send_from_directory
-import requests_cache
 from src.routes.authentication.routes import user_details
-from src.routes.blog.stories import CACHE_TIMEOUT
 
 home_route = Blueprint('home', __name__)
-
 
 
 @home_route.route('/')
@@ -50,4 +47,3 @@ def terms_of_use(user_data: dict[str, str]):
 def privacy_policy(user_data: dict[str, str]):
     context = dict(user_data=user_data)
     return render_template('privacy.html', **context)
-
