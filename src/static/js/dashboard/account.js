@@ -250,7 +250,7 @@ async function getPlanDetails(plan_id, uuid) {
   const plan = json.payload;
   return {
     name: plan.plan_name,
-    price: plan.Amount / 100,
+    price: plan.Amount,
     maxRequests: plan.plan_limit,
     limit_type: plan.plan_limit_type,
     rate_limit: plan.rate_limit,
