@@ -6,7 +6,7 @@ from jwt import ExpiredSignatureError
 from src.config import config_instance
 from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
-from src.routes.authentication.dance import google_dance
+
 from src.routes.blog.github import GithubBlog
 
 user_session = {}
@@ -51,6 +51,7 @@ def create_app(config=config_instance()) -> Flask:
         from src.routes.subscriptions.plan import plan_routes
         from src.routes.sitemap_route import sitemap_bp
         from src.routes.blog.route import github_blog_route
+        from src.routes.authentication.dance import google_dance
         # celery.config_from_object(config.CELERY_SETTINGS)
 
         app.register_blueprint(home_route)
