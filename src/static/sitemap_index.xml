@@ -1,0 +1,20 @@
+<sitemapindex xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+        <loc>https://eod-stock-api.site/sitemap.xml</loc>
+    </sitemap>
+    <sitemap>
+        <loc>https://eod-stock-api.site/blog/sitemap.xml</loc>
+    </sitemap>
+    <sitemap>
+        <loc>https://eod-stock-api.site/blog/financial-news/us/sitemap.xml</loc>
+    </sitemap>
+    <sitemap>
+        <loc>https://eod-stock-api.site/blog/financial-news/canada/sitemap.xml</loc>
+    </sitemap>
+    <sitemap>
+        <loc>https://eod-stock-api.site/blog/financial-news/meme/sitemap.xml</loc>
+    </sitemap>
+    <sitemap>
+        <loc>https://eod-stock-api.site/blog/financial-news/brazil/sitemap.xml</loc>
+    </sitemap>
+</sitemapindex>

@@ -22,6 +22,15 @@ def sw():
     return send_from_directory('static', 'js/sw.js')
 
 
+@app.route('/sitemap_index.xml', methods=['GET'])
+def sitemap_index():
+    """
+        sitemap index
+    :return:
+    """
+    return send_from_directory('static', 'sitemap_index.xml')
+
+
 app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
