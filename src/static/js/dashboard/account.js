@@ -267,7 +267,7 @@ async function updateAccountDetails(response) {
     updateUI(json.payload);
   } else {
     clearLocalStorage();
-    redirectToLogin();
+    // redirectToLogin();
   }
 }
 
