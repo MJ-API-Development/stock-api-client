@@ -7,7 +7,6 @@ from src.config import config_instance
 
 class AppLogger:
     def __init__(self, name: str, is_file_logger: bool = False, log_level: int = logging.INFO):
-        # TODO create the logs folder in the root directory of the application
         logging_file = f'logs/{config_instance().LOGGING.filename}'
         logger_name = name if name else config_instance().APP_NAME
         self.logger = logging.getLogger(logger_name)

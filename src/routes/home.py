@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, send_from_directory
-
+import requests_cache
 from src.routes.authentication.routes import user_details
+from src.routes.blog.stories import CACHE_TIMEOUT
 
 home_route = Blueprint('home', __name__)
+
 
 
 @home_route.route('/')

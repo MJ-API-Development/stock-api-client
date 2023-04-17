@@ -1,12 +1,16 @@
 import os
 import markdown
 import requests
+import requests_cache
 # noinspection PyUnresolvedReferences
 from flask import Blueprint, render_template, request, make_response, send_from_directory
 from src.cache import cached
 from src.routes.authentication.routes import user_details
+from src.routes.blog.stories import CACHE_TIMEOUT
 
 docs_route = Blueprint('docs', __name__)
+
+docs_requests_session = requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT)
 
 
 @docs_route.context_processor
@@ -52,9 +56,10 @@ def redoc():
     """
     # Replace "https://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site/redoc"
-    response = requests.get(url)
-    content = response.content.decode('utf-8')
-    content = content.replace("https://gateway.eod-stock-api.site/static/redoc.standalone.js", "/redoc.standalone.js")
+    with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
+        response = session.get(url)
+        content = response.content.decode('utf-8')
+        content = content.replace("https://gateway.eod-stock-api.site/static/redoc.standalone.js", "/redoc.standalone.js")
     return content
 
 
@@ -77,9 +82,9 @@ def openapi_json():
     """
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
     url = "https://gateway.eod-stock-api.site/open-api"
-
-    openapi_data = requests.get(url)
-    response = make_response(openapi_data.json(), 200)
+    with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
+        openapi_data = session.get(url)
+        response = make_response(openapi_data.json(), 200)
     response.headers["Content-Type"] = "application/json"
     return response
 
@@ -109,8 +114,9 @@ def github_docs(user_data: dict[str, str]):
     :return:
     """
     url = "https://raw.githubusercontent.com/MJ-API-Development/Intelligent-EOD-Stock-Financial-News-API/main/README.md"
-    response = requests.get(url)
-    html_content = markdown.markdown(response.content.decode('utf-8'))
+    with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
+        response = session.get(url)
+        html_content = markdown.markdown(response.content.decode('utf-8'))
     context = dict(user_data=user_data, document=html_content, BASE_URL="https://client.eod-stock-api.site")
     return render_template('docs/github-docs.html', **context)
 
@@ -140,8 +146,10 @@ def python_sdk_docs(user_data: dict[str, str], path: str):
     """
     if path.casefold() == "python":
         url = 'https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/README.md'
-        response = requests.get(url)
-        html_content = markdown.markdown(response.content.decode('utf-8'))
+
+        with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
+            response = session.get(url)
+            html_content = markdown.markdown(response.content.decode('utf-8'))
 
         context = dict(user_data=user_data, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)
@@ -160,7 +168,7 @@ def github_links(user_data: dict[str, str], path: str):
     :return:
     """
     url = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
-    with requests.Session() as session:
+    with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
         try:
             response = session.get(url)
         except requests.ConnectionError:
