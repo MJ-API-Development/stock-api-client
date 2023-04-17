@@ -18,3 +18,17 @@ def login_google():
     resp = google.get("/oauth2/v2/userinfo")
     assert resp.ok, resp.text
     return "You are {email} on Google".format(email=resp.json()["email"])
+
+
+@google_dance.route("/google/authorized")
+def google_authorized():
+    """
+
+    :return:
+    """
+    if not google.authorized:
+        return "Access denied"
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    return "You are {email} on Google".format(email=resp.json()["email"])
+
