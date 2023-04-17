@@ -177,7 +177,6 @@ def auth_required(func):
 
             token = create_authentication_token(user_data=user_data)
             user_session[user_data['uuid']] = user_data
-
         # verify token authenticity
         if token and token is not None:
             payload = verify_authentication_token(token=token)

@@ -2,7 +2,7 @@ from flask import Flask, redirect, url_for
 from flask_dance.contrib.google import make_google_blueprint, google
 
 from src.config import config_instance
-from src.routes.authentication.handlers import do_login_auth
+from src.routes.authentication.handlers import do_login_auth, auth_logger
 
 app = Flask(__name__)
 app.secret_key = config_instance().SECRET_KEY
@@ -39,6 +39,8 @@ def google_authorized():
     user_info = resp.json()
     email = user_info["email"]
     oauth_id = user_info["sub"]
+    auth_logger.info("User {email} logged in with google".format(email=email))
+
     return do_login_auth(email=email, password=oauth_id)
     # return "You are {email} on Google".format(email=resp.json()["email"])
 
