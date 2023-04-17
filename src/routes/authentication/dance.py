@@ -19,7 +19,7 @@ google_dance = make_google_blueprint(client_id=config_instance().GOOGLE_SETTINGS
 @google_dance.route("/login/google")
 def login_google():
     if not google.authorized:
-        return redirect(url_for("google.login"))
+        return redirect(url_for("auth.login"))
     resp = google.get("/oauth2/v2/userinfo")
     user_info = resp.json()
     email = user_info["email"]
@@ -28,6 +28,7 @@ def login_google():
 
     return do_login_auth(email=email, password=oauth_id)
     # return "You are {email} on Google".format(email=resp.json()["email"])
+
 
 @google_dance.route("/google/authorized")
 def google_authorized():
@@ -47,5 +48,3 @@ def google_authorized():
 
     return do_login_auth(email=email, password=oauth_id)
     # return "You are {email} on Google".format(email=resp.json()["email"])
-
-
