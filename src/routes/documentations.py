@@ -117,6 +117,7 @@ def github_docs(user_data: dict[str, str]):
     with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
         response = session.get(url)
         html_content = markdown.markdown(response.content.decode('utf-8'))
+
     context = dict(user_data=user_data, document=html_content, BASE_URL="https://client.eod-stock-api.site")
     return render_template('docs/github-docs.html', **context)
 
@@ -153,6 +154,8 @@ def python_sdk_docs(user_data: dict[str, str], path: str):
 
         context = dict(user_data=user_data, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)
+
+    return render_template('blog/404.html')
 
 
 @docs_route.route('/sdk/src/docs/<string:path>', methods=['GET'])
