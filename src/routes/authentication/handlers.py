@@ -353,7 +353,8 @@ def do_create_account(email: str, password: str, first_name: str, second_name: s
         'password': password,
         'first_name': first_name,
         'second_name': second_name,
-        'surname': surname
+        'surname': surname,
+        'cell': '+27110234567'
     }
 
     _headers = get_headers(user_data)
