@@ -1,5 +1,7 @@
 import requests
 from flask import request, render_template, Blueprint, flash, jsonify, make_response, redirect, url_for
+from oauthlib.oauth2 import TokenExpiredError
+
 from src.routes.authentication.dance import google
 
 from src.config import config_instance
@@ -111,16 +113,21 @@ def google_authorized():
     """
     if not google.authorized:
         return redirect(url_for('google.login'))
-
-    resp = google.get("/oauth2/v2/userinfo")
+    try:
+        resp = google.get("/oauth2/v2/userinfo")
+    except TokenExpiredError as e:
+        return redirect(url_for('google.login'))
 
     assert resp.ok, resp.text
+
     user_info = resp.json()
+
     auth_logger.info(f"Google User : {user_info}")
     email = user_info["email"]
     # oauth_id = user_info["sub"]
     auth_logger.info("Google Authorized")
     auth_logger.info(f"email {email} is authorized oauth_id")
+
     if user_info.get('verified_email', False):
         name = user_info.get('name')
         given_name = user_info.get('given_name')
