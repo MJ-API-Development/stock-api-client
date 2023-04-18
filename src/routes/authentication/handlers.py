@@ -15,6 +15,9 @@ from src.exceptions import UnAuthenticatedError, UnresponsiveServer, ServerInter
 from src.logger import init_logger
 from src.main import user_session
 
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
 auth_logger = init_logger('auth_logger')
 
 
@@ -68,6 +71,29 @@ def verify_authentication_token(token: str):
 
     except (jwt.DecodeError, jwt.ExpiredSignatureError):
         raise UnAuthenticatedError()
+
+
+def verify_google_auth_token(token):
+    """
+        **verify_google_auth_token**
+            verifies google authentication token only
+    :param token:
+    :return:
+    """
+    try:
+        client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
+        return id_token.verify_oauth2_token(token, requests.Request(), client_id)
+    except ValueError:
+        return None
+
+
+def get_google_auth_session_token(_request: flask.Request) -> str:
+    """
+    **get_google_auth_session_token**
+        :param request:
+        :return:
+    """
+    return _request.cookies.get('session')
 
 
 @cached
@@ -170,6 +196,13 @@ def auth_required(func):
         # if uuid is None:
         auth_logger.info(f" headers : {request.headers}")
         token = request.headers.get('X-Auth-Token', None)
+        get_google_auth_token = get_google_auth_session_token(_request=request)
+
+        if get_google_auth_token is not None:
+            id_info = verify_google_auth_token(token=get_google_auth_token)
+            auth_logger.info(f"Google Auth ID_INFO  : {id_info}")
+            auth_logger.info(f"Google Auth ID_INFO  TYPE : {type(id_info)}")
+
         if token is None:
             # Token not found lets try a cookie
             user_data = get_uuid_cookie(_request=request)
@@ -178,6 +211,7 @@ def auth_required(func):
 
             token = create_authentication_token(user_data=user_data)
             user_session[user_data['uuid']] = user_data
+
         # verify token authenticity
         if token and token is not None:
             payload = verify_authentication_token(token=token)
