@@ -103,7 +103,7 @@ def create_app(config=config_instance()) -> Flask:
         @app.route('/login/google')
         def login():
             if not google.authorized:
-                return redirect(url_for('google.login'))
+                return redirect(url_for('home.home'))
             # The user is already authenticated
             return redirect(url_for('home.home'))
 
