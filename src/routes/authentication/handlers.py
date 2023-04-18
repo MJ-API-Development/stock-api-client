@@ -7,7 +7,7 @@ from functools import wraps
 import flask
 import jwt
 import requests
-from flask import request, redirect, abort, Request, make_response, jsonify, session
+from flask import request, redirect, abort, Request, make_response, jsonify, session, url_for
 
 from src.cache import cached
 from src.config import config_instance
@@ -332,7 +332,7 @@ def do_login_auth(email: str, id: str, name: str, given_name: str, family_name: 
 
         return do_create_account(email=email, password=id, first_name=given_name, second_name=second_name, surname=family_name)
 
-    response = make_response(jsonify(response_data), 200)
+    response = make_response(redirect(url_for('account.account')), 200)
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
     return response
@@ -382,7 +382,7 @@ def do_create_account(email: str, password: str, first_name: str, second_name: s
         if uuid:
             user_session.update({f"{uuid}": response_data.get('payload', {})})
 
-    response = make_response(jsonify(response_data), 200)
+    response = make_response(redirect(url_for('account.account')), 200)
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
     return response

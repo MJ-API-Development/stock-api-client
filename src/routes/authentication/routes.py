@@ -121,6 +121,12 @@ def google_authorized():
     # oauth_id = user_info["sub"]
     auth_logger.info("Google Authorized")
     auth_logger.info(f"email {email} is authorized oauth_id")
-    do_login_auth(**user_info)
+    if user_info.get('verified_email', False):
+        name = user_info.get('name')
+        given_name = user_info.get('given_name')
+        family_name = user_info.get('family_name')
+        response = do_login_auth(email=email, id=user_info.get('id'), name=name, given_name=given_name, family_name=family_name)
+        return response
+
     return redirect(url_for('account.account'))
 
