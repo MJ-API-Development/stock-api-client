@@ -1,5 +1,5 @@
 import requests
-from flask import request, render_template, Blueprint, flash, jsonify, make_response
+from flask import request, render_template, Blueprint, flash, jsonify, make_response, redirect, url_for
 from src.routes.authentication.dance import google
 
 from src.config import config_instance
@@ -8,7 +8,7 @@ from src.exceptions import UnresponsiveServer, InvalidSignatureError
 from src.logger import init_logger
 from src.main import user_session
 from src.routes.authentication.handlers import user_details, get_headers, auth_required, create_authentication_token, \
-    verify_signature, do_login
+    verify_signature, do_login, do_login_auth
 
 auth_handler = Blueprint("auth", __name__)
 
@@ -110,7 +110,8 @@ def google_authorized():
     :return:
     """
     if not google.authorized:
-        return "Access denied"
+        return redirect(url_for('google.login'))
+
     resp = google.get("/oauth2/v2/userinfo")
 
     assert resp.ok, resp.text
@@ -120,5 +121,6 @@ def google_authorized():
     # oauth_id = user_info["sub"]
     auth_logger.info("Google Authorized")
     auth_logger.info(f"email {email} is authorized oauth_id")
-    assert resp.ok, resp.text
-    return "You are {email} on Google".format(email=resp.json()["email"])
+    do_login_auth(**user_info)
+    return redirect(url_for('account.account'))
+
