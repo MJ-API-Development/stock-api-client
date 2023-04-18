@@ -206,13 +206,6 @@ def auth_required(func):
         # if uuid is None:
         auth_logger.info(f" headers : {request.headers}")
         token = request.headers.get('X-Auth-Token', None)
-        google_auth_token = get_google_auth_session_token(_request=request)
-        auth_logger.info(f" Google Auth Token : {google_auth_token}")
-        if google_auth_token is not None:
-            id_info = verify_google_auth_token(token=google_auth_token)
-            auth_logger.info(f"Google Auth ID_INFO  : {id_info}")
-            auth_logger.info(f"Google Auth ID_INFO  TYPE : {type(id_info)}")
-
         if token is None:
             # Token not found lets try a cookie
             user_data = get_uuid_cookie(_request=request)
