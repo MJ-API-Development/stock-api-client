@@ -1,5 +1,6 @@
 import requests
 from flask import request, render_template, Blueprint, flash, jsonify, make_response
+from src.routes.authentication.dance import google
 
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountCreate
@@ -100,3 +101,22 @@ def logout(user_data: dict[str, str]):
     # user completely logged out bye bye
     return response
 
+
+@auth_handler.route("/google/authorized")
+def google_authorized():
+    """
+    **google_authorized**
+        will login user if user does not exist will create a new user then login user
+    :return:
+    """
+    if not google.authorized:
+        return "Access denied"
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    user_info = resp.json()
+    email = user_info["email"]
+    oauth_id = user_info["sub"]
+    auth_logger.info("Google Authorized")
+    auth_logger.info(f"email {email} is authorized oauth_id {oauth_id}")
+    assert resp.ok, resp.text
+    return "You are {email} on Google".format(email=resp.json()["email"])
