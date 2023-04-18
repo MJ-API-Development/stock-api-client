@@ -82,7 +82,7 @@ def verify_google_auth_token(token):
     """
     try:
         client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
-        return id_token.verify_oauth2_token(token, requests.Request(), client_id)
+        return id_token.verify_oauth2_token(id_token=token, request=requests.Request(), audience=client_id)
     except ValueError:
         return None
 
