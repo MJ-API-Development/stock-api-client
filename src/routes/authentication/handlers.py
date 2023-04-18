@@ -162,7 +162,7 @@ def set_cookie(response: flask.Response, user_data: dict) -> flask.Response:
     :param response:
     :return:
     """
-    response.set_cookie('uuid', user_data)
+    response.set_cookie('uuid', json.dumps(user_data).encode('utf-8'))
     return response
 
 
