@@ -333,7 +333,7 @@ def do_login_auth(email: str, id: str, name: str, given_name: str, family_name: 
 
         return do_create_account(email=email, password=id, first_name=given_name, second_name=second_name, surname=family_name)
 
-    response = make_response(redirect(url_for('account.account')), 200)
+    response = redirect(url_for('account.account'))
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
     return response
@@ -385,7 +385,7 @@ def do_create_account(email: str, password: str, first_name: str, second_name: s
         if uuid:
             user_session.update({f"{uuid}": response_data.get('payload', {})})
 
-    response = make_response(redirect(url_for('account.account')), 200)
+    response = redirect(url_for('account.account'))
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
     return response
