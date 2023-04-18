@@ -7,7 +7,7 @@ from functools import wraps
 import flask
 import jwt
 import requests
-from flask import request, redirect, abort, Request, make_response, jsonify
+from flask import request, redirect, abort, Request, make_response, jsonify, session
 
 from src.cache import cached
 from src.config import config_instance
@@ -184,6 +184,10 @@ def auth_required(func):
             raise UnAuthenticatedError()
 
         _uuid = payload.get('uuid', None)
+
+        # TODO Have to make this work ASAP
+        if 'google_token' in session:
+            _uuid = session['google_token']
 
         if _uuid is None or _uuid not in user_session:
             return redirect('/login')

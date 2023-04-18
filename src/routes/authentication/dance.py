@@ -17,7 +17,7 @@ google_dance = make_google_blueprint(client_id=config_instance().GOOGLE_SETTINGS
 
 
 @google_dance.route("/login/google")
-def login_google():
+def login():
     if not google.authorized:
         return redirect(url_for("auth.login"))
     resp = google.get("/oauth2/v2/userinfo")
