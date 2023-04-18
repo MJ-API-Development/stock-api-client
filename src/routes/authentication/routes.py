@@ -112,11 +112,11 @@ def google_authorized():
     :return:
     """
     if not google.authorized:
-        return redirect(url_for('google.login'))
+        return redirect(url_for('auth.login'))
     try:
         resp = google.get("/oauth2/v2/userinfo")
     except TokenExpiredError:
-        response = redirect(url_for('google.login'))
+        response = redirect(url_for('auth.login'))
         auth_logger.error("Token Expired")
         response.set_cookie('session', '')
         return response
