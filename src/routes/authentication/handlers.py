@@ -364,7 +364,7 @@ def do_create_account(email: str, password: str, first_name: str, second_name: s
         try:
             auth_logger.info(f"Creating account : {user_data}")
             response = request_session.post(url=_url, json=user_data, headers=_headers)
-
+            auth_logger.info(f"Created account : {response.text}")
         except requests.exceptions.ConnectionError:
             raise UnresponsiveServer("Cannot connect to server try again later")
         except requests.exceptions.Timeout:
