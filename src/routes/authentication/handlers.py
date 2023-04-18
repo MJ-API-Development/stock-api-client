@@ -90,9 +90,6 @@ def verify_google_auth_token(token):
         auth_logger.info(f"Token is invalid: {str(e)}")
     except id_token.exceptions.GoogleAuthError as e:
         auth_logger.info(f"Google authentication error: {str(e)}")
-    except id_token.exceptions.AudienceMismatchError as e:
-        auth_logger.info(f"Audience mismatch: {str(e)}")
-
     return None
 
 
