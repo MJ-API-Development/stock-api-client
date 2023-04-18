@@ -10,8 +10,8 @@ app.secret_key = config_instance().SECRET_KEY
 google_dance = make_google_blueprint(client_id=config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID,
                                      client_secret=config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_SECRET,
                                      redirect_url="https://eod-stock-api.site/account",
-                                     scope=["https://www.googleapis.com/auth/userinfo.email",
-                                            "https://www.googleapis.com/auth/userinfo.profile",
+                                     scope=["/auth/userinfo.email",
+                                            "/auth/userinfo.profile",
                                             "openid"])
 
 
