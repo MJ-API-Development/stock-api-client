@@ -156,6 +156,16 @@ def get_uuid_cookie(_request: Request):
         return None
 
 
+def set_cookie(response: flask.Response, user_data: dict) -> flask.Response:
+    """
+    :param user_data:
+    :param response:
+    :return:
+    """
+    response.set_cookie('uuid', user_data)
+    return response
+
+
 def user_details(func):
     """
         Returns the user details if the user is logged in and authorized to access this route
@@ -329,6 +339,7 @@ def do_login_auth(email: str, id: str, name: str, given_name: str, family_name: 
     response = redirect(url_for('account.account'))
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
+    response = set_cookie(response=response, user_data=response_data.get('payload'))
     return response
 
 
@@ -381,4 +392,5 @@ def do_create_account(email: str, password: str, first_name: str, second_name: s
     response = redirect(url_for('account.account'))
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
+    response = set_cookie(response=response, user_data=response_data.get('payload'))
     return response
