@@ -2,15 +2,13 @@ import requests
 from flask import request, render_template, Blueprint, flash, jsonify, make_response, redirect, url_for
 from oauthlib.oauth2 import TokenExpiredError
 
-from src.routes.authentication.dance import google
-
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountCreate
 from src.exceptions import UnresponsiveServer, InvalidSignatureError
 from src.logger import init_logger
-from src.main import user_session
-from src.routes.authentication.handlers import user_details, get_headers, auth_required, create_authentication_token, \
-    verify_signature, do_login, do_login_auth
+from src.main import user_session, google
+from src.routes.authentication.handlers import user_details, get_headers, auth_required, verify_signature, do_login, \
+    do_login_auth
 
 auth_handler = Blueprint("auth", __name__)
 

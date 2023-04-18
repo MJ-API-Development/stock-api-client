@@ -1,12 +1,14 @@
-from flask import Flask, make_response, jsonify, redirect, url_for
+from flask import Flask, url_for
+from flask import make_response, jsonify, redirect
 from flask_cors import CORS
+from flask_dance.contrib.google import google
+from flask_dance.contrib.google import make_google_blueprint
 from flask_sitemap import Sitemap
 from jwt import ExpiredSignatureError
 
 from src.config import config_instance
 from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
-
 from src.routes.blog.github import GithubBlog
 
 user_session = {}
@@ -51,8 +53,6 @@ def create_app(config=config_instance()) -> Flask:
         from src.routes.subscriptions.plan import plan_routes
         from src.routes.sitemap_route import sitemap_bp
         from src.routes.blog.route import github_blog_route
-        from src.routes.authentication.dance import google_dance
-        # celery.config_from_object(config.CELERY_SETTINGS)
 
         app.register_blueprint(home_route)
         app.register_blueprint(docs_route)
@@ -64,6 +64,15 @@ def create_app(config=config_instance()) -> Flask:
         app.register_blueprint(plan_routes)
         app.register_blueprint(sitemap_bp)
         app.register_blueprint(github_blog_route)
+
+        # celery.config_from_object(config.CELERY_SETTINGS)
+        google_dance = make_google_blueprint(client_id=config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID,
+                                             client_secret=config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_SECRET,
+                                             redirect_url=url_for('auth.google_authorized', _external=True),
+                                             scope=["https://www.googleapis.com/auth/userinfo.email",
+                                                    "https://www.googleapis.com/auth/userinfo.profile",
+                                                    "openid"])
+
         app.register_blueprint(google_dance, url_prefix='/login')
 
         # Handle API Errors, all errors are re raised as HTTPException
@@ -90,5 +99,12 @@ def create_app(config=config_instance()) -> Flask:
 
         app.register_error_handler(UnAuthenticatedError,
                                    redirect(url_for('home.home')))
+
+        @app.route('/login/google')
+        def login():
+            if not google.authorized:
+                return redirect(url_for('google.login'))
+            # The user is already authenticated
+            return redirect(url_for('account.account'))
 
     return app
