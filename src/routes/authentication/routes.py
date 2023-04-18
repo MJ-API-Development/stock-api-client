@@ -115,8 +115,8 @@ def google_authorized():
     assert resp.ok, resp.text
     user_info = resp.json()
     email = user_info["email"]
-    oauth_id = user_info["sub"]
+    # oauth_id = user_info["sub"]
     auth_logger.info("Google Authorized")
-    auth_logger.info(f"email {email} is authorized oauth_id {oauth_id}")
+    auth_logger.info(f"email {email} is authorized oauth_id")
     assert resp.ok, resp.text
     return "You are {email} on Google".format(email=resp.json()["email"])
