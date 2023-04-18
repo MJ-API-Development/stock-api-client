@@ -168,6 +168,7 @@ def auth_required(func):
 
         # uuid = request_data.get('uuid', kwargs.get('uuid'))
         # if uuid is None:
+        auth_logger.info(f" headers : {request.headers}")
         token = request.headers.get('X-Auth-Token', None)
         if token is None:
             # Token not found lets try a cookie
