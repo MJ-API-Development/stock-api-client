@@ -1,12 +1,12 @@
 import logging
 import socket
 
-from flask import Flask, request, send_from_directory, render_template
+from flask import Flask, request, send_from_directory, render_template, redirect, url_for
 from flask_cors import CORS
 
 from src.config.config import config_instance
 from src.main import create_app
-
+from src.routes.authentication.dance import google
 app: Flask = create_app(config=config_instance())
 
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -29,6 +29,14 @@ def sitemap_index():
     :return:
     """
     return send_from_directory('static', 'sitemap_index.xml')
+
+
+@app.route('/login/google')
+def login():
+    if not google.authorized:
+        return redirect(url_for('google.login'))
+    # The user is already authenticated
+    return redirect(url_for('account.account'))
 
 
 app.logger.setLevel(logging.INFO)
