@@ -9,7 +9,7 @@ app.secret_key = config_instance().SECRET_KEY
 
 google_dance = make_google_blueprint(client_id=config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID,
                                      client_secret=config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_SECRET,
-                                     redirect_url="https://eod-stock-api.site/account",
+                                     redirect_url="https://eod-stock-api.site",
                                      scope=["https://www.googleapis.com/auth/userinfo.email",
                                             "https://www.googleapis.com/auth/userinfo.profile",
                                             "openid"])
@@ -18,15 +18,17 @@ google_dance = make_google_blueprint(client_id=config_instance().GOOGLE_SETTINGS
 @google_dance.route("/login/google")
 def login_google():
     if not google.authorized:
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
 
     user_info = resp.json()
     email = user_info["email"]
     oauth_id = user_info["sub"]
-    auth_logger.info("User {email} logged in with google".format(email=email))
+    auth_logger.info("login Google")
+    auth_logger.info(f"email {email} is authorized oauth_id {oauth_id}")
 
-    return do_login_auth(email=email, password=oauth_id)
+    assert resp.ok, resp.text
+    return "You are {email} on Google".format(email=resp.json()["email"])
     # return "You are {email} on Google".format(email=resp.json()["email"])
 
 
@@ -44,7 +46,7 @@ def google_authorized():
     user_info = resp.json()
     email = user_info["email"]
     oauth_id = user_info["sub"]
-    auth_logger.info("User {email} logged in with google".format(email=email))
-
-    return do_login_auth(email=email, password=oauth_id)
-    # return "You are {email} on Google".format(email=resp.json()["email"])
+    auth_logger.info("Google Authorized")
+    auth_logger.info(f"email {email} is authorized oauth_id {oauth_id}")
+    assert resp.ok, resp.text
+    return "You are {email} on Google".format(email=resp.json()["email"])

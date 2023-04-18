@@ -17,7 +17,7 @@ from src.main import user_session
 
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-
+from flask_dance.contrib.google import google
 auth_logger = init_logger('auth_logger')
 
 
@@ -84,6 +84,7 @@ def verify_google_auth_token(token):
         dict or None: The decoded token claims if the token is valid, otherwise None.
     """
     try:
+        
         client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
         _request = google_requests.Request(session=requests.session())
 
