@@ -86,6 +86,7 @@ def verify_google_auth_token(token):
     try:
         client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
         _request = google_requests.Request(session=requests.session())
+
         return id_token.verify_oauth2_token(id_token=token, audience=client_id, request=_request)
     except ValueError as e:
         auth_logger.info(f"Token is invalid: {str(e)}")
