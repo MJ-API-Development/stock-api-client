@@ -84,7 +84,7 @@ def verify_google_auth_token(token):
         dict or None: The decoded token claims if the token is valid, otherwise None.
     """
     try:
-        
+
         client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
         _request = google_requests.Request(session=requests.session())
 
@@ -166,6 +166,8 @@ def user_details(func):
         token = request.headers.get('X-Auth-Token', None)
         auth_logger.info(f"Request Header : {request.headers}")
         # Just Obtain user details no need to verify the token
+        token_key = "flask_dance.google.token"
+        auth_logger.info(f"GOOGLE Token Key : {session[token_key]}")
         if token is None:
             user_data = get_uuid_cookie(_request=request)
             if user_data is None:
