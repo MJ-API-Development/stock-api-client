@@ -31,12 +31,6 @@ def sitemap_index():
     return send_from_directory('static', 'sitemap_index.xml')
 
 
-@app.route('/login/google')
-def login():
-    if not google.authorized:
-        return redirect(url_for('google.login'))
-    # The user is already authenticated
-    return redirect(url_for('account.account'))
 
 
 app.logger.setLevel(logging.INFO)
