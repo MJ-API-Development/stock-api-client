@@ -290,17 +290,17 @@ def do_login(email: str, password: str):
     return response
 
 
-def do_login_auth(email: str, uid: str, name: str, given_name: str, family_name: str) -> flask.Response:
+def do_login_auth(email: str, id: str, name: str, given_name: str, family_name: str) -> flask.Response:
     """
 
     :param family_name:
     :param given_name:
     :param name:
     :param email:
-    :param uid:
+    :param id:
     :return:
     """
-    user_data = {'email': email, 'password': uid}
+    user_data = {'email': email, 'password': id}
     _headers = get_headers(user_data)
     _path = config_instance().GATEWAY_SETTINGS.LOGIN_URL
     _base = config_instance().GATEWAY_SETTINGS.BASE_URL
@@ -330,7 +330,7 @@ def do_login_auth(email: str, uid: str, name: str, given_name: str, family_name:
     else:
         second_name = name.split(" ")[1] if len(name.split(" ")) > 1 else name
 
-        return do_create_account(email=email, password=uid, first_name=given_name, second_name=second_name, surname=family_name)
+        return do_create_account(email=email, password=id, first_name=given_name, second_name=second_name, surname=family_name)
 
     response = make_response(jsonify(response_data), 200)
     # Adding Authentication Token to the response
