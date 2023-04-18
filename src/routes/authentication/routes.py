@@ -137,4 +137,4 @@ def google_authorized():
                                  family_name=family_name)
         return response
 
-    return redirect(url_for('account.account'))
+    return redirect(url_for('home.home'))
