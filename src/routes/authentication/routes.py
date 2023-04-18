@@ -116,7 +116,8 @@ def google_authorized():
     try:
         resp = google.get("/oauth2/v2/userinfo")
     except TokenExpiredError as e:
-        return redirect(url_for('google.login'))
+        response = redirect(url_for('google.login'))
+        return response.set_cookie('session', '')
 
     assert resp.ok, resp.text
 
