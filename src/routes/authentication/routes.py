@@ -112,8 +112,10 @@ def google_authorized():
     if not google.authorized:
         return "Access denied"
     resp = google.get("/oauth2/v2/userinfo")
+
     assert resp.ok, resp.text
     user_info = resp.json()
+    auth_logger.info(f"Google User : {user_info}")
     email = user_info["email"]
     # oauth_id = user_info["sub"]
     auth_logger.info("Google Authorized")
