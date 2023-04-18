@@ -104,7 +104,7 @@ def logout(user_data: dict[str, str]):
     return response
 
 
-@auth_handler.route("/google/authorized")
+@auth_handler.route("/login/google/authorized")
 def google_authorized():
     """
     **google_authorized**
@@ -112,11 +112,11 @@ def google_authorized():
     :return:
     """
     if not google.authorized:
-        return redirect(url_for('auth.google_login'))
+        return redirect(url_for('google.login'))
     try:
         resp = google.get("/oauth2/v2/userinfo")
     except TokenExpiredError:
-        response = redirect(url_for('auth.google_login'))
+        response = redirect(url_for('google.login'))
         auth_logger.error("Token Expired")
         response.set_cookie('session', '')
         return response
@@ -139,12 +139,4 @@ def google_authorized():
                                  family_name=family_name)
         return response
 
-    return redirect(url_for('account.account'))
-
-
-@auth_handler.route('/login/google')
-def google_login():
-    if not google.authorized:
-        return redirect(url_for('auth.google_login'))
-    # The user is already authenticated
     return redirect(url_for('account.account'))

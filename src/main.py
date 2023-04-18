@@ -64,7 +64,7 @@ def create_app(config=config_instance()) -> Flask:
         app.register_blueprint(plan_routes)
         app.register_blueprint(sitemap_bp)
         app.register_blueprint(github_blog_route)
-        app.register_blueprint(google_dance)
+        app.register_blueprint(google_dance, url_prefix='/login')
 
         # Handle API Errors, all errors are re raised as HTTPException
         from src.exceptions import (InvalidSignatureError, ServerInternalError, UnresponsiveServer)
