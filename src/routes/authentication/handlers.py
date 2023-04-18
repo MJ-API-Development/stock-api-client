@@ -75,19 +75,25 @@ def verify_authentication_token(token: str):
 
 def verify_google_auth_token(token):
     """
-        **verify_google_auth_token**
-            verifies google authentication token only
-    :param token:
-    :return:
+    Verifies a Google authentication token.
+
+    Args:
+        token (str): The token to verify.
+
+    Returns:
+        dict or None: The decoded token claims if the token is valid, otherwise None.
     """
     try:
         client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
-        return id_token.verify_oauth2_token(id_token=token, request=requests.Request(), audience=client_id)
+        return id_token.verify_oauth2_token(id_token=token, audience=client_id)
     except ValueError as e:
-        auth_logger.info(f"Token is invalid : {str(e)}")
-        return None
+        auth_logger.info(f"Token is invalid: {str(e)}")
     except id_token.exceptions.GoogleAuthError as e:
-        auth_logger.info(f"Issuer invalid : {str(e)}")
+        auth_logger.info(f"Google authentication error: {str(e)}")
+    except id_token.exceptions.AudienceMismatchError as e:
+        auth_logger.info(f"Audience mismatch: {str(e)}")
+
+    return None
 
 
 def get_google_auth_session_token(_request: flask.Request) -> str:
