@@ -83,14 +83,17 @@ def verify_google_auth_token(token):
     try:
         client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
         return id_token.verify_oauth2_token(id_token=token, request=requests.Request(), audience=client_id)
-    except ValueError:
+    except ValueError as e:
+        auth_logger.info(f"Token is invalid : {str(e)}")
         return None
+    except id_token.exceptions.GoogleAuthError as e:
+        auth_logger.info(f"Issuer invalid : {str(e)}")
 
 
 def get_google_auth_session_token(_request: flask.Request) -> str:
     """
     **get_google_auth_session_token**
-        :param request:
+        :param _request:
         :return:
     """
     return _request.cookies.get('session')
