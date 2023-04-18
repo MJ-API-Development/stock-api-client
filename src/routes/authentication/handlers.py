@@ -16,7 +16,7 @@ from src.logger import init_logger
 from src.main import user_session
 
 from google.oauth2 import id_token
-from google.auth.transport import requests
+from google.auth.transport import requests as google_requests
 
 auth_logger = init_logger('auth_logger')
 
@@ -85,7 +85,8 @@ def verify_google_auth_token(token):
     """
     try:
         client_id = config_instance().GOOGLE_SETTINGS.GOOGLE_CLIENT_ID
-        return id_token.verify_oauth2_token(id_token=token, audience=client_id)
+        _request = google_requests.Request(session=requests.session())
+        return id_token.verify_oauth2_token(id_token=token, audience=client_id, request=_request)
     except ValueError as e:
         auth_logger.info(f"Token is invalid: {str(e)}")
     except id_token.exceptions.GoogleAuthError as e:
