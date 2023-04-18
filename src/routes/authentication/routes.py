@@ -116,7 +116,7 @@ def google_authorized():
     try:
         resp = google.get("/oauth2/v2/userinfo")
     except TokenExpiredError:
-        response = redirect(url_for('auth.g_login'))
+        response = redirect(url_for('google.g_login'))
         auth_logger.error("Token Expired")
         response.set_cookie('session', '')
         return response
@@ -144,6 +144,6 @@ def google_authorized():
 @auth_handler.route('/login/google')
 def g_login():
     if not google.authorized:
-        return redirect(url_for('auth.g_login'))
+        return redirect(url_for('google.g_login'))
     # The user is already authenticated
     return redirect(url_for('account.account'))
