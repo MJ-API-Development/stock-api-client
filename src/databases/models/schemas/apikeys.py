@@ -10,3 +10,5 @@ class ApiKeysBaseModel(BaseModel):
     is_active: bool
     subscription: SubscriptionModel
 
+    class Config:
+        title = "API Keys Model"

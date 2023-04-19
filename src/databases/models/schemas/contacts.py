@@ -17,6 +17,9 @@ class Contacts(BaseModel):
     message: str
     timestamp: float = time.monotonic()
 
+    class Config:
+        title = "Contacts Model"
+
     @validator('email')
     def validate_email(cls, email):
         """

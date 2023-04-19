@@ -14,6 +14,9 @@ class AccountModel(BaseModel):
     is_admin: bool = False
     is_deleted: bool = False
 
+    class Config:
+        title = "Account Base Model"
+
     @classmethod
     @root_validator(pre=True)
     def split_name(cls, values):
@@ -41,12 +44,21 @@ class AccountCreate(AccountModel):
     uuid: str | None
     password: str
 
+    class Config:
+        title = "Create Account Model"
+
 
 class CompleteAccountResponseModel(AccountModel):
     apikeys: ApiKeysBaseModel
+
+    class Config:
+        title = "Account Response Model"
 
 
 class AccountResponseSchema(BaseModel):
     status: bool
     payload: CompleteAccountResponseModel
     message: str
+
+    class Config:
+        title = "Account Response Model"

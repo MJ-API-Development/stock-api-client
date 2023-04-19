@@ -13,6 +13,9 @@ class SubscriptionModel(BaseModel):
     approval_url: str | None = None
     paypal_id: str | None = None
 
+    class Config:
+        title = "Subscriptions Model"
+
 
 class PayPalSubscriptionModel(BaseModel):
     """
@@ -30,5 +33,5 @@ class PayPalSubscriptionModel(BaseModel):
     facilitatorAccessToken: str
     payment_method: str = "paypal"
 
-
-
+    class Config:
+        title = "PayPal Subscriptions Model"
