@@ -67,16 +67,50 @@
 </div>
 
 </div>
+<div class="clearfix"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"> Get Access to 70+ Exchanges World Wide</h3>
+                </div>
 
-<div class="col-md-12">
-    <hr/>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4">
+                            <img src="{{ url_for('static', filename='images/xchanges/bse.jpg') }}" alt="BSE Stock Exchange" width="80" height="46">
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <img src="{{ url_for('static', filename='images/xchanges/dax.jpg') }}" alt="DAX Exchange"  width="80" height="46">
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <img src="{{ url_for('static', filename='images/xchanges/nasdaq.jpg') }}" alt="Nasdaq Stock Exchange"  width="90" height="46">
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <img src="{{ url_for('static', filename='images/xchanges/nse.jpg') }}" alt="National Stock Exchange India"  width="90" height="46">
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                                <img src="{{ url_for('static', filename='images/xchanges/nyse.jpg') }}" alt="New York Stock Exchange"  width="90" height="46">
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                                <img src="{{ url_for('static', filename='images/xchanges/tsx.jpg') }}" alt="Toronto Stock Exchange"  width="90" height="46">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 {#    DATA API'S          #}
-<div class="col-md-12">
-    <div class="tile_header">
-        <h3 class="tile_info"> <i class="fa fa-line-chart"> </i> Available Financial Data API</h3>
-    </div>
-    <div class="col-md-6">
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"> Stock Market & Financial Data API's</h3>
+        </div>
+    <div class="row">
+    <div class="col-md-6 col-sm-6">
             <div class="blockquote">
                 <ul>
                     <li><a href="{{ url_for('docs.documentations', path='fundamentals') }}"> Fundamental Data </a></li>
@@ -86,7 +120,7 @@
                 </ul>
             </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-sm-6">
             <div class="blockquote">
                 <ul>
                     <li><a href="{{  url_for('docs.documentations', path='exchanges') }}">Exchanges Data</a></li>
@@ -96,164 +130,175 @@
                 </ul>
             </div>
     </div>
-</div>
-
-
-<div class="clearfix"><hr/></div>
-              <div id="subscription_plans" class="container">
-                  <div class="tile tile_header">
-                      <h3 class="title-decor"><i class="fa fa-money"> </i> Subscription Plans</h3>
-                  </div>
-                <div class="col-md-12">
-                      <div class="col-md-3">
-                        <h3>Basic </h3>
-                        <h2 class="text-info font-weight-bold">1 Month Free Trial</h2>
-                        <p class="text-body">Get started with our basic plan. and get a one month free trial</p>
-                        <ul>
-                          <li>500 requests per month</li>
-                          <li>10,000 records per request</li>
-                          <li>Limited email support</li>
-                          <li>API documentation access</li>
-                          <li>Exchanges</li>
-                          <li>Stock Tickers</li>
-                          <li>EOD Data</li>
-                            <li class="text text-info font-weight-bold"> One Month Free Trial</li>
-                        </ul>
-                            <form id="basic_plan_form" class="form-horizontal" action="/plan-subscription/">
-                                <input type="hidden" id="basic_id" name="basic_id" value="">
-                                <button type="button" class="btn btn-dark" id="basic_plan"><i class="fa fa-dollar"> </i>  </button>
-                            </form>
-                      </div>
-                      <div class="col-md-3">
-                        <h3>Professional</h3>
-                        <p>Upgrade to our professional plan.</p>
-                        <ul>
-                          <li>1,000 requests per month</li>
-                          <li>50,000 records per request</li>
-                          <li>Priority email support</li>
-                          <li>API documentation access</li>
-                          <li>Exchanges</li>
-                          <li>Stock Tickers</li>
-                          <li>EOD Data</li>
-                          <li>Fundamentals</li>
-                          <li>Financial News</li>
-                          <li>Options Data</li>
-                          <li>Technical Data</li>
-                          <li>Sentiment Analysis</li>
-                        </ul>
-                        <form id="professional_plan_form" class="form-horizontal" action="/plan-subscription/">
-                            <input type="hidden" id="professional_id" name="professional_id" value="">
-                         <button type="button" class="btn btn-dark" id="professional_plan"><i class="fa fa-dollar"> </i>  </button>
-                        </form>
-                      </div>
-                      <div class="col-md-3">
-                        <h3>Business</h3>
-                        <p>Upgrade to our business plan.</p>
-                        <ul>
-                          <li>5,000 requests per month</li>
-                          <li>200,000 records per request</li>
-                          <li>24/7 email and phone support</li>
-                          <li>API documentation access</li>
-                          <li>Dedicated account manager</li>
-                          <li>Exchanges</li>
-                          <li>Stock Tickers</li>
-                          <li>EOD Data</li>
-                          <li>Fundamentals</li>
-                          <li>Financial News</li>
-                          <li>Options Data</li>
-                          <li>Technical Data</li>
-                          <li>Sentiment Analysis</li>
-                          <li>Real Time Social Media Trends</li>
-                        </ul>
-                          <form id="business_plan_form" class="form-horizontal" action="/plan-subscription/">
-                                <input type="hidden" id="business_id" name="business_id" value="">
-                                <button class="btn btn-dark" id="business_plan"><i class="fa fa-dollar"> </i> </button>
-                          </form>
-                      </div>
-                      <div class="col-md-3">
-                        <h3>Enterprise</h3>
-                        <p>Contact us for a custom enterprise plan.</p>
-                        <ul>
-                          <li>Custom request limits</li>
-                          <li>Custom records per request</li>
-                          <li>24/7 email and phone support</li>
-                          <li>API documentation access</li>
-                          <li>Dedicated account manager</li>
-                          <li>SLA-backed uptime guarantee</li>
-                          <li>Exchanges</li>
-                          <li>Stock Tickers</li>
-                          <li>EOD Data</li>
-                          <li>Fundamentals</li>
-                          <li>Financial News</li>
-                          <li>Options Data</li>
-                          <li>Technical Data</li>
-                          <li>Sentiment Analysis</li>
-                          <li>Real Time Social Media Trends</li>
-                        </ul>
-                          <form id="enterprise_plan_form" class="form-horizontal" action="/plan-subscription/">
-                              <input type="hidden" id="enterprise_id" name="enterprise_id" value="">
-                              <button type="button" class="btn btn-dark" id="enterprise_plan"><i class="fa fa-envelope"> </i> </button>
-                         </form>
-                      </div>
-                </div>
-                </div>
-</div>
-<div class="clearfix"><hr/></div>
-      <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="tile">
-            <div class="tile-header">
-              <h3 class="title"><i class="fa fa-brands fa-github"> </i> SDKs</h3>
-            </div>
-            <div class="tile-content">
-              <p>We offer SDKs in multiple programming languages to make integrating with our API a breeze. Our SDKs are available on GitHub, making it easy to get started.</p>
-                <ul class="list-group">
-                  <li class="list-group-item">
-                    <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk" target="_blank">
-                      <i class="fa fa-github-alt"></i>
-                      Python
-                    </a>
-                           <ul>
-                               <li>Python Package @ GITHUB : <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk" target="_blank"> Intelligent-Stock-Market-API</a></li>
-                               <li>Install from Pypi : <a href="https://pypi.org/project/Intelligent-Stock-Market-API/" target="_blank"> Intelligent-Stock-Market-API </a> </li>
-                               <li> <p>Or You can install from your python virtual environment using :</p>
-    <pre class="bg-dark text-white">
-       pip install Intelligent-Stock-Market-API
-    </pre>
-                               </li>
-                           </ul>
-                  </li>
-                  <li class="list-group-item">
-                    <a href="https://github.com/MJ-API-Development/stock-api-nodesdk" target="_blank">
-                      <i class="fa fa-github-alt"> </i>
-                      Node.js
-                    </a>
-                  </li>
-                </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="tile">
-            <div class="tile-header">
-                <h3 class="title"><i class="fa fa-brands fa-file-text"> </i> Documentations</h3>
-            </div>
-            <div class="tile-content">
-              <p>Our API documentation is comprehensive and easy to follow. It includes code samples, detailed explanations,
-                  and examples of use cases. You can access our documentation at the following link:</p>
-
-            <ul class="list-group">
-                <li class="list-group-item"><a href="{{ url_for('docs.redoc') }}">Redoc Documentations </a></li>
-                <li class="list-group-item"><a href="{{ url_for('docs.openapi_json') }}">OpenAPI Specifications  </a></li>
-                <li class="list-group-item"><a href="{{ url_for('docs.github_docs') }}">Github Documentations  </a></li>
-            </ul>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
+    </div>
+</div>
+
+
 <div class="clearfix"><hr/></div>
+  <div id="subscription_plans" class="container">
+      <div class="tile tile_header">
+          <h3 class="title-decor">Subscribe - Free Trial Available</h3>
+      </div>
+    <div class="col-md-12">
+          <div class="col-md-3">
+            <h3>Basic </h3>
+            <h2 class="text-info font-weight-bold">1 Month Free Trial</h2>
+            <p class="text-body">Get started with our basic plan. and get a one month free trial</p>
+            <ul>
+              <li>500 requests per month</li>
+              <li>10,000 records per request</li>
+              <li>Limited email support</li>
+              <li>API documentation access</li>
+              <li>Exchanges</li>
+              <li>Stock Tickers</li>
+              <li>EOD Data</li>
+                <li class="text text-info font-weight-bold"> One Month Free Trial</li>
+            </ul>
+                <form id="basic_plan_form" class="form-horizontal" action="/plan-subscription/">
+                    <input type="hidden" id="basic_id" name="basic_id" value="">
+                    <button type="button" class="btn btn-dark" id="basic_plan"><i class="fa fa-dollar"> </i>  </button>
+                </form>
+          </div>
+          <div class="col-md-3">
+            <h3>Professional</h3>
+            <p>Upgrade to our professional plan.</p>
+            <ul>
+              <li>1,000 requests per month</li>
+              <li>50,000 records per request</li>
+              <li>Priority email support</li>
+              <li>API documentation access</li>
+              <li>Exchanges</li>
+              <li>Stock Tickers</li>
+              <li>EOD Data</li>
+              <li>Fundamentals</li>
+              <li>Financial News</li>
+              <li>Options Data</li>
+              <li>Technical Data</li>
+              <li>Sentiment Analysis</li>
+            </ul>
+            <form id="professional_plan_form" class="form-horizontal" action="/plan-subscription/">
+                <input type="hidden" id="professional_id" name="professional_id" value="">
+             <button type="button" class="btn btn-dark" id="professional_plan"><i class="fa fa-dollar"> </i>  </button>
+            </form>
+          </div>
+          <div class="col-md-3">
+            <h3>Business</h3>
+            <p>Upgrade to our business plan.</p>
+            <ul>
+              <li>5,000 requests per month</li>
+              <li>200,000 records per request</li>
+              <li>24/7 email and phone support</li>
+              <li>API documentation access</li>
+              <li>Dedicated account manager</li>
+              <li>Exchanges</li>
+              <li>Stock Tickers</li>
+              <li>EOD Data</li>
+              <li>Fundamentals</li>
+              <li>Financial News</li>
+              <li>Options Data</li>
+              <li>Technical Data</li>
+              <li>Sentiment Analysis</li>
+              <li>Real Time Social Media Trends</li>
+            </ul>
+              <form id="business_plan_form" class="form-horizontal" action="/plan-subscription/">
+                    <input type="hidden" id="business_id" name="business_id" value="">
+                    <button class="btn btn-dark" id="business_plan"><i class="fa fa-dollar"> </i> </button>
+              </form>
+          </div>
+          <div class="col-md-3">
+            <h3>Enterprise</h3>
+            <p>Contact us for a custom enterprise plan.</p>
+            <ul>
+              <li>Custom request limits</li>
+              <li>Custom records per request</li>
+              <li>24/7 email and phone support</li>
+              <li>API documentation access</li>
+              <li>Dedicated account manager</li>
+              <li>SLA-backed uptime guarantee</li>
+              <li>Exchanges</li>
+              <li>Stock Tickers</li>
+              <li>EOD Data</li>
+              <li>Fundamentals</li>
+              <li>Financial News</li>
+              <li>Options Data</li>
+              <li>Technical Data</li>
+              <li>Sentiment Analysis</li>
+              <li>Real Time Social Media Trends</li>
+            </ul>
+              <form id="enterprise_plan_form" class="form-horizontal" action="/plan-subscription/">
+                  <input type="hidden" id="enterprise_id" name="enterprise_id" value="">
+                  <button type="button" class="btn btn-dark" id="enterprise_plan"><i class="fa fa-envelope"> </i> </button>
+             </form>
+          </div>
+    </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="container">
+   <div class="card">
+       <div class="card-header">
+           <h3 class="card-title">Documentations</h3>
+       </div>
+   <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+              <div class="tile">
+                <div class="tile-header">
+                  <h3 class="title"><i class="fa fa-brands fa-github"> </i> SDKs</h3>
+                </div>
+                <div class="tile-content">
+                  <p>We offer SDKs in multiple programming languages to make integrating with our API a breeze. Our SDKs are available on GitHub, making it easy to get started.</p>
+                    <ul class="list-group">
+                      <li class="list-group-item">
+                        <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk" target="_blank">
+                          <i class="fa fa-github-alt"></i>
+                          Python
+                        </a>
+                               <ul>
+                                   <li>Python Package @ GITHUB : <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk" target="_blank"> Intelligent-Stock-Market-API</a></li>
+                                   <li>Install from Pypi : <a href="https://pypi.org/project/Intelligent-Stock-Market-API/" target="_blank"> Intelligent-Stock-Market-API </a> </li>
+                                   <li> <p>Or You can install from your python virtual environment using :</p>
+            <pre class="bg-dark text-white">
+            pip install Intelligent-Stock-Market-API
+            </pre>
+                                   </li>
+                               </ul>
+                      </li>
+                      <li class="list-group-item">
+                        <a href="https://github.com/MJ-API-Development/stock-api-nodesdk" target="_blank">
+                          <i class="fa fa-github-alt"> </i>
+                          Node.js
+                        </a>
+                      </li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="tile">
+                <div class="tile-header">
+                    <h3 class="title"><i class="fa fa-brands fa-file-text"> </i> Documentations</h3>
+                </div>
+                <div class="tile-content">
+                  <p>Our API documentation is comprehensive and easy to follow. It includes code samples, detailed explanations,
+                      and examples of use cases. You can access our documentation at the following link:</p>
+
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="{{ url_for('docs.redoc') }}">Redoc Documentations </a></li>
+                    <li class="list-group-item"><a href="{{ url_for('docs.openapi_json') }}">OpenAPI Specifications  </a></li>
+                    <li class="list-group-item"><a href="{{ url_for('docs.github_docs') }}">Github Documentations  </a></li>
+                </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+   </div>
+   </div>
+</div>
+
+<div class="clearfix"><hr/></div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -270,7 +315,9 @@
     </div>
 </div>
 <div class="clearfix"><hr/></div>
+
 <div class="container">
+
   <div class="row">
     <div class="col-md-12">
       <div class="card">
