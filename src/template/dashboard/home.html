@@ -13,7 +13,7 @@
 {% endblock %}
 {% block content %}
           <div class="right_col" role="main">
-<div class="col-md-12">
+<div class="card col-md-12">
 <div class="row">
   <div class="card col-md-12">
     <h1>EOD Stock API - Intelligent Stock Market API</h1>
@@ -63,7 +63,7 @@
     <h2 class="card-text">Our mission is to provide developers with the resources & Information they need to create innovative and effective applications that solve real-world problems.</h2>
     <h2 class="card-text">We are passionate about building tools and solutions that help modern businesses succeed in a constantly evolving Stock Market & Business Landscape during the AI & Digital Revolution.</h2>
     <h2 class="card-text"> <strong>Our API Gateway's</strong> and <strong>Stocks API Backend</strong> offer comprehensive solutions for enabling easy and reliable access to daily
-                    stock market data, business news & trends world wide .</h2>
+                    stock market data, business news & trends world-wide.</h2>
 </div>
 
 </div>
@@ -238,7 +238,7 @@
 <div class="container">
    <div class="card">
        <div class="card-header">
-           <h3 class="card-title">Documentations</h3>
+           <a href="/docs/fundamentals"> <h3 class="card-title">Documentations</h3> </a>
        </div>
    <div class="card-body">
         <div class="row">
@@ -304,7 +304,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> Redoc Documentations</h3>
+                    <a href="/redoc"> <h3 class="card-title"> Redoc Documentations</h3> </a>
                 </div>
                 <div class="card-body">
                     <a href="{{ url_for('docs.redoc') }}"> Redoc Open API Documentations for our API can be accessed here, so if you are
@@ -362,13 +362,23 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+
+  </div>
+</div>
+
+<div class="container">
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"> Resources & Community</h3>
+    </div>
+    <div class="card-body">
+      <div class="row">
         <div class="card-body">
+            <a href="https://github.com/MJ-API-Development" target="_blank"> <h3 class="title"> Github Repositories</h3></a>
 
-            <a href="https://github.com/MJ-API-Development" target="_blank"> <h3 class="title">MJ API Development on Github</h3></a>
+            <div class="card-text col-md-6 col-sm-6">
 
-            <div class="card-text">
-                <h3>Python Based API Gateway:</h3>
+                <h3 class="card-title">Python Based API Gateway:</h3>
                     <p>Our API Gateway repository provides gateway services such as authentication, authorization,
                         and payment processing for clients.</p>
 
@@ -378,8 +388,8 @@
                 <p>Check it out at: <a href="https://github.com/MJ-API-Development/api-gateway" target="_blank"> <strong>API Gateway Built With Python</strong></a>
             </div>
 
-            <div class="card-text">
-                <h3>EOD API Developers Blog:</h3>
+            <div class="card-text col-md-6 col-sm-6">
+                <h3>EOD API Developers Blog</h3>
                 <p>
                     Our <a href=""><strong>EOD API Blog is a Github-based blog hosted on our website</strong></a>
                     which provides valuable resources and information for developers working with
@@ -392,8 +402,8 @@
                 Visit our blog at: <a href="https://eod-stock-api.site/blog"><strong>Github Based Developers Blog</strong></a>
             </div>
 
-            <div class="card-text">
-                <h3>Stock API Python SDK: Intelligent Stock Market API </h3>
+            <div class="card-text col-md-6 col-sm-6">
+                <h3>Stock API Python SDK: Intelligent Stock Market API</h3>
                 <p>Our <strong>Stock API Python SDK</strong> provides a simple and intuitive way to interact with our Stock API,
                     making it easy to integrate real-time financial data into your applications.</p>
 
@@ -403,7 +413,7 @@
                 <p>Check out our Python SDK at: <a href="https://github.com/MJ-API-Development/stock-api-pythonsdk" target="_blank"> <strong>Intelligent Stock Market PythonSDK</strong> </a></p>
             </div>
 
-            <div class="card-text">
+            <div class="card-text col-md-6 col-sm-6">
                 <h3>Cloudflare Based Gateway Routers</h3>
 
                 <p>Our Cloudflare Gateway Routers repository provides a powerful tool for managing and routing API requests.
@@ -413,7 +423,9 @@
             </div>
         </div>
     </div>
-  </div>
+    </div>
+</div>
+</div>
 
 <div id="cookie-popup" style="display:none;">
     <p> We use cookies to personalize content,
@@ -430,7 +442,7 @@
 
 </div>
 
-</div>
+
           <!-- /page content -->
 {% endblock %}
 {% block scripts %}
