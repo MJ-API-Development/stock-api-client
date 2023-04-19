@@ -4,6 +4,12 @@
               <div class="nav toggle">
                 <a id="menu_toggle"><i class="fa fa-bars"></i></a>
               </div>
+{% if user_data and user_data['uuid'] %}
+              <a href="{{ url_for('auth.logout') }}" class="btn btn-danger pull-right"><i class="fa fa-power-off"> </i> Logout</a>
+{% else %}
+              <a href="{{ url_for('auth.login') }}" class="btn btn-info pull-right"><i class="fa fa-power-off"> </i> Login</a>
+              <a href="{{ url_for('auth.login') }}#signup" class="btn btn-danger pull-right"><i class="fa fa-user-plus"> </i> Sign Up Free</a>
+{% endif %}
           </div>
         </div>
         <!-- /top navigation -->
