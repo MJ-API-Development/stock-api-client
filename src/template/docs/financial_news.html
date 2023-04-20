@@ -2,55 +2,132 @@
 
 {% block content %}
 <div class="right_col" role="main">
-  <div class="col-md-12">
-    <h1>EOD Stock API - Documentations - Financial News</h1>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">API Endpoint</h5>
-          <p class="card-text">The API endpoint for retrieving financial news is <code>https://eodhistoricaldata.com/api/news</code>.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Parameters</h5>
-          <p class="card-text">The financial news API endpoint accepts the following parameters:</p>
-          <ul class="card-text">
-            <li><code>symbols</code> (required) - A comma-separated list of stock symbols to retrieve news for.</li>
-            <li><code>from</code> (optional) - A date string in the format <code>YYYY-MM-DD</code> specifying the start of the date range to retrieve news for.</li>
-            <li><code>to</code> (optional) - A date string in the format <code>YYYY-MM-DD</code> specifying the end of the date range to retrieve news for.</li>
-            <li><code>sources</code> (optional) - A comma-separated list of news sources to retrieve news from.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    </div>
-
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Response</h5>
-          <p class="card-text">The financial news API endpoint returns an array of news articles, where each article is represented as a JSON object with the following fields:</p>
-          <ul class="card-text">
-            <li><code>id</code> - The unique identifier of the news article.</li>
-            <li><code>title</code> - The title of the news article.</li>
-            <li><code>description</code> - A short description of the news article.</li>
-            <li><code>url</code> - The URL of the news article.</li>
-            <li><code>source</code> - The source of the news article.</li>
-            <li><code>date</code> - The date the news article was published.</li>
-          </ul>
-        </div>
-      </div>
+  <div class="card">
+    <div class="card-header">
+        <h1 class="card-title">EOD Stock API - Financial News API Docs</h1>
     </div>
   </div>
+
+
+<div class="card-body">
+
+
+<p class="font-weight-bold"><code>Endpoint: https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}?api_key=YOUR-API-KEY</code></p>
+
+    <p class="font-weight-bold">Description: This endpoint retrieves financial news articles related to a specific stock code.</p>
+
+    <p class="font-weight-bold">HTTP Method: <code>GET</code></p>
+
+    <p class="font-weight-bold">URL Parameters:</p>
+<ul>
+    <li><code>- {stock_code} -</code> the code of the stock to retrieve the news articles for.</li>
+</ul>
+<p>You can obtain your API Key once you subscribe</p>
+
+
+<div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python Code</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-nodejs" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Node</a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Response</a>
+                  </li>
+                </ul>
+              </div>
+<div class="card-body">
+<div class="tab-content" id="custom-tabs-one-tabContent">
+
+    <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+    </div>
+    <div class="tab-pane fade" id="custom-tabs-one-nodejs" role="tabpanel" aria-labelledby="custom-tabs-one-nodejs">
+    </div>
+    <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+    </div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+Response format:
+
+The API will return a JSON object with the following properties:
+
+- message: A string describing the status of the request.
+- payload: An array of news articles related to the stock code. Each article is represented as a JSON object with the following properties:
+
+  - link: The URL link to the full article.
+  - providerPublishTime: The time the article was published, represented as a Unix timestamp.
+  - publisher: The publisher of the article.
+  - relatedTickers: A JSON object containing related stock tickers for the article.
+  - thumbnail: A JSON object containing information about the thumbnail image for the article.
+  - title: The title of the article.
+  - type: The type of the article.
+  - uuid: The unique identifier for the article.
+
+- status: A boolean indicating the status of the request.
+
+Example Request:
+
+GET https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/GOOG
+
+Example Response:
+
+{
+  "message": "Success",
+  "payload": [
+    {
+      "link": "https://www.example.com/news/article1",
+      "providerPublishTime": 1646323200,
+      "publisher": "Example News",
+      "relatedTickers": {
+        "ticker": "GOOG"
+      },
+      "thumbnail": {
+        "resolutions": {
+          "height": 200,
+          "tag": "thumbnail",
+          "url": "https://www.example.com/news/article1/thumbnail.jpg",
+          "width": 300
+        }
+      },
+      "title": "Example News Article 1",
+      "type": "News",
+      "uuid": "1234567890"
+    },
+    {
+      "link": "https://www.example.com/news/article2",
+      "providerPublishTime": 1646323200,
+      "publisher": "Example News",
+      "relatedTickers": {
+        "ticker": "GOOG"
+      },
+      "thumbnail": {
+        "resolutions": {
+          "height": 200,
+          "tag": "thumbnail",
+          "url": "https://www.example.com/news/article2/thumbnail.jpg",
+          "width": 300
+        }
+      },
+      "title": "Example News Article 2",
+      "type": "News",
+      "uuid": "0987654321"
+    }
+  ],
+  "status": true
+}
+</div>
 
 </div>
 {% endblock %}

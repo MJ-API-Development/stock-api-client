@@ -1,5 +1,153 @@
 {% extends "layouts/layout.html" %}
 
 {% block content %}
+<div class="right_col" role="main">
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">EOD Stock API - EOD Documentation</h1>
+        </div>
+        <div class="card-body">
+            <h5>Description: This endpoint returns end-of-day data for a certain stock on a specific date.</h5>
+            <p><code> Endpoint : https://gateway.eod-stock-api.site/api/v1/eod/{_date}/{exchange_code}?api_key=YOUR_API_KEY</code></p>
+            <p class="font-weight-bold">HTTP Method: GET</p>
+            <p class="font-weight-bold">Parameters :
+          <ul>
+            <li><em><code>_date (required):</code></em> The date for which to retrieve the end-of-day data. This should be in the format yyyy-mm-dd.</li>
+            <li><em><code>exchange_code (required):</code></em> The code for the exchange on which the stock is listed. This should be a string.</li>
+          </ul>
+            </p>
 
+            <div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-node" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Node</a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Response</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                    <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                        <card>
+                            This function takes in an api_key, a date in the format yyyy-mm-dd, and an exchange_code as arguments, and returns the response data from the API in the form of a dictionary. If the API returns an error status code, it raises an HTTPError. You can use this function to retrieve end-of-day data for a certain stock on a specific date.
+<pre><code>
+import requests
+
+def get_eod_data(api_key, date, exchange_code):
+    """
+    Makes a GET request to the end-of-day data endpoint and returns the response data.
+
+    Args:
+    api_key (str): Your API key.
+    date (str): The date for which to retrieve the end-of-day data in the format yyyy-mm-dd.
+    exchange_code (str): The code for the exchange on which the stock is listed.
+
+    Returns:
+    dict: The response data from the endpoint.
+
+    Raises:
+    requests.exceptions.HTTPError: If the API returns an error status code.
+    """
+    url = f"https://gateway.eod-stock-api.site/api/v1/eod/{date}/{exchange_code}?api_key={api_key}"
+    with requests.Session() as session:
+        response = session.get(url)
+        response.raise_for_status() # Raise an HTTPError if status code is unsuccessful
+    return response.json()
+</code></pre>
+                        </card>
+                    </div>
+                    <div class="tab-pane fade" id="custom-tabs-one-node" role="tabpanel" aria-labelledby="custom-tabs-one-node">
+
+<p>This function takes in an apiKey, a date in the format yyyy-mm-dd, and an exchangeCode as arguments, and returns a promise that resolves with the response data from the API. If the API returns an error status code,
+    it throws an error with a message indicating the reason for the error.</p>
+
+<code><pre>
+const axios = require('axios');
+
+async function getEodData(apiKey, date, exchangeCode) {
+  const url = `https://gateway.eod-stock-api.site/api/v1/eod/${date}/${exchangeCode}?api_key=${apiKey}`;
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error retrieving end-of-day data: ${error.message}`);
+  }
+}
+</pre></code>
+
+
+                    </div>
+                     <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                           <div class="card-body">
+
+            <h4>Example Request: </h4>
+
+            <p class="font-weight-bold"><code>GET /api/v1/eod/2022-01-01/NYSE</code></p>
+
+            <p><code>Example Response:</code></p>
+            <pre class="bg-black"><code>
+{
+    "message": "Successful request",
+    "status": true,
+    "payload": [
+                {
+                    "adjusted_close": 105.12,
+                    "close": 105.5,
+                    "code": "AAPL",
+                    "date": "2022-01-01",
+                    "high": 106.2,
+                    "low": 104.7,
+                    "market_capitalization": 1.8e+12
+                },
+                {
+                    "adjusted_close": 105.12,
+                    "close": 95.5,
+                    "code": "MSFT",
+                    "date": "2022-01-01",
+                    "high": 98.2,
+                    "low": 93.7,
+                    "market_capitalization": 1.8e+12
+                }...
+                ]
+}
+            </code>
+
+            </pre>
+
+
+        </div>
+                     </div>
+                </div>
+
+              </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="card-header">
+
+            </div>
+        <p class="font-weight-bold">
+            For more information on this endpoint consider checking the following resources
+            <ul>
+            <li><a href="/blog/Developers/index.html"> EOD Stock API Developer Blog</a></li>
+            <li><a href="/redoc"> EOD Stock API - Redoc Documentation</a></li>
+            <li><a href="https://github.com/MJ-API-Development/Intelligent-EOD-Stock-Financial-News-API"> Github Documentation</a></li>
+            <li><a href="https://github.com/MJ-API-Development/stock-api-pythonsdk"> Or Use our Python SDK - IntelligentStockMarket</a></li>
+            </ul>
+        </p>
+    </div>
+
+
+    </div>
+</div>
+</div>
 {% endblock %}
