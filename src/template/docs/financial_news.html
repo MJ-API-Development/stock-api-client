@@ -44,7 +44,7 @@
 <div class="tab-content" id="custom-tabs-one-tabContent">
 
     <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-<pre class="bg-dark"><code>
+<pre class="bg-dark text-white"><code>
 
 def get_financial_news_articles(stock_code: str) -> Dict[str, Union[bool, List[Dict[str, Union[str, int, Dict[str, Union[str, int]], Dict[str, Dict[str, Union[int, str]]]]]]]]:
     """
@@ -131,7 +131,7 @@ def get_financial_news_articles(stock_code: str) -> Dict[str, Union[bool, List[D
 </code></pre>
     </div>
     <div class="tab-pane fade" id="custom-tabs-one-nodejs" role="tabpanel" aria-labelledby="custom-tabs-one-nodejs">
-<pre class="bg-dark">
+<pre class="bg-dark text-white">
 <code>
 const axios = require('axios');
 
@@ -255,7 +255,7 @@ module.exports = { getFinancialNewsArticles };
         <p class="font-weight-bold"><code>GET https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/GOOG?api_key=YOURAPIKEY</code></p>
 
         <p class="font-weight-bold">Example Response:</p>
-<pre class="btn-dark"><code>
+<pre class="btn-dark text-white"><code>
 {
   "message": "Success",
   "payload": [
@@ -307,13 +307,15 @@ module.exports = { getFinancialNewsArticles };
 </div>
 </div>
 
-
-
-
-
-
-
+<div class="card-body">
+    <p class="font-weight-bold"> For extra resources and documentations please make use of this resources</p>
+    <ul>
+        <li><a href="/redoc"> Redoc Documentations </a></li>
+        <li><a href="/blog/developers/financial_news_requests.html"> Developers Blog - Financial News API </a></li>
+        <li><a href="https://github.com/MJ-API-Development/stock-api-pythonsdk"> Documentations on Python SDK - Financial News</a></li>
+    </ul>
 </div>
 
+</div>
 </div>
 {% endblock %}
