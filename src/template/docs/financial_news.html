@@ -29,7 +29,7 @@
               <div class="card-header p-0 pt-1">
                 <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                   <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python Code</a>
+                    <a class="nav-link" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Python</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-nodejs" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Node</a>
@@ -48,41 +48,33 @@
     <div class="tab-pane fade" id="custom-tabs-one-nodejs" role="tabpanel" aria-labelledby="custom-tabs-one-nodejs">
     </div>
     <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
-    </div>
+        <p class="font-weight-bold">Response format:</p>
 
-</div>
-</div>
+        <p class="font-weight-bold">The API will return a JSON object with the following properties:</p>
+<ul>
+    <li>- message: A string describing the status of the request.</li>
+    <li>- payload: An array of news articles related to the stock code. Each article is represented as a JSON object with the following properties:</li>
+</ul>
+<ul>
+    <li><code>- link:</code> The URL link to the full article.</li>
+    <li><code>- providerPublishTime:</code> The time the article was published, represented as a Unix timestamp.</li>
+    <li><code>- publisher:</code> The publisher of the article.</li>
+    <li><code>- relatedTickers:</code> A JSON object containing related stock tickers for the article.</li>
+    <li><code>- thumbnail:</code> A JSON object containing information about the thumbnail image for the article.</li>
+    <li><code>- title:</code> The title of the article.</li>
+    <li><code>- type:</code> The type of the article.</li>
+    <li><code>- uuid:</code> The unique identifier for the article.</li>
+</ul>
+<ul>
+    <li><code>- status:</code> A boolean indicating the status of the request.</li>
+</ul>
 
+        <p class="font-weight-bold">Example Request:</p>
 
+        <p class="font-weight-bold"><code>GET https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/GOOG?api_key=YOURAPIKEY</code></p>
 
-
-
-
-
-Response format:
-
-The API will return a JSON object with the following properties:
-
-- message: A string describing the status of the request.
-- payload: An array of news articles related to the stock code. Each article is represented as a JSON object with the following properties:
-
-  - link: The URL link to the full article.
-  - providerPublishTime: The time the article was published, represented as a Unix timestamp.
-  - publisher: The publisher of the article.
-  - relatedTickers: A JSON object containing related stock tickers for the article.
-  - thumbnail: A JSON object containing information about the thumbnail image for the article.
-  - title: The title of the article.
-  - type: The type of the article.
-  - uuid: The unique identifier for the article.
-
-- status: A boolean indicating the status of the request.
-
-Example Request:
-
-GET https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/GOOG
-
-Example Response:
-
+        <p class="font-weight-bold">Example Response:</p>
+<pre><code>
 {
   "message": "Success",
   "payload": [
@@ -127,6 +119,19 @@ Example Response:
   ],
   "status": true
 }
+</code></pre>
+</div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
 </div>
 
 </div>
