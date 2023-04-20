@@ -20,6 +20,8 @@ def generate_sitemap():
     yield 'home.privacy_policy', {}
     yield 'docs.documentations', {'path': 'exchanges'},
     yield 'docs.documentations', {'path': 'fundamentals'},
+    yield 'docs.documentations', {'path': 'financial-news'},
+    yield 'docs.documentations', {'path': 'eod'},
     yield 'blog.financial_news', {'country': 'meme'},
     yield 'blog.financial_news', {'country': 'us'},
     yield 'blog.financial_news', {'country': 'canada'},
