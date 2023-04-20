@@ -44,8 +44,189 @@
 <div class="tab-content" id="custom-tabs-one-tabContent">
 
     <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+<pre class="bg-dark"><code>
+
+def get_financial_news_articles(stock_code: str) -> Dict[str, Union[bool, List[Dict[str, Union[str, int, Dict[str, Union[str, int]], Dict[str, Dict[str, Union[int, str]]]]]]]]:
+    """
+    Retrieves financial news articles related to a specific stock code.
+
+    Args:
+        stock_code (str): The code of the stock to retrieve news articles for.
+
+    Returns:
+        A dictionary with the following keys:
+        - message (str): A string describing the status of the request.
+        - payload (list): A list of news articles related to the stock code. Each article is represented as a dictionary with the following keys:
+            - link (str): The URL link to the full article.
+            - providerPublishTime (int): The time the article was published, represented as a Unix timestamp.
+            - publisher (str): The publisher of the article.
+            - relatedTickers (dict): A dictionary containing related stock tickers for the article, with a key of 'ticker'.
+            - thumbnail (dict): A dictionary containing information about the thumbnail image for the article, with the following keys:
+                - resolutions (dict): A dictionary containing the height, width, tag, and URL of the thumbnail image.
+            - title (str): The title of the article.
+            - type (str): The type of the article.
+            - uuid (str): The unique identifier for the article.
+        - status (bool): A boolean indicating the status of the request.
+
+    Raises:
+        ValueError: If the provided stock code is not a string or is an empty string.
+
+    Example Usage:
+
+    >>> get_financial_news_articles('AAPL')
+    {
+        "message": "Success",
+        "payload": [
+            {
+                "link": "https://www.example.com/news/article1",
+                "providerPublishTime": 1646323200,
+                "publisher": "Example News",
+                "relatedTickers": {
+                    "ticker": "AAPL"
+                },
+                "thumbnail": {
+                    "resolutions": {
+                        "height": 200,
+                        "tag": "thumbnail",
+                        "url": "https://www.example.com/news/article1/thumbnail.jpg",
+                        "width": 300
+                    }
+                },
+                "title": "Example News Article 1",
+                "type": "News",
+                "uuid": "1234567890"
+            },
+            {
+                "link": "https://www.example.com/news/article2",
+                "providerPublishTime": 1646323200,
+                "publisher": "Example News",
+                "relatedTickers": {
+                    "ticker": "AAPL"
+                },
+                "thumbnail": {
+                    "resolutions": {
+                        "height": 200,
+                        "tag": "thumbnail",
+                        "url": "https://www.example.com/news/article2/thumbnail.jpg",
+                        "width": 300
+                    }
+                },
+                "title": "Example News Article 2",
+                "type": "News",
+                "uuid": "0987654321"
+            }
+        ],
+        "status": true
+    }
+    """
+    endpoint = f"https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(endpoint, headers=headers)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"message": "Failed to retrieve news articles", "status": False}
+
+</code></pre>
     </div>
     <div class="tab-pane fade" id="custom-tabs-one-nodejs" role="tabpanel" aria-labelledby="custom-tabs-one-nodejs">
+<pre class="bg-dark">
+<code>
+const axios = require('axios');
+
+/**
+ * Retrieves financial news articles related to a specific stock code.
+ *
+ * @param {string} stockCode - The code of the stock to retrieve news articles for.
+ * @returns {
+ *   message: string,
+ *   payload: {
+ *     link: string,
+ *     providerPublishTime: number,
+ *     publisher: string,
+ *     relatedTickers: {
+ *       ticker: string
+ *     },
+ *     thumbnail: {
+ *       resolutions: {
+ *         height: number,
+ *         tag: string,
+ *         url: string,
+ *         width: number
+ *       }
+ *     },
+ *     title: string,
+ *     type: string,
+ *     uuid: string
+ *   }[],
+ *   status: boolean
+ * } A dictionary with the following keys:
+ * - message (string): A string describing the status of the request.
+ * - payload (array): An array of news articles related to the stock code. Each article is represented as a dictionary with the following keys:
+ *   - link (string): The URL link to the full article.
+ *   - providerPublishTime (number): The time the article was published, represented as a Unix timestamp.
+ *   - publisher (string): The publisher of the article.
+ *   - relatedTickers (object): An object containing related stock tickers for the article, with a key of 'ticker'.
+ *   - thumbnail (object): An object containing information about the thumbnail image for the article, with the following keys:
+ *     - resolutions (object): An object containing the height, width, tag, and URL of the thumbnail image.
+ *   - title (string): The title of the article.
+ *   - type (string): The type of the article.
+ *   - uuid (string): The unique identifier for the article.
+ * - status (boolean): A boolean indicating the status of the request.
+ *
+ * @throws {Error} If the provided stock code is not a string or is an empty string.
+ *
+ * @example
+ * getFinancialNewsArticles('AAPL')
+ *   .then((data) => {
+ *     console.log(data);
+ *     /*
+ *      * Output:
+ *      * {
+ *      *   "message": "Success",
+ *      *   "payload": [
+ *      *     {
+ *      *       "link": "https://www.example.com/news/article1",
+ *      *       "providerPublishTime": 1646323200,
+ *      *       "publisher": "Example News",
+ *      *       "relatedTickers": {
+ *      *         "ticker": "AAPL"
+ *      *       },
+ *      *       "thumbnail": {
+ *      *         "resolutions": {
+ *      *           "height": 200,
+ *      *           "tag": "thumbnail",
+ *      *           "url": "https://www.example.com/news/article1/thumbnail.jpg",
+ *      *           "width": 300
+ *      *         }
+ *      *       },
+ *      *       "title": "Example News Article 1",
+ *      *       "type": "News",
+ *      *       "uuid": "1234567890"
+ *      *     },
+ *      *     {
+ *      *       "link": "https://www.example.com/news/article2",
+ *      *       "providerPublishTime": 1646323200,
+ *      *       "publisher": "Example News",
+ *      *       "relatedTickers": {
+ *      *         "ticker": "AAPL"
+ *      *       },
+ *      */
+
+async function getFinancialNewsArticles(stockCode) {
+  if (typeof stockCode !== 'string' || stockCode === '') {
+    throw new Error('Invalid stock code');
+  }
+
+  const url = `https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/${stockCode}`;
+  const response = await axios.get(url);
+  return response.data;
+}
+
+module.exports = { getFinancialNewsArticles };
+</code>
+</pre>
     </div>
     <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
         <p class="font-weight-bold">Response format:</p>
@@ -74,7 +255,7 @@
         <p class="font-weight-bold"><code>GET https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/GOOG?api_key=YOURAPIKEY</code></p>
 
         <p class="font-weight-bold">Example Response:</p>
-<pre><code>
+<pre class="btn-dark"><code>
 {
   "message": "Success",
   "payload": [
@@ -124,7 +305,7 @@
 
 </div>
 </div>
-
+</div>
 
 
 

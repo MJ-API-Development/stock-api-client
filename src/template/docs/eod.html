@@ -38,7 +38,7 @@
                     <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                         <card>
                             This function takes in an api_key, a date in the format yyyy-mm-dd, and an exchange_code as arguments, and returns the response data from the API in the form of a dictionary. If the API returns an error status code, it raises an HTTPError. You can use this function to retrieve end-of-day data for a certain stock on a specific date.
-<pre><code>
+<pre class="bg-dark"><code>
 import requests
 
 def get_eod_data(api_key, date, exchange_code):
@@ -69,7 +69,7 @@ def get_eod_data(api_key, date, exchange_code):
 <p>This function takes in an apiKey, a date in the format yyyy-mm-dd, and an exchangeCode as arguments, and returns a promise that resolves with the response data from the API. If the API returns an error status code,
     it throws an error with a message indicating the reason for the error.</p>
 
-<code><pre>
+<code><pre class="bg-dark">
 const axios = require('axios');
 
 async function getEodData(apiKey, date, exchangeCode) {
@@ -93,7 +93,7 @@ async function getEodData(apiKey, date, exchangeCode) {
             <p class="font-weight-bold"><code>GET /api/v1/eod/2022-01-01/NYSE</code></p>
 
             <p><code>Example Response:</code></p>
-            <pre class="bg-black"><code>
+            <pre class="bg-dark"><code>
 {
     "message": "Successful request",
     "status": true,
