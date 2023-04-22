@@ -7,24 +7,15 @@
         <h1 class="card-title">EOD Stock API - Financial News API Docs</h1>
     </div>
   </div>
-
-
 <div class="card-body">
-
-
 <p class="font-weight-bold"><code>Endpoint: https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}?api_key=YOUR-API-KEY</code></p>
-
     <p class="font-weight-bold">Description: This endpoint retrieves financial news articles related to a specific stock code.</p>
-
     <p class="font-weight-bold">HTTP Method: <code>GET</code></p>
-
     <p class="font-weight-bold">URL Parameters:</p>
 <ul>
     <li><code>- {stock_code} -</code> the code of the stock to retrieve the news articles for.</li>
 </ul>
 <p>You can obtain your API Key once you subscribe</p>
-
-
 <div class="card card-primary card-tabs">
               <div class="card-header p-0 pt-1">
                 <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
@@ -42,7 +33,6 @@
               </div>
 <div class="card-body">
 <div class="tab-content" id="custom-tabs-one-tabContent">
-
     <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
 <pre class="bg-dark text-white"><code>
 
@@ -121,7 +111,8 @@ def get_financial_news_articles(stock_code: str) -> Dict[str, Union[bool, List[D
     """
     endpoint = f"https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/{stock_code}"
     headers = {"User-Agent": "Mozilla/5.0"}
-    response = requests.get(endpoint, headers=headers)
+    params = {api_key: "1234567890"}
+    response = requests.get(endpoint, headers=headers, params=params)
 
     if response.status_code == 200:
         return response.json()
@@ -230,7 +221,6 @@ module.exports = { getFinancialNewsArticles };
     </div>
     <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
         <p class="font-weight-bold">Response format:</p>
-
         <p class="font-weight-bold">The API will return a JSON object with the following properties:</p>
 <ul>
     <li>- message: A string describing the status of the request.</li>
@@ -249,11 +239,8 @@ module.exports = { getFinancialNewsArticles };
 <ul>
     <li><code>- status:</code> A boolean indicating the status of the request.</li>
 </ul>
-
         <p class="font-weight-bold">Example Request:</p>
-
         <p class="font-weight-bold"><code>GET https://gateway.eod-stock-api.site/api/v1/news/articles-by-ticker/GOOG?api_key=YOURAPIKEY</code></p>
-
         <p class="font-weight-bold">Example Response:</p>
 <pre class="btn-dark text-white"><code>
 {
@@ -302,7 +289,6 @@ module.exports = { getFinancialNewsArticles };
 }
 </code></pre>
 </div>
-
 </div>
 </div>
 </div>

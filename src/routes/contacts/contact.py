@@ -1,6 +1,5 @@
 import json
 import time
-
 import flask
 import requests
 from flask import Blueprint, render_template, request, abort, jsonify

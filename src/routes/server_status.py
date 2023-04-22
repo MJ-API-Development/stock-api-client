@@ -1,7 +1,6 @@
 
 import requests
 from flask import Blueprint, jsonify
-
 from src.logger import init_logger
 
 status_bp = Blueprint('status', __name__)
@@ -15,7 +14,7 @@ def get_status():
         check if all services and server are available and list the details
     :return:
     """
-    status_logger.info("are we even getting status")
+    status_logger.info("Are we even getting status")
     response = requests.get(url="https://gateway.eod-stock-api.site/_ah/warmup")
     server_status = dict(Gateway='offline',
                          API_Master='offline',

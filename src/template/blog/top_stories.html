@@ -95,12 +95,13 @@
                 <p>Related Tickers: {{ story.related_tickers|join(', ') }}</p>
                 <a href="{{ story.link }}" target="_blank" rel="nofollow">
                     <img
-                            src="{{ story.thumbnail_url }}"
-                            alt="{{ story.publisher }} thumbnail"
-                            height="600"
-                            width="600"
+                        src="{{ story.thumbnail_url }}"
+                        alt="{{ story.publisher }} thumbnail"
+                        height="600"
+                        width="600"
                     >
                 </a>
+                {# TODO - Consider adding a summary of the article here #}
             </div>
         </div>
 {% endfor %}
