@@ -101,6 +101,13 @@
                         width="600"
                     >
                 </a>
+                {% if sentiment and sentiment.article %}
+                    <p>{{ sentiment.article }}</p>
+                {% endif %}
+                {% if sentiment and sentiment.article_tldr %}
+                    <p>{{ sentiment.article_tldr }}</p>
+                {% endif %}
+
                 {# TODO - Consider adding a summary of the article here #}
             </div>
         </div>

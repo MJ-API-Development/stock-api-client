@@ -1,4 +1,5 @@
 import os
+import pprint
 import random
 
 import markdown
@@ -79,7 +80,8 @@ def load_top_stories(user_data: dict):
                 'publisher': story.get('publisher', '').title(),
                 'datetime_published': story.get('datetime_published'),
                 'link': story.get('link', ''),
-                'related_tickers': story.get('related_tickers', []),
+                'related_tickers': story.get('tickers', []),
+                'sentiment': story.get('sentiment', {}),
                 'thumbnail_url': good_image_url,
             }
             created_stories.append(new_story)
@@ -147,15 +149,18 @@ def financial_news(user_data: dict, country: str):
         # Use a uuid to identify each story and avoid duplicates
         uuid = story.get('uuid')
         if uuid not in uuids:
+
             new_story = {
                 'uuid': uuid,
                 'title': story.get('title', '').title(),
                 'publisher': story.get('publisher', '').title(),
                 'datetime_published': story.get('datetime_published'),
                 'link': story.get('link', ''),
-                'related_tickers': story.get('related_tickers', []),
+                'related_tickers': story.get('tickers', []),
+                'sentiment': story.get('sentiment', {}),
                 'thumbnail_url': good_image_url,
             }
+            pprint.pprint(new_story)
             created_stories.append(new_story)
             uuids.add(uuid)
 
