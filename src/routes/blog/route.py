@@ -118,7 +118,7 @@ def financial_news(user_data: dict, country: str):
                         so you never miss a beat. 
                         <p>Keep reading for the latest top stock news from our API.</p>
                         
-                        <p><strong><a href="http://eod-stock-api.local:8081/#subscription_plans"> If you want to Intergrate our Financial News API into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>         
+                        <p><strong><a href="http://eod-stock-api.local:8081/login#subscription_plans"> If you want to Intergrate our Financial News API into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>         
                     """
 
     if country.casefold() == "us":
