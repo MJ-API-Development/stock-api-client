@@ -85,7 +85,7 @@ def login():
 
 
 @auth_handler.route('/logout', methods=['GET'])
-@auth_required
+@user_details
 def logout(user_data: dict[str, str]):
     """
         convert to JSON based messages , the flow will be handled by the front page
