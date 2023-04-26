@@ -220,7 +220,7 @@ def auth_required(func):
             # Token not found lets try a cookie
             user_data = get_uuid_cookie(_request=request)
             if user_data is None:
-                raise UnAuthenticatedError()
+                return render_template('401.html')
 
             token = create_authentication_token(user_data=user_data)
             user_session[user_data['uuid']] = user_data
@@ -229,7 +229,7 @@ def auth_required(func):
         if token and token is not None:
             payload = verify_authentication_token(token=token)
         else:
-            raise UnAuthenticatedError()
+            return render_template('401.html')
 
         _uuid = payload.get('uuid', None)
 
