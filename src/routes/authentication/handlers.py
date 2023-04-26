@@ -7,7 +7,7 @@ from functools import wraps
 import flask
 import jwt
 import requests
-from flask import request, redirect, abort, Request, make_response, jsonify, session, url_for
+from flask import request, redirect, abort, Request, make_response, jsonify, session, url_for, render_template
 
 from src.cache import cached
 from src.config import config_instance
@@ -248,7 +248,7 @@ def auth_required(func):
             # Add X-Auth-Token header to response
             return response
         else:
-            abort(401)
+            return render_template('401.html')
 
     return wrapper
 
