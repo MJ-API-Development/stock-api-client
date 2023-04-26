@@ -13,7 +13,7 @@ class ServerInternalError(HTTPException):
 
 class UnresponsiveServer(HTTPException):
     code = 503
-    description = 'The server is currently unavailable and cannot process requests.'
+    description = 'Server Error, please try again later'
 
 
 class UnAuthenticatedError(HTTPException):

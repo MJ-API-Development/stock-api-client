@@ -73,7 +73,11 @@ def login():
         request_data = request.get_json()
         email = request_data['username']
         password = request_data['password']
-        return do_login(email, password)
+        try:
+            return do_login(email, password)
+        except Exception as e:
+            auth_logger.info(f"login error: {e}")
+            return render_template('login.html')
         # Check user credentials using API endpoint
 
     elif request.method == 'GET':
@@ -87,19 +91,21 @@ def logout(user_data: dict[str, str]):
         convert to JSON based messages , the flow will be handled by the front page
     :return:
     """
-
-    uuid = user_data.get('uuid')
-    # removes login information from session
-    user_session.update({f"{uuid}": {}})
-    # TODO - consider sending the message to the gateway indicating the action to logout
-    flash('You have been logged out.', 'success')
-    response = make_response(render_template('login.html'), 200)
-    # set the session cookie to expire
-    response.set_cookie('uuid', '', max_age=0)
-    # removing the authentication token
-    response.headers.set('X-Auth-Token', '')
-    # user completely logged out bye bye
-    return response
+    try:
+        uuid = user_data.get('uuid')
+        # removes login information from session
+        user_session.update({f"{uuid}": {}})
+        # TODO - consider sending the message to the gateway indicating the action to logout
+        flash('You have been logged out.', 'success')
+        response = make_response(render_template('login.html'), 200)
+        # set the session cookie to expire
+        response.set_cookie('uuid', '', max_age=0)
+        # removing the authentication token
+        response.headers.set('X-Auth-Token', '')
+        # user completely logged out bye bye
+        return response
+    except Exception:
+        return redirect(url_for('home.home'))
 
 
 @auth_handler.route("/login/google/authorized")
