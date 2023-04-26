@@ -95,7 +95,6 @@ def logout(user_data: dict[str, str]):
         uuid = user_data.get('uuid')
         # removes login information from session
         user_session.update({f"{uuid}": {}})
-        # TODO - consider sending the message to the gateway indicating the action to logout
         flash('You have been logged out.', 'success')
         response = make_response(render_template('login.html'), 200)
         # set the session cookie to expire
