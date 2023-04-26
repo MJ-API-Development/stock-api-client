@@ -19,3 +19,13 @@
 //     load_stories_button.disabled = false;
 //   }
 // });
+
+document.addEventListener('load', async (event) => {
+    const image = document.querySelector('.image');
+    if (window.innerWidth < 768) {
+      image.style.width = '100%';
+    } else {
+      image.style.width = '50%';
+    }
+
+})
