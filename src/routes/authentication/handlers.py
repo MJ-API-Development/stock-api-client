@@ -283,13 +283,14 @@ def do_login(email: str, password: str):
     response_data = response.json()
 
     if response_data and response_data.get('status', False):
-        uuid = response_data.get('payload', {}).get('uuid')
+        uuid: str = response_data.get('payload', {}).get('uuid', None)
 
-        if uuid:
+        if uuid is not None:
             user_session.update({f"{uuid}": response_data.get('payload', {})})
     response = make_response(jsonify(response_data), 200)
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
+    response = set_cookie(response=response, user_data=response_data.get('payload'))
     return response
 
 

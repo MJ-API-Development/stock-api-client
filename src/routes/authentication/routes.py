@@ -84,6 +84,7 @@ def login():
         return render_template('login.html')
 
 
+# noinspection PyBroadException
 @auth_handler.route('/logout', methods=['GET'])
 @user_details
 def logout(user_data: dict[str, str]):
@@ -103,7 +104,9 @@ def logout(user_data: dict[str, str]):
         response.headers.set('X-Auth-Token', '')
         # user completely logged out bye bye
         return response
-    except Exception:
+    except Exception as e:
+        auth_logger.info(str(e))
+        flash("There was an error login you out, please ensure that you are logged out")
         return redirect(url_for('home.home'))
 
 
