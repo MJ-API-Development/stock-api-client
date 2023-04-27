@@ -54,7 +54,7 @@
               <h1 class="title"> Login</h1>
               <div>
                 <label class="label" for="username">Username</label>
-                <input type="text" id="username" class="form-control" placeholder="Enter Username" required="" />
+                <input type="text" id="username" class="form-control" placeholder="Enter Email" required="" />
               </div>
               <div>
                 <label class="label" for="password">Password</label>
@@ -81,34 +81,31 @@
                 <h1> EOD Stock Market API</h1>
               </a>
             </div>
-          <form id="registration_form" method="POST" action="{{ url_for('auth.register') }}">
-            <h1>Create Account</h1>
-{#            <div>#}
-{#              <label class="label" for="name">Name</label>#}
-{#              <input type="text" id="name" class="form-control" placeholder="Enter Name" required="" />#}
-{#            </div>#}
-            <div>
-              <label class="label" for="email">Email</label>
-              <input type="email" id="email" class="form-control" placeholder="Enter Email" required="" />
-            </div>
-{#            <div>#}
-{#              <label class="label" for="cell">Cell</label>#}
-{#              <input type="tel" id="cell" class="form-control" placeholder="Enter Cell" required="" />#}
-{#            </div>#}
-            <div>
-              <label class="label" for="r_password">Password</label>
-              <input type="password" id="r_password" class="form-control" placeholder="Enter Password" required="" />
-            </div>
-            <div>
-              <input type="password" id="repeat_password" class="form-control" placeholder="Repeat Password" required="" />
-            </div>
-            <div>
-              <a class="btn btn-google" type="btn" id="submit_registration" href="#">Register</a>
-              <a class="btn btn-email" type="btn" href="#signin">Already have an account?</a>
-              <div class="clearfix"></div>
-            </div>
-           <span class="title" id="message-subscribe"></span>
-          </form>
+            <form id="registration_form" method="POST" action="{{ url_for('auth.register') }}">
+              <h1>Create Account</h1>
+              <div>
+                <label class="label" for="email">Email</label>
+                <input type="email" id="email" class="form-control" placeholder="Enter Email" required="" />
+              </div>
+              <div>
+                <label class="label" for="r_password">Password</label>
+                <input type="password" id="r_password" class="form-control" placeholder="Enter Password" required="" />
+              </div>
+              <div>
+                <input type="password" id="repeat_password" class="form-control" placeholder="Repeat Password" required="" />
+              </div>
+              <div>
+                <input type="checkbox" id="accept_terms" required="">
+                <label for="accept_terms">I accept the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a></label>
+              </div>
+              <div>
+                <a class="btn btn-google" type="btn" id="submit_registration" href="#">Register</a>
+                <a class="btn btn-email" type="btn" href="#signin">Already have an account?</a>
+                <div class="clearfix"></div>
+              </div>
+              <span class="title" id="message-subscribe"></span>
+            </form>
+
           </section>
         </div>
       </div>
