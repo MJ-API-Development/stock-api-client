@@ -1,11 +1,43 @@
 {% extends "layouts/layout.html" %}
-{% block headers %}
+{% block title %}
+    <title>EOD Stock API - {{ plan.plan_name }} Subscription Plan</title>
+{% endblock %}
 
+{% block seo_tags %}
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="EOD Stock API Subscription plans - {{ plan.description }}">
+    <meta name="keywords" content="EOD Stock API, End of Day Stock Data, Fundamental Data, Stock Options Data, Financial News API, Social Media Trend Data, Sentiment Analysis for News, Real-time Stock Data">
+    <meta name="author" content="MJ API Development">
+
+    <meta property="og:title" content="EOD Stock API - {{ plan.plan_name }} Subscription Plan">
+    <meta property="og:description" content="EOD Stock API Subscription plan {{ plan.description }}">
+    <meta property="og:image" content="{{ url_for('static', filename='images/logo.png', _external=True) }}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:title" content="EOD Stock API - {{ plan.plan_name }} Subscription Plan">
+    <meta name="twitter:description" content="EOD Stock API Subscription plan {{ plan.description }}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/logo.png', _external=True) }}">
+    <meta name="twitter:card" content="summary">
+
+    <meta name="application-name" content="EOD Stock API">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    {#<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">#}
+{% endblock %}
+
+{% block headers %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "EOD Stock Market API Subscriptions",
-  "name": "{{ plan.plan_name }}",
+  "name": "{{ plan.plan_name }} Plan",
   "description": "{{ plan.description }}",
   "offers": {
     "@type": "Offer",
