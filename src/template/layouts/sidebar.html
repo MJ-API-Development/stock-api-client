@@ -59,31 +59,12 @@
             <!-- /menu footer buttons -->
 {% if user_data and user_data['uuid'] %}
             <div class="sidebar-footer hidden-small">
-{#              <a data-toggle="tooltip" data-placement="top" title="Settings">#}
-{#                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>#}
-{#              </a>#}
-{#              <a data-toggle="tooltip" data-placement="top" title="FullScreen">#}
-{#                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>#}
-{#              </a>#}
-{#              <a data-toggle="tooltip" data-placement="top" title="Lock">#}
-{#                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>#}
-{#              </a>#}
-
               <a data-toggle="tooltip" data-placement="top center" title="Logout" href="{{ url_for('auth.logout') }}">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
 {% else %}
             <div class="sidebar-footer hidden-small">
-{#              <a data-toggle="tooltip" data-placement="top" title="Settings">#}
-{#                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>#}
-{#              </a>#}
-{#              <a data-toggle="tooltip" data-placement="top" title="FullScreen">#}
-{#                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>#}
-{#              </a>#}
-{#              <a data-toggle="tooltip" data-placement="top" title="Lock">#}
-{#                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>#}
-{#              </a>#}
 
               <a data-toggle="tooltip" data-placement="top center" title="Login" href="{{ url_for('auth.login') }}">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>

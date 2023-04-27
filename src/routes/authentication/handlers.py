@@ -170,7 +170,6 @@ def user_details(func):
     """
         Returns the user details if the user is logged in and authorized to access this route
     """
-
     @wraps(func)
     def wrapper(*args, **kwargs):
         token = request.headers.get('X-Auth-Token', None)
@@ -290,7 +289,9 @@ def do_login(email: str, password: str):
     response = make_response(jsonify(response_data), 200)
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
+    response.headers['Cache-Control'] = 'no-cache'
     response = set_cookie(response=response, user_data=response_data.get('payload'))
+    response.set_cookie('cf-cache-status', 'bypass')
     return response
 
 
@@ -340,7 +341,9 @@ def do_login_auth(email: str, id: str, name: str, given_name: str, family_name: 
     response = redirect(url_for('account.account'))
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
+    response.headers['Cache-Control'] = 'no-cache'
     response = set_cookie(response=response, user_data=response_data.get('payload'))
+    response.set_cookie('cf-cache-status', 'bypass')
     return response
 
 
@@ -393,5 +396,7 @@ def do_create_account(email: str, password: str, first_name: str, second_name: s
     response = redirect(url_for('account.account'))
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
+    response.headers['Cache-Control'] = 'no-cache'
     response = set_cookie(response=response, user_data=response_data.get('payload'))
+    response.set_cookie('cf-cache-status', 'bypass')
     return response
