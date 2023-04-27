@@ -52,6 +52,23 @@
     #paypal-button-container {
       max-width: 150px;
     }
+    .footer-menu {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+    .footer-menu li {
+        margin-right: 20px;
+    }
+    .footer-menu li:last-child {
+        margin-right: 0;
+    }
+    .footer-menu li a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+    }
 </style>
 <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_settings.CLIENT_ID }}&currency=USD&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
 {% endblock %}
@@ -76,22 +93,29 @@
                   <div id="paypal-button-container"></div>
                 </form>
             </div>
+            {% if user_data %}
+                <form class="form-horizontal" id="user_subscription_data_form">
+                    <input id="uuid" type="hidden" value="{{ user_data.uuid }}" />
+                    <input id="plan_id" type="hidden" value="{{ plan.plan_id }}" />
+                    <input id="paypal_id" type="hidden" value="{{ plan.paypal_id }}" />
+                </form>
 
-            <form class="form-horizontal" id="user_subscription_data_form">
-                {% if user_data %}
-                <input id="uuid" type="hidden" value="{{ user_data.uuid }}" />
-
-
-                <input id="plan_id" type="hidden" value="{{ plan.plan_id }}" />
-                <input id="paypal_id" type="hidden" value="{{ plan.paypal_id }}" />
-            </form>
             {% else %}
-                    <div class="card">
-                        <div class="card-header">
-                            <a href="{{ url_for('auth.login') }}"> <h3 class="card-title"> Login to subscribe to this plan</h3></a>
-                        </div>
+                <div class="card">
+                    <div class="card-header">
+                        <a href="{{ url_for('auth.login') }}"><h5 class="card-title">Login to subscribe to this plan</h5></a>
                     </div>
 
+                    <div class="card-footer">
+                        <ul class="footer-menu">
+                            <li><a href="/plan-descriptions/basic">Basic</a></li>
+                            <li><a href="/plan-descriptions/professional">Professional</a></li>
+                            <li><a href="/plan-descriptions/business">Business</a></li>
+                            <li><a href="/plan-descriptions/enterprise">Enterprise</a></li>
+                        </ul>
+                    </div>
+
+                </div>
             {% endif %}
             <div class="text-body" id="subscription_response_message"></div>
         </div>

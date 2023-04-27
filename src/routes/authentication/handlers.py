@@ -210,7 +210,6 @@ def auth_required(func):
 
         # if request.headers.get('Content-Type')  == 'application/json':
         #     request_data = request.get_json()
-
         # uuid = request_data.get('uuid', kwargs.get('uuid'))
         # if uuid is None:
         auth_logger.info(f" headers : {request.headers}")

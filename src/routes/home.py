@@ -17,8 +17,7 @@ def select_plan_by_name(plans_models: list[PlanModels], plan_name: str) -> str:
 @home_route.route('/')
 @user_details
 def home(user_data: dict[str, str]):
-    _plans_models  = get_all_plans()
-    print(_plans_models.get('payload'))
+    _plans_models = get_all_plans()
     plans_models = [PlanModels.parse_obj(plan_dict) for plan_dict in _plans_models.get('payload')]
     basic_plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name="BASIC")
     enterprise_plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name="ENTERPRISE")

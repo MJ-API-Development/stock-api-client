@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, redirect, jsonify, request, abort
 
 from src.cache import cached
 from src.config import config_instance
-from src.databases.models.schemas.subscriptions import PayPalSubscriptionModel
+from src.databases.models.schemas.subscriptions import PayPalSubscriptionModel, PlanModels
 from src.exceptions import UnresponsiveServer, ServerInternalError
 from src.logger import init_logger
 from src.routes.authentication.handlers import auth_required, user_details
@@ -241,3 +241,34 @@ def plans_all() -> flask.Response:
     :return:
     """
     return jsonify(get_all_plans())
+
+
+def select_plan_by_name(plans_models: list[PlanModels], plan_name: str) -> str:
+    for plan in plans_models:
+        if plan.plan_name.casefold() == plan_name.casefold():
+            return plan
+    return ''
+
+
+@plan_routes.route('/plan-descriptions/<string:plan_name>', methods=['GET'])
+@user_details
+def plan_by_name(user_data: dict[str, str], plan_name: str):
+
+    _plans_models: dict[str, str | dict[str, str]] = get_all_plans()
+    plans_models = [PlanModels.parse_obj(plan_dict) for plan_dict in _plans_models.get('payload')]
+
+    plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name=plan_name)
+
+    uuid: str = user_data.get('uuid', create_id())
+
+    _paypal_settings: dict[str, dict[str, str | int]] = cache_get_paypal_settings('settings', None)
+    if _paypal_settings is None:
+        _paypal_settings = get_paypal_settings(uuid=uuid)
+        paypal_settings_cache['settings'] = _paypal_settings
+
+    context: dict[str, dict[str, str]] = dict(plan=plan.dict(),
+                                              user_data=user_data,
+                                              paypal_settings=_paypal_settings)
+
+    return render_template('dashboard/plan_subscriptions.html', **context)
+
