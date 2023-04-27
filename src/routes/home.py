@@ -14,19 +14,28 @@ def select_plan_by_name(plans_models: list[PlanModels], plan_name: str) -> str:
     return ''
 
 
-@home_route.route('/')
-@user_details
-def home(user_data: dict[str, str]):
-    _plans_models = get_all_plans()
-    plans_models = [PlanModels.parse_obj(plan_dict) for plan_dict in _plans_models.get('payload')]
+def get_plan_models_dicts() -> dict[str, dict[str, str | float]]:
+    """
+        **get_plan_models_dicts**
+        returns dicts for plan models
+    :return:
+    """
+    _plans_models: dict[str, str | dict[str, str]] = get_all_plans()
+    plans_models: list[PlanModels] = [PlanModels.parse_obj(plan_dict) for plan_dict in _plans_models.get('payload', {})]
     basic_plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name="BASIC")
     enterprise_plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name="ENTERPRISE")
     business_plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name="BUSINESS")
     professional_plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name="PROFESSIONAL")
-
     plans_models_dict: PlanModels = dict(basic_plan=basic_plan.dict(), enterprise_plan=enterprise_plan.dict(),
                                          business_plan=business_plan.dict(), professional_plan=professional_plan.dict())
+    return plans_models_dict
 
+
+@home_route.route('/')
+@user_details
+def home(user_data: dict[str, str]):
+
+    plans_models_dict = get_plan_models_dicts()
     context = dict(user_data=user_data, total_exchanges=75, BASE_URL="eod-stock-api.site", plans=plans_models_dict)
     return render_template('index.html', **context)
 
