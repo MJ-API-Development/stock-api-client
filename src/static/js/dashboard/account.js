@@ -130,7 +130,7 @@ self.addEventListener('load', async (e) => {
     await refresh_account_details(response);
 
   } else {
-    // redirectToLogin();
+    redirectToLogin();
   }
 });
 
@@ -267,7 +267,7 @@ async function updateAccountDetails(response) {
     updateUI(json.payload);
   } else {
     clearLocalStorage();
-    // redirectToLogin();
+    redirectToLogin();
   }
 }
 
