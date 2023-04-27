@@ -9,6 +9,10 @@ def generate_sitemap():
     yield 'home.home', {}
     yield 'contact.contact', {}
     yield 'auth.login', {}
+    yield 'plan.plan_by_name', {'plan_name': 'basic'},
+    yield 'plan.plan_by_name', {'plan_name': 'professional'},
+    yield 'plan.plan_by_name', {'plan_name': 'business'},
+    yield 'plan.plan_by_name', {'plan_name': 'enterprise'},
     yield 'docs.redoc', {}
     yield 'docs.openapi_json', {}
     yield 'docs.openapi_html', {}
