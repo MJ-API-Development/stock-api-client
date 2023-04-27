@@ -161,12 +161,11 @@ const register_user = async (mode) => {
                 <a class="btn btn-dark" href="/login"> <i class="fa fa-user"> </i> Login </a>
             `;
         } else {
-            document.getElementById('message-subscribe').innerHTML = "An error occurred.";
+            document.getElementById('message-subscribe').innerHTML = data.message ? data.message : "An error occurred.";
         }
     }catch (e){
         document.getElementById('message-subscribe').innerHTML = "An error occurred.";
     }
-
 };
 
 // Attach the submitForm function to the form's submit event
