@@ -151,14 +151,22 @@ const register_user = async (mode) => {
         credentials: "same-origin",
     });
 
-    let response = await fetch(request);
 
-    if (response.statusCode !== 200) {
+    try {
+        let response = await fetch(request);
         const data = await response.json();
-        document.getElementById('message-subscribe').innerHTML = data.message;
-    } else {
-        document.getElementById('message-subscribe').innerHTML = data.message;
+
+        if (response.status === 200 || response.status === 201) {
+            document.getElementById('message-subscribe').innerHTML = `${data.message} </br>
+                <a class="btn btn-dark" href="/login"> <i class="fa fa-user"> </i> Login </a>
+            `;
+        } else {
+            document.getElementById('message-subscribe').innerHTML = "An error occurred.";
+        }
+    }catch (e){
+        document.getElementById('message-subscribe').innerHTML = "An error occurred.";
     }
+
 };
 
 // Attach the submitForm function to the form's submit event
