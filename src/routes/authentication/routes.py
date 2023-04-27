@@ -122,8 +122,8 @@ def google_authorized():
         will login user if user does not exist will create a new user then login user
     :return:
     """
-    if not google.authorized:
-        return redirect(url_for('google.login'))
+    # if not google.authorized:
+    #     return redirect(url_for('google.login'))
     try:
         resp = google.get("/oauth2/v2/userinfo")
     except TokenExpiredError:
