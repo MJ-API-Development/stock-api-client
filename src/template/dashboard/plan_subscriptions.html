@@ -34,11 +34,19 @@
             <form class="form-horizontal" id="user_subscription_data_form">
                 {% if user_data %}
                 <input id="uuid" type="hidden" value="{{ user_data.uuid }}" />
-                {% endif %}
+
 
                 <input id="plan_id" type="hidden" value="{{ plan.plan_id }}" />
                 <input id="paypal_id" type="hidden" value="{{ plan.paypal_id }}" />
             </form>
+            {% else %}
+                    <div class="card">
+                        <div class="card-header">
+                            <a href="{{ url_for('auth.login') }}"> <h3 class="card-title"> Login to subscribe to this plan</h3></a>
+                        </div>
+                    </div>
+
+            {% endif %}
             <div class="text-body" id="subscription_response_message"></div>
         </div>
   </div>
