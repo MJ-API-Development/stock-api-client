@@ -8,7 +8,7 @@ from src.exceptions import UnresponsiveServer, InvalidSignatureError
 from src.logger import init_logger
 from src.main import user_session, google
 from src.routes.authentication.handlers import user_details, get_headers, auth_required, verify_signature, do_login, \
-    do_login_auth
+    do_login_auth, set_cookie
 
 auth_handler = Blueprint("auth", __name__)
 
@@ -99,11 +99,16 @@ def logout(user_data: dict[str, str]):
         flash('You have been logged out.', 'success')
         response = make_response(render_template('login.html'), 200)
         # set the session cookie to expire
-        response.set_cookie('uuid', '', max_age=0)
+
         # removing the authentication token
         response.headers.set('X-Auth-Token', '')
         # user completely logged out bye bye
+        response.headers['Cache-Control'] = 'cache'
+        response.set_cookie('cf-cache-status', max_age=0)
+        response.set_cookie('uuid', '', max_age=0)
+        response.set_cookie('session', '', max_age=0)
         return response
+
     except Exception as e:
         auth_logger.info(str(e))
         flash("There was an error login you out, please ensure that you are logged out")
