@@ -1,12 +1,26 @@
 {% extends "layouts/layout.html" %}
 {% block headers %}
-    <style>
 
-        #paypal-button-container {
-          max-width: 150px;
-        }
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EOD Stock Market API Subscriptions",
+  "name": "{{ plan.plan_name }}",
+  "description": "{{ plan.description }}",
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ plan.Amount }}",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+<style>
 
-    </style>
+    #paypal-button-container {
+      max-width: 150px;
+    }
+</style>
 <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_settings.CLIENT_ID }}&currency=USD&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
 {% endblock %}
 {% block content %}
