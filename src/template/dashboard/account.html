@@ -95,8 +95,7 @@
                                         </select>
                                     </li>
                             </ul>
-
-                              <button type="submit" class="btn btn-dark"> <i class="fa fa-key"> </i>  Subscribe</button>
+                              <a href="https://eod-stock-api.site/#subscription_plans" class="btn btn-dark"> <i class="fa fa-key"> </i>  Subscribe</a>
                             </form>
 
                     {% endif %}
@@ -110,8 +109,8 @@
                   <button class="btn btn-secondary" type="button" id="show_api_key">
                     <i class="fa fa-eye"></i>
                   </button>
-                  <button class="btn btn-secondary" type="button" id="copy_api_key">
-                    <i class="fa fa-copy"></i>
+                  <button class="btn btn-secondary" type="button" id="copy_api_key" >
+                    <i class="fa fa-copy"> </i>
                   </button>
                 </span>
               </div>
@@ -121,7 +120,7 @@
                     <button id="update_api_key_button" type="button" class="btn btn-primary"> <i class="fa fa-key"> </i>  Create New API Key</button>
                 {% else %}
 {#                    <button id="" type="button" class="btn btn-primary" disabled> <i class="fa fa-key"> </i>  API Key</button>#}
-                    <span class="card-text"> Please subscribe to get an API Key</span>
+                    <a href="https://eod-stock-api.site/#subscription_plans"> <span class="card-text"> Please subscribe to get an API Key</span></a>
                 {% endif %}
             </form>
           </div>
