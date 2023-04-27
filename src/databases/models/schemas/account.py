@@ -10,7 +10,7 @@ class AccountModel(BaseModel):
     second_name: str | None
     surname: str | None
     email: str
-    cell: str
+    cell: str | None
     is_admin: bool = False
     is_deleted: bool = False
 

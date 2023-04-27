@@ -8,7 +8,8 @@ from src.databases.models.schemas.account import AccountModel, AccountResponseSc
 from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
 from src.main import user_session
-from src.routes.authentication.routes import auth_required, get_headers, UnresponsiveServer, verify_signature
+from src.routes.authentication.handlers import auth_required
+from src.routes.authentication.routes import get_headers, UnresponsiveServer, verify_signature
 
 account_handler = Blueprint("account", __name__)
 account_logger = init_logger("account_logger")

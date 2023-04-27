@@ -1,6 +1,8 @@
 from datetime import date
 from urllib.parse import urlparse
 
+
+from requests.exceptions import ConnectionError, ReadTimeout
 from flask import render_template, Response
 from github import Github
 
@@ -26,14 +28,20 @@ class GithubBlog:
             - blog_url (str, optional): The base URL for the published blog.
         """
         self.token = github_token
-        self.github = Github(self.token)
-        self.repo = self.github.get_repo(blog_repo)
+        self._logger = init_logger('github_blog')
+
+        try:
+            self.github = Github(self.token)
+            self.repo = self.github.get_repo(blog_repo)
+        except (TimeoutError, ConnectionError, ReadTimeout):
+            self.repo = None
+            self._logger.info('Error connecting to github blog')
+
         self.ignore_files = ignore_files or ['readme.md', '.gitignore', 'license']
         self.github_url = github_url or 'https://raw.githubusercontent.com/MJ-API-Development/eod-api-blog/main/'
         self.blog_url = blog_url or 'https://eod-stock-api.site/blog/'
         self.last_commit_time = None
         self.blog_files = {}
-        self._logger = init_logger('github_blog')
 
     def check_for_updates(self):
         """
@@ -85,7 +93,7 @@ class GithubBlog:
         blog_files = {}
 
         # Get the contents of the given directory using the GitHub API
-        contents = self.repo.get_contents(directory)
+        contents = self.repo.get_contents(directory) if self.repo else []
 
         for content_file in contents:
             if content_file.type == "dir" and not content_file.name.lower().startswith(".idea"):

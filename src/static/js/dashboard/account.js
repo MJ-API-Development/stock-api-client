@@ -112,7 +112,7 @@ self.addEventListener('load', async (e) => {
    * @type {string}
    */
   const data = getAccountFromCookie();
-  if (data !== null) {
+  if (data !== undefined) {
     account_data = data;
     let uuid = account_data.uuid;
     let baseUrl = settings.base_url;
@@ -167,7 +167,9 @@ async function update_subscription_details(subscription){
   const dateSubscribed = new Date(subscription.time_subscribed * 1000).toLocaleDateString();
   const monthlyRequestLimit = subscription.api_requests_balance;
   const maxRequests = planDetails.maxRequests;
+  // noinspection JSUnusedLocalSymbols
   const monthlyPayment = subscription.subscription_id;
+  // noinspection JSUnusedLocalSymbols
   const dateLastPayment = new Date().toLocaleDateString(); // this value needs to be obtained from the subscription data
 
   const resources = planDetails.resources.map(resource => {

@@ -286,6 +286,7 @@ def do_login(email: str, password: str):
 
         if uuid is not None:
             user_session.update({f"{uuid}": response_data.get('payload', {})})
+
     response = make_response(jsonify(response_data), 200)
     # Adding Authentication Token to the response
     response.headers['X-Auth-Token'] = create_authentication_token(user_data=response_data.get('payload', {}))
@@ -374,6 +375,7 @@ def do_create_account(email: str, password: str, first_name: str, second_name: s
             auth_logger.info(f"Creating account : {user_data}")
             response = request_session.post(url=_url, json=user_data, headers=_headers)
             auth_logger.info(f"Created account : {response.text}")
+
         except requests.exceptions.ConnectionError:
             raise UnresponsiveServer("Cannot connect to server try again later")
         except requests.exceptions.Timeout:

@@ -7,8 +7,8 @@ from src.databases.models.schemas.account import AccountCreate
 from src.exceptions import UnresponsiveServer, InvalidSignatureError
 from src.logger import init_logger
 from src.main import user_session, google
-from src.routes.authentication.handlers import user_details, get_headers, auth_required, verify_signature, do_login, \
-    do_login_auth, set_cookie
+from src.routes.authentication.handlers import user_details, get_headers, verify_signature, do_login, \
+    do_login_auth
 
 auth_handler = Blueprint("auth", __name__)
 
@@ -21,7 +21,7 @@ def register(user_data: dict[str, str]):
     if not user_data:
 
         user_data = request.get_json()
-
+        auth_logger.info(f"Registering New User : {user_data}")
         account_base = AccountCreate(**user_data)
         _path = config_instance().GATEWAY_SETTINGS.CREATE_USER_URL
         _base = config_instance().GATEWAY_SETTINGS.BASE_URL
@@ -151,3 +151,8 @@ def google_authorized():
         return response
 
     return redirect(url_for('home.home'))
+
+
+@auth_handler.route("/__/auth/handler")
+def github_auth_handler():
+    pass

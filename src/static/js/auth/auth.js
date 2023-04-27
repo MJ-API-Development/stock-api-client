@@ -55,9 +55,9 @@ login_btn.addEventListener( 'click', async (event) => {
 
 
 // get the input DOM Fields for registering a new user
-const nameInput = document.getElementById('name');
+// const nameInput = document.getElementById('name');
 const emailInput = document.getElementById('email');
-const cellInput = document.getElementById('cell');
+// const cellInput = document.getElementById('cell');
 const passwordInput = document.getElementById('r_password');
 
 
@@ -118,26 +118,26 @@ const register_user = async (mode) => {
      * @param {mode}
      */
 
-    const name = nameInput.value;
+    // const name = nameInput.value;
     const email = emailInput.value;
-    const cell = cellInput.value;
+    // const cell = cellInput.value;
     const password = passwordInput.value;
 
     console.log("creating new account");
     console.log(registrationForm.action);
 
-    if (!validateName(name)){
-        alert("Names or Names are invalid");
-        return;
-    }
+    // if (!validateName(name)){
+    //     alert("Names or Names are invalid");
+    //     return;
+    // }
     if (!validateEmail(email)){
         alert("Email should at least be a valid email address");
         return;
     }
-    if (!validateCellNumber(cell)){
-        alert("Cell number should contain international codes");
-        return;
-    }
+    // if (!validateCellNumber(cell)){
+    //     alert("Cell number should contain international codes");
+    //     return;
+    // }
     if (!validatePassword(password)){
         alert("Try to meet our minimum password complexity requirements");
         return;
@@ -146,7 +146,7 @@ const register_user = async (mode) => {
     const request = new Request(registrationForm.action, {
         method: registrationForm.method,
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ name, email, cell, password }),
+        body: JSON.stringify({ email,  password }),
         mode: mode,
         credentials: "same-origin",
     });
@@ -170,7 +170,6 @@ registrationForm.addEventListener('submit', async event => {
     event.preventDefault();
     await register_user( 'cors');
 });
-
 // Attach the submitForm function to the register button's click event
 registerButton.addEventListener('click', async (event) => {
    event.preventDefault();

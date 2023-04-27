@@ -62,7 +62,7 @@
               </div>
               <div>
                   <a class="btn btn-email submit" type="submit" href="{{ url_for('auth.login') }}" id="submit_login"><i class="fa fa-envelope"> </i> Sign in (Email)</a>
-                  <a class="btn btn-google" href="{{ url_for('google.login') }}"> <i class="fa fa-google"></i> Proceed With Google </a>
+{#                  <a class="btn btn-google" href="{{ url_for('google.login') }}"> <i class="fa fa-google"></i> Proceed With Google </a>#}
                   <a class="btn btn-google" href="#signup"><i class="fa fa-user-plus"> </i> Create Account</a>
                 <div class="clearfix"></div>
               <span class="title" id="message"></span>
@@ -83,18 +83,18 @@
             </div>
           <form id="registration_form" method="POST" action="{{ url_for('auth.register') }}">
             <h1>Create Account</h1>
-            <div>
-              <label class="label" for="name">Name</label>
-              <input type="text" id="name" class="form-control" placeholder="Enter Name" required="" />
-            </div>
+{#            <div>#}
+{#              <label class="label" for="name">Name</label>#}
+{#              <input type="text" id="name" class="form-control" placeholder="Enter Name" required="" />#}
+{#            </div>#}
             <div>
               <label class="label" for="email">Email</label>
               <input type="email" id="email" class="form-control" placeholder="Enter Email" required="" />
             </div>
-            <div>
-              <label class="label" for="cell">Cell</label>
-              <input type="tel" id="cell" class="form-control" placeholder="Enter Cell" required="" />
-            </div>
+{#            <div>#}
+{#              <label class="label" for="cell">Cell</label>#}
+{#              <input type="tel" id="cell" class="form-control" placeholder="Enter Cell" required="" />#}
+{#            </div>#}
             <div>
               <label class="label" for="r_password">Password</label>
               <input type="password" id="r_password" class="form-control" placeholder="Enter Password" required="" />

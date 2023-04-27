@@ -5,8 +5,7 @@ from flask import Blueprint, request, jsonify
 
 from src.config import config_instance
 from src.exceptions import UnresponsiveServer, InvalidSignatureError
-from src.routes.authentication.handlers import get_headers, verify_signature
-from src.routes.authentication.routes import auth_required
+from src.routes.authentication.handlers import get_headers, verify_signature, auth_required
 
 apikeys_route = Blueprint("apikeys", __name__)
 

@@ -10,7 +10,8 @@ from src.config import config_instance
 from src.databases.models.schemas.subscriptions import PayPalSubscriptionModel
 from src.exceptions import UnresponsiveServer, ServerInternalError
 from src.logger import init_logger
-from src.routes.authentication.routes import get_headers, verify_signature, auth_required
+from src.routes.authentication.handlers import auth_required
+from src.routes.authentication.routes import get_headers, verify_signature
 from src.utils import create_id
 
 plan_routes = Blueprint('plan', __name__)
