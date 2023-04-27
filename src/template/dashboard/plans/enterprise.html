@@ -1,23 +1,29 @@
+<div class="card">
+    <div class="card-header">
                         <h3 class="card-title">Enterprise Plan</h3>
-                        <p>The best possible plan for a huge enterprise or research institution</p>
+                        <p class="font-weight-bold text-info">The best possible plan for a huge enterprise or research institution</p>
+    </div>
+    <div class="card-body">
                         <ul>
-                          <li>Custom request limits</li>
+                          <li class="font-weight-bold text-danger">Unlimited Request Limits</li>
                           <li>Custom records per request</li>
-                          <li>24/7 email and phone support</li>
-                          <li>API documentation access</li>
+                          <li>24/7 Email Support</li>
+                          <li>API Documentation Access</li>
                           <li>Dedicated account manager</li>
                           <li>SLA-backed uptime guarantee</li>
-                          <li>Exchanges</li>
-                          <li>Stock Tickers</li>
-                          <li>EOD Data</li>
-                          <li>Fundamentals</li>
-                          <li>Financial News</li>
-                          <li>Options Data</li>
-                          <li>Technical Data</li>
-                          <li>Sentiment Analysis</li>
-                          <li>Real Time Social Media Trends</li>
+                          <li class="font-italic font-weight-bold text-info">Exchanges</li>
+                          <li class="font-italic font-weight-bold text-info">Stock Tickers</li>
+                          <li class="font-italic font-weight-bold text-info">EOD Data</li>
+                          <li class="font-italic font-weight-bold text-info">Fundamentals</li>
+                          <li class="font-italic font-weight-bold text-info">Financial News</li>
+                          <li class="font-italic font-weight-bold text-info">Options Data</li>
+                          <li class="font-italic font-weight-bold text-info">Technical Data</li>
+                          <li class="font-italic font-weight-bold text-info">Sentiment Analysis</li>
+                          <li class="font-italic font-weight-bold text-info">Real Time Social Media Trends</li>
                         </ul>
-
-<h3 style="background-color: darkgray; accent-color: #3e8f3e; color: white;  padding: 5px;">Subscription Details</h3>
-<h4 style="font-weight: bold;">This is a 12 Month Contract with Monthly Payments of $ {{ '%0.2f'|format(plan.Amount) }} and an option to cancel at any time</h4>
-
+    </div>
+    <div class="card-footer">
+        <h3 style="background-color: darkgray; accent-color: #3e8f3e; color: white;  padding: 5px;">Subscription Details</h3>
+        <h4 style="font-weight: bold;">This is a Monthly Contract with Monthly Payments of $ {{ '%0.2f'|format(plan.Amount) }} and an option to cancel at any time</h4>
+    </div>
+</div>

@@ -1,15 +1,24 @@
-<h3 class="card-title">Basic Plan</h3>
-<p>Get started with our basic plan. get a one month free trial in order to get started</p>
-<ul>
-  <li>500 requests per month</li>
-  <li>10,000 records per request</li>
-  <li>Limited email support</li>
-  <li>API documentation access</li>
-  <li>Exchanges</li>
-  <li>Stock Tickers</li>
-  <li>EOD Data</li>
-</ul>
-
-<h3 style="background-color: darkgray; accent-color: #3e8f3e; color: white;  padding: 5px;">Subscription Details</h3>
-<h4 style="font-weight: bold;">Our Basic Plan Includes a 1 Month Free Trial</h4>
-<h4 style="font-weight: bold;">After the One Month Free Trial the monthly payment is $ {{ '%0.2f'|format(plan.Amount) }}</h4>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Basic Plan</h3>
+        <p class="font-weight-bold text-info">Get started with our basic plan. get a one month free trial in order to get started</p>
+    </div>
+<div class="card-body">
+    <ul>
+      <li class="font-weight-bold text-danger">5000 requests per month</li>
+      <li>10,000 records per request</li>
+      <li>Limited email support</li>
+      <li>API documentation access</li>
+      <li class="font-italic font-weight-bold text-info">Exchanges</li>
+      <li class="font-italic font-weight-bold text-info">Stock Tickers</li>
+      <li class="font-italic font-weight-bold text-info">EOD Data</li>
+      <li class="font-italic font-weight-bold text-info">Financial News</li>
+      <li class="font-weight-bold text-danger">1 Month Free Trial Included</li>
+    </ul>
+</div>
+<div class="card-footer">
+    <h3 style="background-color: darkgray; accent-color: #3e8f3e; color: white;  padding: 5px;">Subscription Details</h3>
+    <h4 style="font-weight: bold;">Our Basic Plan Includes a 1 Month Free Trial</h4>
+    <h4 style="font-weight: bold;">After the One Month Free Trial the monthly payment is $ {{ '%0.2f'|format(plan.Amount) }}</h4>
+</div>
+</div>

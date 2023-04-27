@@ -12,15 +12,6 @@
 {% block content %}
 <div class="right_col" role="main">
 <div class="col-md-12">
-        <div class="card-header">
-            <h3 class="card-title">EOD Stock API - {{ plan.plan_name }} Plan</h3>
-        </div>
-        <div class="card-body">
-        <div class="card-header">
-            <span class="text-body">
-                    {{ plan.description }}
-            </span>
-        </div>
             {#  TODO include plan details #}
             {% if plan.plan_name == 'BUSINESS' %}
                 {% include 'dashboard/plans/business.html' %}
