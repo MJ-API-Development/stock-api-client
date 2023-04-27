@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class SubscriptionModel(BaseModel):
@@ -35,3 +35,10 @@ class PayPalSubscriptionModel(BaseModel):
 
     class Config:
         title = "PayPal Subscriptions Model"
+
+
+class PlanModels(BaseModel):
+    plan_id: str
+    paypal_id: str
+    plan_name: str
+    charge_amount: float = Field(alias="Amount")

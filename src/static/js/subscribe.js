@@ -161,5 +161,5 @@ function showSubscriptionForm(plan_id, uuid) {
   // xhr.open('GET', `/plan-subscription/${plan_id}.${uuid}`, true);
   // xhr.setRequestHeader('Content-Type', 'text/html');
   // xhr.send();
-  window.location.href = `/plan-subscription/${plan_id}.${uuid}`
+  window.location.href = `/plan-subscription/${plan_id}`
 }

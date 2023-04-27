@@ -10,7 +10,7 @@ from src.config import config_instance
 from src.databases.models.schemas.subscriptions import PayPalSubscriptionModel
 from src.exceptions import UnresponsiveServer, ServerInternalError
 from src.logger import init_logger
-from src.routes.authentication.handlers import auth_required
+from src.routes.authentication.handlers import auth_required, user_details
 from src.routes.authentication.routes import get_headers, verify_signature
 from src.utils import create_id
 
@@ -147,36 +147,42 @@ def get_paypal_settings(uuid: str) -> dict[str, str | int]:
     return paypal_settings
 
 
-@plan_routes.route('/plan-subscription/<string:plan_id>.<string:uuid>', methods=["GET"])
-def plan_subscription(plan_id: str, uuid: str) -> flask.Response:
+@plan_routes.route('/plan-subscription/<string:plan_id>', methods=["GET"])
+@user_details
+def plan_subscription(user_data: dict[str, str], plan_id: str) -> flask.Response:
     """
         this endpoint will be called by the front page to get details
         about the subscription plan
+    :param user_data:
     :param plan_id:
     :param uuid:
     :return:
     """
+    if user_data:
+        uuid = user_data.get('uuid')
+    else:
+        uuid = create_id()
 
     if request.method.casefold() == "get":
         if not plan_id:
             return redirect('/')
 
         plan: dict[str, str | int] = get_plan_details(plan_id)
-        user_data: dict[str, str | int] = get_user_data(uuid=uuid)
+
         _paypal_settings: dict[str, dict[str, str | int]] = cache_get_paypal_settings('settings', None)
         if _paypal_settings is None:
             _paypal_settings = get_paypal_settings(uuid=uuid)
             paypal_settings_cache['settings'] = _paypal_settings
 
         context: dict[str, dict[str, str]] = dict(plan=plan.get("payload", {}),
-                                                  user_data=user_data.get("payload", {}),
+                                                  user_data=user_data,
                                                   paypal_settings=_paypal_settings)
 
         return render_template('dashboard/plan_subscriptions.html', **context)
 
 
 # noinspection PyUnusedLocal
-@plan_routes.route('/plan-details/<string:plan_id>.<string:uuid>', methods=["GET"])
+@plan_routes.route('/plan-details/<string:plan_id>', methods=["GET"])
 @auth_required
 def plan_details(user_data: dict[str, str], plan_id: str, uuid: str) -> flask.Response:
     """
