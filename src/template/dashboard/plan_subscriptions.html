@@ -116,7 +116,6 @@
             {% else %}
                 {% include 'dashboard/plans/basic.html' %}
             {% endif %}
-
             <div class="card-body">
                 <form class="form-horizontal">
                   <div id="paypal-button-container"></div>
@@ -128,13 +127,11 @@
                     <input id="plan_id" type="hidden" value="{{ plan.plan_id }}" />
                     <input id="paypal_id" type="hidden" value="{{ plan.paypal_id }}" />
                 </form>
-
             {% else %}
                 <div class="card">
                     <div class="card-header">
                         <a href="{{ url_for('auth.login') }}"><h5 class="card-title">Login to subscribe to this plan</h5></a>
                     </div>
-
                     <div class="card-footer">
                         <ul class="footer-menu">
                             <li><a href="/plan-descriptions/basic">Basic</a></li>
@@ -143,13 +140,12 @@
                             <li><a href="/plan-descriptions/enterprise">Enterprise</a></li>
                         </ul>
                     </div>
-
                 </div>
             {% endif %}
             <div class="text-body" id="subscription_response_message"></div>
         </div>
   </div>
-</div>
+
 {% endblock %}
 
 {% block scripts %}
