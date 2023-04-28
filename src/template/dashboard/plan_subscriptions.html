@@ -1,8 +1,7 @@
 {% extends "layouts/layout.html" %}
 {% block title %}
-    <title>EOD Stock API - {{ plan.plan_name }} Subscription Plan</title>
+    <title>EOD Stock Market API - {{ plan.plan_name }} Subscription Plans</title>
 {% endblock %}
-
 {% block seo_tags %}
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -27,14 +26,10 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    {#<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">#}
+
 {% endblock %}
-
 {% block headers %}
-
-
 {% if plan.plan_name == 'BASIC' %}
 <script type="application/ld+json">
     {
@@ -76,7 +71,6 @@
     }
     </script>
 {% endif %}
-
 <style>
     #paypal-button-container {
       max-width: 150px;
@@ -130,14 +124,52 @@
             {% else %}
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ url_for('auth.login') }}"><h5 class="card-title">Login or Create an Account to subscribe to this plan</h5></a>
+                        <a href="{{ url_for('auth.login') }}">
+                            <span
+                                    class="btn btn-dark"
+                                    title="Login or Create an Account in order to subscribe"><i class="fa fa-user-plus"> </i> Login / Create Account</span></a>
+                    </div>
+                    <div class="card-body">
+                        <span>In order to subscribe you need to create an account</span>
                     </div>
                     <div class="card-footer">
                         <ul class="footer-menu">
-                            <li><a href="/plan-descriptions/basic">Basic Plan</a></li>
-                            <li><a href="/plan-descriptions/professional">Professional Plan</a></li>
-                            <li><a href="/plan-descriptions/business">Business Plan</a></li>
-                            <li><a href="/plan-descriptions/enterprise">Enterprise Plan</a></li>
+                            {% if plan.plan_name == "BASIC" %}
+                            <li><span
+                                   class="font-weight-bold text-dark"
+                                   title="EOD Stock Market API - Basic Plan">Basic Plan</span></li>
+                            {% else %}
+                            <li><a href="/plan-descriptions/basic"
+                                   class="font-weight-bold text-info"
+                                   title="EOD Stock Market API - Basic Plan">Basic Plan</a></li>
+                            {% endif %}
+                            {% if plan.plan_name == "PROFESSIONAL" %}
+                            <li><span
+                                   class="font-weight-bold text-dark"
+                                   title="EOD Stock Market API - Professional Plan">Professional Plan</span></li>
+                            {% else %}
+                            <li><a href="/plan-descriptions/professional"
+                                   class="font-weight-bold text-info"
+                                   title="EOD Stock Market API - Professional Plan">Professional Plan</a></li>
+                            {% endif %}
+                            {% if plan.plan_name == "BUSINESS" %}
+                            <li><span
+                                   class="font-weight-bold text-dark"
+                                   title="EOD Stock Market API - Business Plan">Business Plan</span></li>
+                            {% else %}
+                            <li><a href="/plan-descriptions/business"
+                                   class="font-weight-bold text-info"
+                                   title="EOD Stock Market API - Business Plan">Business Plan</a></li>
+                            {% endif %}
+                            {% if plan.plan_name == "ENTERPRISE" %}
+                            <li><span
+                                   class="font-weight-bold text-dark"
+                                   title="EOD Stock Market API - Enterprise Plan">Enterprise Plan</span></li>
+                            {% else %}
+                            <li><a href="/plan-descriptions/enterprise"
+                                   class="font-weight-bold text-info"
+                                   title="EOD Stock Market API - Enterprise Plan">Enterprise Plan</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -145,11 +177,8 @@
             <div class="text-body" id="subscription_response_message"></div>
         </div>
   </div>
-
 {% endblock %}
-
 {% block scripts %}
-  <!-- Include the PayPal JavaScript SDK -->
     {% if user_data %}
         <script src="{{ url_for('static', filename='js/paypal_button.js') }}"></script>
     {% endif %}
