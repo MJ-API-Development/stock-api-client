@@ -84,7 +84,9 @@
     </div>
 </div>
 
-{% for story in stories %}
+<div class="row">
+    <div class="col-md-6">
+        {% for story in stories[:5] %}
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title"> {{ story.title }}</h3>
@@ -96,22 +98,57 @@
                 <a href="{{ story.link }}" target="_blank" rel="nofollow">
                     <img
                         src="{{ story.thumbnail_url }}"
-                        alt="{{ story.publisher }} thumbnail"
-                        height="600"
-                        width="600"
+                        alt="{{ story.title }} thumbnail"
+                        height="300"
+                        width="400"
+                        title="Read Article : {{ story.title }}"
                     >
                 </a>
-                {% if sentiment and sentiment.article %}
-                    <p>{{ sentiment.article }}</p>
-                {% endif %}
-                {% if sentiment and sentiment.article_tldr %}
-                    <p>{{ sentiment.article_tldr }}</p>
+
+                {% if story.sentiment and story.sentiment.article_tldr %}
+                    <p>{{ story.sentiment.article_tldr }}</p>
+                {% elif story.sentiment and story.sentiment.article %}
+                    <p class="font-weight-bold text-info">{{ story.sentiment.article[:250] }}</p>
                 {% endif %}
 
                 {# TODO - Consider adding a summary of the article here #}
             </div>
         </div>
-{% endfor %}
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+        {% for story in stories[5:10] %}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"> {{ story.title }}</h3>
+            </div>
+            <div class="card-body">
+                <h2>Published By : {{ story.publisher }}</h2>
+                <p>Date Published: {{ story.datetime_published }}</p>
+                <p>Related Tickers: {{ story.related_tickers|join(', ') }}</p>
+                <a href="{{ story.link }}" target="_blank" rel="nofollow">
+                    <img
+                        src="{{ story.thumbnail_url }}"
+                        alt="{{ story.title }} thumbnail"
+                        height="300"
+                        width="400"
+                        title="Read Article : {{ story.title }}"
+                    >
+                </a>
+
+                {% if story.sentiment and story.sentiment.article_tldr %}
+                    <p>{{ story.sentiment.article_tldr }}</p>
+                {% elif story.sentiment and story.sentiment.article %}
+                    <p class="font-weight-bold text-info">{{ story.sentiment.article[:250] }}</p>
+                {% endif %}
+
+                {# TODO - Consider adding a summary of the article here #}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 </div>
 </div>
 {% endblock %}

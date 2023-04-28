@@ -33,22 +33,51 @@
 {% endblock %}
 
 {% block headers %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "EOD Stock Market API Subscriptions",
-  "name": "{{ plan.plan_name }} Plan",
-  "description": "{{ plan.description }}",
-  "offers": {
-    "@type": "Offer",
-    "price": "{{ plan.Amount }}",
-    "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock"
-  }
-}
-</script>
-<style>
 
+
+{% if plan.plan_name == 'BASIC' %}
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "{{ plan.plan_name }} Plan",
+      "description": "EOD Stock Market API - {{ plan.description }}",
+      "offers": {
+        "@type": "Offer",
+        "price": "{{ plan.Amount }}",
+        "priceCurrency": "USD",
+        "priceValidUntil": "2025-01-01",
+        "availability": "https://schema.org/OnlineOnly",
+      "trial":{
+        "@type":"Offer",
+        "name": "1 Month Free Trial of Basic Plan",
+        "description": "EOD Stock Market API - {{ plan.description }}",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/OnlineOnly"
+      }
+      }
+    }
+</script>
+{% else %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "{{ plan.plan_name }} Plan",
+      "description": "EOD Stock Market API - {{ plan.description }}",
+      "offers": {
+        "@type": "Offer",
+        "price": "{{ plan.Amount }}",
+        "priceCurrency": "USD",
+        "priceValidUntil": "2025-01-01",
+        "availability": "https://schema.org/OnlineOnly"
+      }
+    }
+    </script>
+{% endif %}
+
+<style>
     #paypal-button-container {
       max-width: 150px;
     }

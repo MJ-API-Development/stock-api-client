@@ -42,11 +42,12 @@ class PlanModels(BaseModel):
     paypal_id: str
     plan_name: str
     charge_amount: float = Field(alias="Amount")
+    description: str
 
     @property
     def amount(self) -> float:
         return self.charge_amount
 
-    def dict(self) -> dict[str, str | float]:
+    def dict(self, **kwargs) -> dict[str, str | float]:
         return dict(plan_id=self.plan_id, paypal_id=self.paypal_id, plan_name=self.plan_name,
-                    charge_amount=self.charge_amount, Amount=self.charge_amount)
+                    charge_amount=self.charge_amount, Amount=self.charge_amount, description=self.description)
