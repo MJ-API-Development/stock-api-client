@@ -1,7 +1,9 @@
+from json import JSONDecodeError
 import json
 from typing import Callable
 
 import flask
+from requests.exceptions import RequestException, ConnectionError
 import requests
 from flask import Blueprint, render_template, redirect, jsonify, request, abort
 
@@ -41,10 +43,10 @@ def get_all_plans() -> list[dict[str, str]]:
             response.raise_for_status()
             all_plan_details: list[dict[str, str | int]] = response.json()
             # Check if the request was successful and return the response body as a dict
-        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+        except (RequestException, ConnectionError) as e:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
             raise UnresponsiveServer() from e
-        except json.JSONDecodeError as e:
+        except JSONDecodeError as e:
             plan_logger.exception(f"Error decoding paypal settings : {response.text}")
             raise ServerInternalError() from e
 
@@ -103,10 +105,10 @@ def get_user_data(uuid: str) -> dict[str, str | int]:
             response = request_session.get(endpoint, headers=headers)
             response.raise_for_status()
             user_data: dict[str, str | int] = response.json()
-        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+        except (RequestException, ConnectionError) as e:
             plan_logger.exception(f"Error making requests to backend : {endpoint}")
             raise UnresponsiveServer() from e
-        except json.JSONDecodeError as e:
+        except JSONDecodeError as e:
             plan_logger.exception(f"Error decoding paypal settings: {response.text}")
             raise ServerInternalError() from e
 
@@ -134,10 +136,10 @@ def get_paypal_settings(uuid: str) -> dict[str, str | int]:
             response.raise_for_status()
             paypal_settings: dict[str, str | int] = response.json()
 
-        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+        except (RequestException, ConnectionError) as e:
             plan_logger.exception(f"Exception - get_paypal_settings: {e}")
             raise UnresponsiveServer() from e
-        except json.JSONDecodeError as e:
+        except JSONDecodeError as e:
             plan_logger.exception(f"Error decoding paypal settings: {e}")
             raise ServerInternalError() from e
 
@@ -155,7 +157,6 @@ def plan_subscription(user_data: dict[str, str], plan_id: str) -> flask.Response
         about the subscription plan
     :param user_data:
     :param plan_id:
-    :param uuid:
     :return:
     """
     if user_data:
@@ -219,10 +220,10 @@ def subscribe(user_data: dict[str, str]) -> flask.Response:
             response.raise_for_status()
             json_data: dict[str, str | int] = response.json()
 
-        except (requests.exceptions.RequestException, requests.exceptions.ConnectionError) as e:
+        except (RequestException, ConnectionError) as e:
             raise UnresponsiveServer() from e
 
-        except json.JSONDecodeError as e:
+        except JSONDecodeError as e:
             plan_logger.exception("Error decoding paypal settings")
             raise ServerInternalError() from e
 
