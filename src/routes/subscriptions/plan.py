@@ -71,7 +71,7 @@ def get_plan_details(plan_id: str) -> dict[str, str | int]:
     with requests.Session() as request_session:
         try:
             # Make a GET request with plan_id in the body as a dict
-            response = request_session.get(endpoint, headers=headers, json=data)
+            response: requests.Response = request_session.get(endpoint, headers=headers, json=data)
             response.raise_for_status()
             _plan_details: dict[str, str | int] = response.json()
             # Check if the request was successful and return the response body as a dict
@@ -102,7 +102,7 @@ def get_user_data(uuid: str) -> dict[str, str | int]:
     with requests.Session() as request_session:
         try:
             # Make a GET request with UUID in the endpoint URL
-            response = request_session.get(endpoint, headers=headers)
+            response: requests.Response = request_session.get(endpoint, headers=headers)
             response.raise_for_status()
             user_data: dict[str, str | int] = response.json()
         except (RequestException, ConnectionError) as e:
@@ -217,7 +217,7 @@ def subscribe(user_data: dict[str, str]) -> flask.Response:
 
     with requests.Session() as request_session:
         try:
-            response = request_session.post(endpoint, json=paypal_subscription.dict(), headers=_headers)
+            response: requests.Response = request_session.post(endpoint, json=paypal_subscription.dict(), headers=_headers)
             response.raise_for_status()
             json_data: dict[str, str | int] = response.json()
 
