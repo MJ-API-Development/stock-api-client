@@ -51,3 +51,6 @@ class PlanModels(BaseModel):
     def dict(self, **kwargs) -> dict[str, str | float]:
         return dict(plan_id=self.plan_id, paypal_id=self.paypal_id, plan_name=self.plan_name,
                     charge_amount=self.charge_amount, Amount=self.charge_amount, description=self.description)
+
+    class Config:
+        title = "Plan Model For template populating"

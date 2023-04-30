@@ -51,6 +51,20 @@ malicious_patterns = {
     # "HTTP_PARAMETER_POLLUTION":  '(?<=^|&)[\w-]+=[^&]*&[\w-]+=',
     "DOM_BASED_XSS": "(?:\blocation\b\s*.\s*(?:hash|search|pathname)|document\s*.\s*(?:location|referrer).hash)"
 }
+
+
+def contains_malicious_patterns(_input: str) -> bool:
+    """
+    **contains_malicious_patterns**
+        will return true if the string matches any of the attack patterns
+    :param _input:
+    :return:
+    """
+    attack_pattern = r"(select|update|delete|drop|create|alter|insert|into|from|where|union|having|or|and|exec|script|javascript|xss|sql|cmd|../|..\|buffer|format|code|include|shell|rfi|lfi|phish)"
+
+    return re.search(attack_pattern, _input, re.IGNORECASE) is not None
+
+
 EMAIL: str = config_instance().CLOUDFLARE_SETTINGS.EMAIL
 TOKEN: str = config_instance().CLOUDFLARE_SETTINGS.TOKEN
 
@@ -140,7 +154,7 @@ class Firewall:
             # Set default regex pattern for string-like request bodies
             #  StackOverflow attacks
             payload_regex = "^[A-Za-z0-9+/]{1024,}={0,2}$"
-            if re.match(payload_regex, body):
+            if re.match(payload_regex, body) or contains_malicious_patterns(_input=body):
                 raise UnAuthenticatedError('Payload is suspicious')
 
         path = str(request.path)

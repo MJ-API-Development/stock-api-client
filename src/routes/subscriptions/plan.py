@@ -273,4 +273,3 @@ def plan_by_name(user_data: dict[str, str], plan_name: str):
                                               paypal_settings=_paypal_settings)
 
     return render_template('dashboard/plan_subscriptions.html', **context)
-
