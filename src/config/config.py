@@ -88,6 +88,9 @@ class GoogleSettings(BaseSettings):
         env_file = '.env.development'
         env_file_encoding = 'utf-8'
 
+class CloudFlareSettings(BaseSettings):
+    EMAIL: str = Field(..., env="CLOUDFLARE_EMAIL")
+    TOKEN: str = Field(..., env="CLOUDFLARE_TOKEN")
 
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
@@ -106,6 +109,8 @@ class Settings(BaseSettings):
     GITHUB_SETTINGS: GithubSettings = GithubSettings()
     SEARCH_CONSOLE_API_KEY: str = Field(..., env="SEARCH_CONSOLE_API_KEY")
     EOD_STOCK_API_KEY: str = Field(..., env="EOD_STOCK_API_KEY")
+    HOST_ADDRESSES: str = Field(..., env='HOST_ADDRESSES')
+    CLOUDFLARE_SETTINGS: CloudFlareSettings = CloudFlareSettings()
 
     class Config:
         case_sensitive = True

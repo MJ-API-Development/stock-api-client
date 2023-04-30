@@ -31,7 +31,6 @@ def sitemap_index():
     return send_from_directory('static', 'sitemap_index.xml')
 
 
-
 app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':

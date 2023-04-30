@@ -8,9 +8,11 @@ from jwt import ExpiredSignatureError
 
 from src.config import config_instance
 from src.exceptions import UnAuthenticatedError
+from src.firewall import Firewall
 from src.logger import init_logger
 from src.routes.blog.github import GithubBlog
 
+firewall = Firewall()
 user_session = {}
 sitemap = Sitemap()
 cors = CORS()
@@ -42,6 +44,8 @@ def create_app(config=config_instance()) -> Flask:
         sitemap.init_app(app=app)
         cors.init_app(app=app)
         github_blog.update_blog()
+
+        firewall.init_app(app=app)
 
         from src.routes.home import home_route
         from src.routes.documentations import docs_route
