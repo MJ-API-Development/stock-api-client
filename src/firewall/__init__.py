@@ -76,6 +76,10 @@ async def send_request(api_url: str, headers: dict[str, str | int], method: str 
 
 
 class Firewall:
+    """
+
+    """
+    # TODO setup security for outgoing Responses , including setting Security headers
     def __init__(self):
         self.allowed_hosts = config_instance().HOST_ADDRESSES.split(",")
         self._max_payload_size: int = 8 * 64
@@ -113,7 +117,6 @@ class Firewall:
     def check_if_request_malicious(self):
         # Check request for malicious patterns
         headers: dict[str, str] = request.headers
-        url: str = request.url
         body = request.data
 
         if 'Content-Length' in headers and int(headers['Content-Length']) > self._max_payload_size:
