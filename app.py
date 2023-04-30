@@ -1,10 +1,9 @@
 import logging
-import socket
 
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-from src.config.config import config_instance
+from src.config.config import config_instance, is_development
 from src.main import create_app
 
 app: Flask = create_app(config=config_instance())
@@ -34,7 +33,7 @@ def sitemap_index():
 app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
-    if socket.gethostname() == config_instance().DEVELOPMENT_SERVER_NAME:
+    if is_development():
         app.run(debug=True, use_reloader=True, host="127.0.0.1", port=8081)
     else:
         app.run(debug=True, use_reloader=True, host="0.0.0.0", port=8081)

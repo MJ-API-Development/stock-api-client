@@ -1,12 +1,12 @@
 import re
-import socket
-import httpx
-from flask import Request, Flask, request
 
+import httpx
 from CloudFlare import CloudFlare
 from CloudFlare.exceptions import CloudFlareAPIError
+from flask import Flask, request
 
 from src.config import config_instance
+from src.config.config import is_development
 from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
 from src.utils import camel_to_snake
@@ -111,7 +111,7 @@ class Firewall:
 
     def init_app(self, app: Flask):
         # Setting Up Incoming Request Security Checks
-        if socket.gethostname() != config_instance().DEVELOPMENT_SERVER_NAME:
+        if is_development():
             # if this is not a development server secure the server with our firewall
             app.before_request(self.is_host_valid)
             app.before_request(self.is_edge_ip_allowed)
