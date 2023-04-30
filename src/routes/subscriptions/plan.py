@@ -207,6 +207,7 @@ def subscribe(user_data: dict[str, str]) -> flask.Response:
     """
     # subscription_data: dict[str, str] = request.get_json()
     # subscription_data = dict(uuid=uuid, plan_id=plan_id, payment_method="paypal")
+    # TODO Refactor this route to take into account the logged in user when subscribing user
     paypal_data: dict[str, str | int] = request.get_json()
     paypal_subscription: PayPalSubscriptionModel = PayPalSubscriptionModel(**paypal_data)
 

@@ -1,4 +1,5 @@
 import re
+import socket
 import httpx
 from flask import Request, Flask, request
 
@@ -77,6 +78,8 @@ async def send_request(api_url: str, headers: dict[str, str | int], method: str 
 
 class Firewall:
     """
+        used in conjunction with cloudflare to secure requests to this web application
+        by using several methods including IP White listing
 
     """
     # TODO setup security for outgoing Responses , including setting Security headers
@@ -94,10 +97,14 @@ class Firewall:
 
     def init_app(self, app: Flask):
         # Setting Up Incoming Request Security Checks
-        app.before_request(self.is_host_valid)
-        app.before_request(self.is_client_ip_allowed)
-        app.before_request(self.check_if_request_malicious)
+        if socket.gethostname() != config_instance().DEVELOPMENT_SERVER_NAME:
+            # if this is not a development server secure the server with our firewall
+            app.before_request(self.is_host_valid)
+            app.before_request(self.is_edge_ip_allowed)
+            app.before_request(self.check_if_request_malicious)
+        # obtain the latest cloudflare edge servers
         ipv4, ipv6 = self.get_ip_ranges()
+        # updating the ip ranges
         self.ip_ranges.extend(ipv4)
         self.ip_ranges.extend(ipv6)
 
@@ -109,12 +116,18 @@ class Firewall:
         if request.host not in self.allowed_hosts:
             raise UnAuthenticatedError('Host not allowed')
 
-    def is_client_ip_allowed(self):
+    def is_edge_ip_allowed(self):
+        """checks if edge ip falls within allowable ranges"""
         edge_ip = self.get_edge_server_ip(headers=request.headers)
         if edge_ip not in self.ip_ranges:
             raise UnAuthenticatedError('IP Address not allowed')
 
     def check_if_request_malicious(self):
+        """
+        **check_if_request_malicious**
+            Analyses request headers , body and path if there
+            are any malicious patterns an error will be thrown
+        """
         # Check request for malicious patterns
         headers: dict[str, str] = request.headers
         body = request.data
@@ -136,15 +149,17 @@ class Firewall:
 
     @staticmethod
     def get_client_ip() -> str:
-        """will return the actual client ip address of the client making the request"""
+        """
+        **get_client_ip**
+            will return the actual client ip address of the client making the request
+        """
         ip = request.headers.get('cf-connecting-ip')
         return ip.split(',')[0]
 
     @staticmethod
     def get_edge_server_ip(headers) -> str:
         """obtains cloudflare edge server the request is being routed through"""
-        return headers.get("Host") if headers.get("Host") in ["localhost", "127.0.0.1"] else headers.get(
-            "x-real-ip")
+        return headers.get("x-real-ip")
 
     @staticmethod
     def get_ip_ranges() -> tuple[list[str], list[str]]:
@@ -160,5 +175,5 @@ class Firewall:
             ipv6_cidrs = response.get('result', {}).get('ipv6_cidrs', [])
             return ipv4_cidrs, ipv6_cidrs
 
-        except CloudFlareAPIError as e:
+        except CloudFlareAPIError:
             return [], []
