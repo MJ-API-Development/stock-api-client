@@ -1,5 +1,5 @@
 import re
-
+import ipaddress
 import httpx
 from CloudFlare import CloudFlare
 from CloudFlare.exceptions import CloudFlareAPIError
@@ -133,7 +133,7 @@ class Firewall:
     def is_edge_ip_allowed(self):
         """checks if edge ip falls within allowable ranges"""
         edge_ip = self.get_edge_server_ip(headers=request.headers)
-        if edge_ip not in self.ip_ranges:
+        if not any(ipaddress.ip_address(edge_ip) in ipaddress.ip_network(ip_range) for ip_range in self.ip_ranges):
             raise UnAuthenticatedError('IP Address not allowed')
 
     def check_if_request_malicious(self):
