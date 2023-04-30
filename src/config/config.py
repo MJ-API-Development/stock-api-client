@@ -3,8 +3,14 @@ from pydantic import BaseSettings, Field
 import socket
 
 
+def is_development() -> bool:
+    """returns true if running in development mode"""
+    return socket.gethostname().casefold() == config_instance().DEVELOPMENT_SERVER_NAME.casefold()
+
+
 def get_server_name():
-    return "eod-stock-api.local:8081" if socket.gethostname() == "DESKTOP-T9V7F59" else "eod-stock-api.site"
+    """will return the hostname of the server to use"""
+    return "eod-stock-api.local:8081" if is_development else "eod-stock-api.site"
 
 
 class EmailSettings(BaseSettings):
@@ -15,22 +21,6 @@ class EmailSettings(BaseSettings):
     EMAIL_HOST_USER: str = Field(..., env="EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD: str = Field(..., env="EMAIL_HOST_PASSWORD")
     DEFAULT_FROM_EMAIL: str = Field(..., env="DEFAULT_FROM_EMAIL")
-
-    class Config:
-        case_sensitive = True
-        env_file = '.env.development'
-        env_file_encoding = 'utf-8'
-
-
-class CelerySettings(BaseSettings):
-    CELERY_RESULT_ENGINE_OPTIONS: dict[str, bool] = {"echo": True}
-    CELERY_RESULT_BACKEND: str = "database"
-    BROKER_TRANSPORT: str = Field(default="sqlakombu.transport.Transport")
-    BROKER_URL: str = Field(..., env="CELERY_BROKER_URL")
-    CELERY_RESULT_DBURI: str = Field(..., env="CELERY_BROKER_URL")
-    CELERY_ACCEPT_CONTENT: list[str] = Field(default=['application/json'])
-    CELERY_TASK_SERIALIZER: str = Field(default='json')
-    CELERY_RESULT_SERIALIZER: str = Field(default='json')
 
     class Config:
         case_sensitive = True
@@ -88,21 +78,28 @@ class GoogleSettings(BaseSettings):
         env_file = '.env.development'
         env_file_encoding = 'utf-8'
 
+
 class CloudFlareSettings(BaseSettings):
     EMAIL: str = Field(..., env="CLOUDFLARE_EMAIL")
     TOKEN: str = Field(..., env="CLOUDFLARE_TOKEN")
 
+    class Config:
+        case_sensitive = True
+        env_file = '.env.development'
+        env_file_encoding = 'utf-8'
+
+
 class Settings(BaseSettings):
     EMAIL_SETTINGS: EmailSettings = EmailSettings()
-    CELERY_SETTINGS = CelerySettings()
+
     SECRET_KEY: str = Field(..., env="SECRET_TOKEN")
 
     DATABASE_SETTINGS: DatabaseSettings = DatabaseSettings()
-    DEVELOPMENT_SERVER_NAME: str = Field(default="DESKTOP-T9V7F59")
+    DEVELOPMENT_SERVER_NAME: str = Field(..., env="DEVELOPMENT_SERVER_NAME")
     LOGGING: Logging = Logging()
     DEBUG: bool = True
     GATEWAY_SETTINGS: GatewaySettings = GatewaySettings()
-    SERVER_NAME: str = Field(default_factory=get_server_name)
+    SERVER_NAME: str = Field(default_factory=lambda: get_server_name())
     APPLICATION_ROOT: str = Field(default="/")
     PREFERRED_URL_SCHEME: str = Field(default="https://")
     GOOGLE_SETTINGS: GoogleSettings = GoogleSettings()
