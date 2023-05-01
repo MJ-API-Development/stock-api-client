@@ -107,21 +107,17 @@ class Firewall:
     def is_host_valid(self) -> bool:
         """will return true if host is one of the allowed hosts addresses"""
         header_host = request.headers.get('Host')
-        self._logger.info(f'Host not allowed : {header_host}')
 
         if header_host.casefold() != request.host.casefold():
             abort(401, 'Bad Host Header')
         if request.host not in self.allowed_hosts:
-            self._logger.info(f'Host not allowed : {request.host}')
             abort(401, 'Host not allowed')
-        self._logger.info(f'Host is Valid: {request.host}')
 
     def is_edge_ip_allowed(self):
         """checks if edge ip falls within allowable ranges"""
         edge_ip = self.get_edge_server_ip(headers=request.headers)
         if not any(ipaddress.ip_address(edge_ip) in ipaddress.ip_network(ip_range) for ip_range in self.ip_ranges):
             abort(401, 'IP Address not allowed')
-        self._logger.info(f'Edge IP is Allowed: {edge_ip}')
 
     def check_if_request_malicious(self):
         """
@@ -148,9 +144,8 @@ class Firewall:
         if any((pattern.match(path) for pattern in self.compiled_bad_patterns)):
             abort(401, 'Payload is suspicious')
 
-        self._logger.info('Request not malicious')
-
-    def verify_client_secret_token(self):
+    @staticmethod
+    def verify_client_secret_token():
         client_secret_token = request.headers.get('X-CLIENT-SECRET-TOKEN')
         if not client_secret_token:
             abort(401, 'Request not Authenticated - token missing')
@@ -161,7 +156,7 @@ class Firewall:
 
         if not hmac.compare_digest(client_secret_token, expected_secret_token):
             abort(401, 'Request not Authenticated - token mismatch')
-        self._logger.info('Client Secret Checks Out')
+        # self._logger.info('Client Secret Checks Out')
 
     @staticmethod
     def get_client_ip() -> str:
