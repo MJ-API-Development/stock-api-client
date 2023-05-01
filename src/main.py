@@ -45,7 +45,7 @@ def create_app(config=config_instance()) -> Flask:
         cors.init_app(app=app)
         github_blog.update_blog()
 
-        # firewall.init_app(app=app)
+        firewall.init_app(app=app)
 
         from src.routes.home import home_route
         from src.routes.documentations import docs_route
