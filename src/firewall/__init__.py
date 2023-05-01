@@ -111,12 +111,14 @@ class Firewall:
             raise UnAuthenticatedError('Bad Host Header')
         if request.host not in self.allowed_hosts:
             raise UnAuthenticatedError('Host not allowed')
+        self._logger.info(f'Host is Valid: {request.host}')
 
     def is_edge_ip_allowed(self):
         """checks if edge ip falls within allowable ranges"""
         edge_ip = self.get_edge_server_ip(headers=request.headers)
         if not any(ipaddress.ip_address(edge_ip) in ipaddress.ip_network(ip_range) for ip_range in self.ip_ranges):
             raise UnAuthenticatedError('IP Address not allowed')
+        self._logger.info(f'Edge IP is Allowed: {edge_ip}')
 
     def check_if_request_malicious(self):
         """
@@ -143,8 +145,9 @@ class Firewall:
         if any((pattern.match(path) for pattern in self.compiled_bad_patterns)):
             raise UnAuthenticatedError('Payload is suspicious')
 
-    @staticmethod
-    def verify_client_secret_token():
+        self._logger.info('Request not malicious')
+
+    def verify_client_secret_token(self):
         client_secret_token = request.headers.get('X_CLIENT_SECRET_TOKEN')
         if not client_secret_token:
             raise UnAuthenticatedError('Missing client secret token')
@@ -155,6 +158,7 @@ class Firewall:
 
         if not hmac.compare_digest(client_secret_token, expected_secret_token):
             raise UnAuthenticatedError('Invalid client secret token')
+        self._logger.info('Client Secret Checks Out')
 
     @staticmethod
     def get_client_ip() -> str:
