@@ -216,15 +216,18 @@ class Firewall:
     def add_security_headers(response: Response) -> Response:
         # exemtping redoc from content securuty policies except frame and XSS
 
-        if bypass_content_security_policy():
-            response.headers[
-                'Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
-
-            response.headers['X-Content-Type-Options'] = 'nosniff'
-            response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-
-        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+
+        if bypass_content_security_policy():
+            return response
+
+        response.headers[
+            'Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
+
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+
         return response
 
 
