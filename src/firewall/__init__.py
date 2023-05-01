@@ -146,7 +146,8 @@ class Firewall:
             # Set default regex pattern for string-like request bodies
             #  StackOverflow attacks
             payload_regex = "^[A-Za-z0-9+/]{1024,}={0,2}$"
-            if re.match(payload_regex, body) or contains_malicious_patterns(_input=body):
+            _body = body.decode('utf-8')
+            if re.match(payload_regex, _body) or contains_malicious_patterns(_input=_body):
                 abort(401, 'Payload is suspicious')
 
         path = str(request.path)
