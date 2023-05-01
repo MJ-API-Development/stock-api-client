@@ -5,12 +5,12 @@ import socket
 
 def is_development() -> bool:
     """returns true if running in development mode"""
-    return socket.gethostname().casefold() == config_instance().DEVELOPMENT_SERVER_NAME.casefold()
+    return socket.gethostname().casefold() == "DESKTOP-T9V7F59"
 
 
 def get_server_name():
     """will return the hostname of the server to use"""
-    return "eod-stock-api.local:8081" if is_development else "eod-stock-api.site"
+    return "eod-stock-api.local:8081" if is_development() else "eod-stock-api.site"
 
 
 class EmailSettings(BaseSettings):
@@ -96,11 +96,11 @@ class Settings(BaseSettings):
     SECRET_KEY: str = Field(..., env="SECRET_TOKEN")
 
     DATABASE_SETTINGS: DatabaseSettings = DatabaseSettings()
+    SERVER_NAME: str = Field(default_factory=lambda: get_server_name())
     DEVELOPMENT_SERVER_NAME: str = Field(..., env="DEVELOPMENT_SERVER_NAME")
     LOGGING: Logging = Logging()
     DEBUG: bool = True
     GATEWAY_SETTINGS: GatewaySettings = GatewaySettings()
-    SERVER_NAME: str = Field(default_factory=lambda: get_server_name())
     APPLICATION_ROOT: str = Field(default="/")
     PREFERRED_URL_SCHEME: str = Field(default="https://")
     GOOGLE_SETTINGS: GoogleSettings = GoogleSettings()
