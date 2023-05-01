@@ -107,9 +107,12 @@ class Firewall:
     def is_host_valid(self) -> bool:
         """will return true if host is one of the allowed hosts addresses"""
         header_host = request.headers.get('Host')
+        self._logger.info(f'Host not allowed : {header_host}')
+
         if header_host.casefold() != request.host.casefold():
             raise UnAuthenticatedError('Bad Host Header')
         if request.host not in self.allowed_hosts:
+            self._logger.info(f'Host not allowed : {request.host}')
             raise UnAuthenticatedError('Host not allowed')
         self._logger.info(f'Host is Valid: {request.host}')
 
