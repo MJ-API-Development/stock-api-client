@@ -16,7 +16,7 @@ self.addEventListener('load', async (e) => {
           // Set up the subscription plan details
           const paypal_id = document.getElementById('paypal_id').value;
           return actions.subscription.create({
-              env: 'production',
+              env: 'live',
               plan_id: paypal_id,
           });
       },
