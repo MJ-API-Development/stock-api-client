@@ -5,7 +5,7 @@ import ipaddress
 import requests
 from CloudFlare import CloudFlare
 from CloudFlare.exceptions import CloudFlareAPIError
-from flask import Flask, request
+from flask import Flask, request, abort
 
 from src.config import config_instance
 from src.config.config import is_development
@@ -92,7 +92,7 @@ class Firewall:
 
     def init_app(self, app: Flask):
         # Setting Up Incoming Request Security Checks
-        if is_development():
+        if not is_development():
             # if this is not a development server secure the server with our firewall
             app.before_request(self.is_host_valid)
             app.before_request(self.is_edge_ip_allowed)
@@ -110,17 +110,17 @@ class Firewall:
         self._logger.info(f'Host not allowed : {header_host}')
 
         if header_host.casefold() != request.host.casefold():
-            raise UnAuthenticatedError('Bad Host Header')
+            abort(401, 'Bad Host Header')
         if request.host not in self.allowed_hosts:
             self._logger.info(f'Host not allowed : {request.host}')
-            raise UnAuthenticatedError('Host not allowed')
+            abort(401, 'Host not allowed')
         self._logger.info(f'Host is Valid: {request.host}')
 
     def is_edge_ip_allowed(self):
         """checks if edge ip falls within allowable ranges"""
         edge_ip = self.get_edge_server_ip(headers=request.headers)
         if not any(ipaddress.ip_address(edge_ip) in ipaddress.ip_network(ip_range) for ip_range in self.ip_ranges):
-            raise UnAuthenticatedError('IP Address not allowed')
+            abort(401, 'IP Address not allowed')
         self._logger.info(f'Edge IP is Allowed: {edge_ip}')
 
     def check_if_request_malicious(self):
@@ -135,32 +135,32 @@ class Firewall:
 
         if 'Content-Length' in headers and int(headers['Content-Length']) > self._max_payload_size:
             # Request payload is too large,
-            raise UnAuthenticatedError('Payload is suspicious')
+            abort(401, 'Payload is suspicious')
 
         if body:
             # Set default regex pattern for string-like request bodies
             #  StackOverflow attacks
             payload_regex = "^[A-Za-z0-9+/]{1024,}={0,2}$"
             if re.match(payload_regex, body) or contains_malicious_patterns(_input=body):
-                raise UnAuthenticatedError('Payload is suspicious')
+                abort(401, 'Payload is suspicious')
 
         path = str(request.path)
         if any((pattern.match(path) for pattern in self.compiled_bad_patterns)):
-            raise UnAuthenticatedError('Payload is suspicious')
+            abort(401, 'Payload is suspicious')
 
         self._logger.info('Request not malicious')
 
     def verify_client_secret_token(self):
         client_secret_token = request.headers.get('X_CLIENT_SECRET_TOKEN')
         if not client_secret_token:
-            raise UnAuthenticatedError('Missing client secret token')
+            abort(401, 'Request not Authenticated')
 
         expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.get('X_CLIENT_SECRET_TOKEN')
         if not expected_secret_token:
-            raise ValueError('Missing expected client secret token')
+            abort(401, 'Request not Authenticated')
 
         if not hmac.compare_digest(client_secret_token, expected_secret_token):
-            raise UnAuthenticatedError('Invalid client secret token')
+            abort(401, 'Request not Authenticated')
         self._logger.info('Client Secret Checks Out')
 
     @staticmethod

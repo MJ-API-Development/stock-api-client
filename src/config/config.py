@@ -5,7 +5,7 @@ import socket
 
 def is_development() -> bool:
     """returns true if running in development mode"""
-    return socket.gethostname().casefold() == "DESKTOP-T9V7F59"
+    return socket.gethostname().casefold() == "DESKTOP-T9V7F59".casefold()
 
 
 def get_server_name():
