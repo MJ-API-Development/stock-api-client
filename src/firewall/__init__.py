@@ -1,6 +1,6 @@
-import re
 import hmac
 import ipaddress
+import re
 
 import requests
 from CloudFlare import CloudFlare
@@ -9,7 +9,6 @@ from flask import Flask, request, abort
 
 from src.config import config_instance
 from src.config.config import is_development
-from src.exceptions import UnAuthenticatedError
 from src.logger import init_logger
 from src.utils import camel_to_snake
 
@@ -105,7 +104,11 @@ class Firewall:
         self.ip_ranges.extend(ipv6)
 
     def is_host_valid(self) -> bool:
-        """will return true if host is one of the allowed hosts addresses"""
+        """
+        **is_host_valid**
+            will return true if host is one of the allowed hosts addresses
+            and both request host and header matches
+        """
         header_host = request.headers.get('Host')
 
         if header_host.casefold() != request.host.casefold():
@@ -114,7 +117,10 @@ class Firewall:
             abort(401, 'Host not allowed')
 
     def is_edge_ip_allowed(self):
-        """checks if edge ip falls within allowable ranges"""
+        """
+        **is_edge_ip_allowed**
+            checks if edge ip falls within known cloudflare ip ranges
+        """
         edge_ip = self.get_edge_server_ip(headers=request.headers)
         if not any(ipaddress.ip_address(edge_ip) in ipaddress.ip_network(ip_range) for ip_range in self.ip_ranges):
             abort(401, 'IP Address not allowed')
@@ -146,6 +152,11 @@ class Firewall:
 
     @staticmethod
     def verify_client_secret_token():
+        """
+        **verify_client_secret_token**
+            check if cloud_flare signed the request with a secret token
+        :return:
+        """
         client_secret_token = request.headers.get('X-CLIENT-SECRET-TOKEN')
         if not client_secret_token:
             abort(401, 'Request not Authenticated - token missing')
@@ -156,7 +167,6 @@ class Firewall:
 
         if not hmac.compare_digest(client_secret_token, expected_secret_token):
             abort(401, 'Request not Authenticated - token mismatch')
-        # self._logger.info('Client Secret Checks Out')
 
     @staticmethod
     def get_client_ip() -> str:
@@ -169,12 +179,16 @@ class Firewall:
 
     @staticmethod
     def get_edge_server_ip(headers) -> str:
-        """obtains cloudflare edge server the request is being routed through"""
+        """
+        **get_edge_server_ip**
+            obtains cloudflare edge server the request is being routed through
+        """
         return headers.get("x-real-ip")
 
     @staticmethod
     def get_ip_ranges() -> tuple[list[str], list[str]]:
         """
+        **get_ip_ranges**
             obtains a list of ip addresses from cloudflare edge servers
         :return:
         """
