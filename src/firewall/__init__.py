@@ -151,11 +151,11 @@ class Firewall:
         self._logger.info('Request not malicious')
 
     def verify_client_secret_token(self):
-        client_secret_token = request.headers.get('X_CLIENT_SECRET_TOKEN')
+        client_secret_token = request.headers.get('X-CLIENT-SECRET-TOKEN')
         if not client_secret_token:
             abort(401, 'Request not Authenticated - token missing')
 
-        expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.get('X_CLIENT_SECRET_TOKEN')
+        expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN
         if not expected_secret_token:
             abort(401, 'Request not Authenticated')
 
