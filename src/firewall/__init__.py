@@ -76,6 +76,7 @@ class Firewall:
         by using several methods including IP White listing
 
     """
+
     def __init__(self):
         self.allowed_hosts = config_instance().HOST_ADDRESSES.split(",")
         self._max_payload_size: int = 8 * 64
@@ -97,7 +98,7 @@ class Firewall:
             app.before_request(self.check_if_request_malicious)
             app.before_request(self.verify_client_secret_token)
 
-            #Setting up Security headers for outgoing requests
+            # Setting up Security headers for outgoing requests
             app.after_request(self.add_security_headers)
             #
         # obtain the latest cloudflare edge servers
@@ -140,6 +141,7 @@ class Firewall:
 
         if 'Content-Length' in headers and int(headers['Content-Length']) > self._max_payload_size:
             # Request payload is too large,
+            self._logger.info("payload too long")
             abort(401, 'Payload is suspicious')
 
         if body:
@@ -148,11 +150,13 @@ class Firewall:
             payload_regex = "^[A-Za-z0-9+/]{1024,}={0,2}$"
             _body = body.decode('utf-8')
             if re.match(payload_regex, _body) or contains_malicious_patterns(_input=_body):
+                self._logger.info("Payload regex failure")
                 abort(401, 'Payload is suspicious')
 
         path = str(request.path)
         if any((pattern.match(path) for pattern in self.compiled_bad_patterns)):
-            abort(401, 'Payload is suspicious')
+            self._logger.info("Attack patterns regex failure on path")
+            abort(401, 'Request path is malformed')
 
     @staticmethod
     def verify_client_secret_token():
@@ -211,7 +215,8 @@ class Firewall:
 
     @staticmethod
     def add_security_headers(response: Response) -> Response:
-        response.headers['Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com;"
+        response.headers[
+            'Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com;"
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['X-XSS-Protection'] = '1; mode=block'
