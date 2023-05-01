@@ -5,7 +5,7 @@
 self.addEventListener('load', async (e) => {
 
   paypal.Buttons({
-      env: 'production', // Update the environment to production
+      env: 'live', // Update the environment to production
       style: {
           shape: 'pill',
           color: 'black',
