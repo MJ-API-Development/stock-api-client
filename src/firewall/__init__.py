@@ -5,7 +5,7 @@ import re
 import requests
 from CloudFlare import CloudFlare
 from CloudFlare.exceptions import CloudFlareAPIError
-from flask import Flask, request, abort
+from flask import Flask, request, abort, Response
 
 from src.config import config_instance
 from src.config.config import is_development
@@ -76,7 +76,6 @@ class Firewall:
         by using several methods including IP White listing
 
     """
-    # TODO setup security for outgoing Responses , including setting Security headers
     def __init__(self):
         self.allowed_hosts = config_instance().HOST_ADDRESSES.split(",")
         self._max_payload_size: int = 8 * 64
@@ -97,6 +96,10 @@ class Firewall:
             app.before_request(self.is_edge_ip_allowed)
             app.before_request(self.check_if_request_malicious)
             app.before_request(self.verify_client_secret_token)
+
+            #Setting up Security headers for outgoing requests
+            app.after_request(self.add_security_headers)
+            #
         # obtain the latest cloudflare edge servers
         ipv4, ipv6 = self.get_ip_ranges()
         # updating the ip ranges
@@ -204,3 +207,12 @@ class Firewall:
 
         except CloudFlareAPIError:
             return [], []
+
+    @staticmethod
+    def add_security_headers(response: Response) -> Response:
+        response.headers['Content-Security-Policy'] = "default-src 'self' https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com;"
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        return response
