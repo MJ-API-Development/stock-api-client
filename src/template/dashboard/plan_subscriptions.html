@@ -28,6 +28,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/plans.css') }}">
+
 {% endblock %}
 {% block headers %}
 {% if plan.plan_name == 'BASIC' %}
@@ -71,28 +73,7 @@
     }
     </script>
 {% endif %}
-<style>
-    #paypal-button-container {
-      max-width: 150px;
-    }
-    .footer-menu {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-    }
-    .footer-menu li {
-        margin-right: 20px;
-    }
-    .footer-menu li:last-child {
-        margin-right: 0;
-    }
-    .footer-menu li a {
-        text-decoration: none;
-        color: #000;
-        font-weight: bold;
-    }
-</style>
+
 <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_settings.CLIENT_ID }}&currency=USD&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
 {% endblock %}
 {% block content %}

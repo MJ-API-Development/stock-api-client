@@ -1,0 +1,21 @@
+
+    #paypal-button-container {
+      max-width: 150px;
+    }
+    .footer-menu {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+    .footer-menu li {
+        margin-right: 20px;
+    }
+    .footer-menu li:last-child {
+        margin-right: 0;
+    }
+    .footer-menu li a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+    }

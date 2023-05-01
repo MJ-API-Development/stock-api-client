@@ -215,7 +215,7 @@ class Firewall:
     @staticmethod
     def add_security_headers(response: Response) -> Response:
         # exemtping redoc from content securuty policies except frame and XSS
-        if request.url != 'https://eod-stock-api.site/redoc':
+        if request.url.casefold() != 'https://eod-stock-api.site/redoc':
             response.headers[
                 'Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
             response.headers['X-Content-Type-Options'] = 'nosniff'
