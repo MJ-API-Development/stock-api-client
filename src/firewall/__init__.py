@@ -92,7 +92,7 @@ class Firewall:
 
     def init_app(self, app: Flask):
         # Setting Up Incoming Request Security Checks
-        if is_development():
+        if not is_development():
             # if this is not a development server secure the server with our firewall
             app.before_request(self.is_host_valid)
             app.before_request(self.is_edge_ip_allowed)
