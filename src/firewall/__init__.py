@@ -149,7 +149,7 @@ class Firewall:
             #  StackOverflow attacks
             payload_regex = "^[A-Za-z0-9+/]{1024,}={0,2}$"
             _body = body.decode('utf-8')
-            if re.match(payload_regex, _body) or contains_malicious_patterns(_input=_body):
+            if contains_malicious_patterns(_input=_body):
                 self._logger.info("Payload regex failure")
                 abort(401, 'Payload is suspicious')
 
