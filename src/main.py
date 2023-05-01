@@ -23,7 +23,7 @@ def create_blog_url():
     server_url = config_instance().SERVER_NAME
     scheme = "http://" if "local" in server_url else "https://"
     blog_url = f"{scheme}{server_url}/blog/"
-    main_logger.info("Blog URL: {}".format(blog_url))
+    main_logger.info("Blog URL: {}".format(blog_url[:-1]))
     return blog_url
 
 

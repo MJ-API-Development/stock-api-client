@@ -1,6 +1,8 @@
 import re
+import hmac
 import ipaddress
-import httpx
+
+import requests
 from CloudFlare import CloudFlare
 from CloudFlare.exceptions import CloudFlareAPIError
 from flask import Flask, request
@@ -68,27 +70,6 @@ def contains_malicious_patterns(_input: str) -> bool:
 EMAIL: str = config_instance().CLOUDFLARE_SETTINGS.EMAIL
 TOKEN: str = config_instance().CLOUDFLARE_SETTINGS.TOKEN
 
-async_client = httpx.AsyncClient(http2=True, limits=httpx.Limits(max_connections=100, max_keepalive_connections=20))
-
-
-async def send_request(api_url: str, headers: dict[str, str | int], method: str = 'get',
-                       data: str | None = None):
-    try:
-        if method.lower() == "get":
-            response = await async_client.get(url=api_url, headers=headers, timeout=360000)
-        elif method.lower() == "post":
-            if data:
-                response = await async_client.post(url=api_url, json=data, headers=headers, timeout=360000)
-            else:
-                response = await async_client.post(url=api_url, headers=headers, timeout=360000)
-        else:
-            return None
-    except httpx.HTTPError as http_err:
-        raise http_err
-    except Exception as err:
-        raise err
-    return response.json()
-
 
 class Firewall:
     """
@@ -116,6 +97,7 @@ class Firewall:
             app.before_request(self.is_host_valid)
             app.before_request(self.is_edge_ip_allowed)
             app.before_request(self.check_if_request_malicious)
+            app.before_request(self.verify_client_secret_token)
         # obtain the latest cloudflare edge servers
         ipv4, ipv6 = self.get_ip_ranges()
         # updating the ip ranges
@@ -162,6 +144,19 @@ class Firewall:
             raise UnAuthenticatedError('Payload is suspicious')
 
     @staticmethod
+    def verify_client_secret_token():
+        client_secret_token = request.headers.get('X_CLIENT_SECRET_TOKEN')
+        if not client_secret_token:
+            raise UnAuthenticatedError('Missing client secret token')
+
+        expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.get('X_CLIENT_SECRET_TOKEN')
+        if not expected_secret_token:
+            raise ValueError('Missing expected client secret token')
+
+        if not hmac.compare_digest(client_secret_token, expected_secret_token):
+            raise UnAuthenticatedError('Invalid client secret token')
+
+    @staticmethod
     def get_client_ip() -> str:
         """
         **get_client_ip**
@@ -184,10 +179,12 @@ class Firewall:
         _uri = 'https://api.cloudflare.com/client/v4/ips'
         _headers = {'Accept': 'application/json', 'X-Auth-Email': EMAIL}
         try:
-            response = await send_request(api_url=_uri, headers=_headers)
-            ipv4_cidrs = response.get('result', {}).get('ipv4_cidrs', DEFAULT_IPV4)
-            ipv6_cidrs = response.get('result', {}).get('ipv6_cidrs', [])
-            return ipv4_cidrs, ipv6_cidrs
+            with requests.Session() as send_request:
+                response = send_request.get(url=_uri, headers=_headers)
+                response_data: dict[str, dict[str, str] | list[str]] = response.json()
+                ipv4_cidrs = response_data.get('result', {}).get('ipv4_cidrs', DEFAULT_IPV4)
+                ipv6_cidrs = response_data.get('result', {}).get('ipv6_cidrs', [])
+                return ipv4_cidrs, ipv6_cidrs
 
         except CloudFlareAPIError:
             return [], []

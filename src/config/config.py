@@ -82,6 +82,7 @@ class GoogleSettings(BaseSettings):
 class CloudFlareSettings(BaseSettings):
     EMAIL: str = Field(..., env="CLOUDFLARE_EMAIL")
     TOKEN: str = Field(..., env="CLOUDFLARE_TOKEN")
+    X_CLIENT_SECRET_TOKEN: str = Field(..., env="X_CLIENT_SECRET_TOKEN")
 
     class Config:
         case_sensitive = True
