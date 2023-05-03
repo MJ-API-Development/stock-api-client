@@ -228,6 +228,11 @@ class Firewall:
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
 
+        session_cookies = [request.cookies.get('session'), request.headers.get('uuid')]
+        session_cookies = [cookie for cookie in session_cookies if cookie is not None]
+        if session_cookies:
+            response.headers['Session-Vary'] = ','.join(session_cookies)
+
         return response
 
 
