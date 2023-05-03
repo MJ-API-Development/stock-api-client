@@ -214,25 +214,28 @@ class Firewall:
 
     @staticmethod
     def add_security_headers(response: Response) -> Response:
-        # exemtping redoc from content securuty policies except frame and XSS
+        """
+            **add_security_headers**
+                the headers below are meant to secure the website from malicious attacks
+        :param response:
+        :return:
+        """
 
         response.headers['X-XSS-Protection'] = '1; mode=block'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-
-        if bypass_content_security_policy():
-            return response
-
-        response.headers[
-            'Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
-
-        response.headers['X-Content-Type-Options'] = 'nosniff'
-        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-
         session_cookies = [request.cookies.get('session'), request.headers.get('uuid')]
         session_cookies = [cookie for cookie in session_cookies if cookie is not None]
         if session_cookies:
             response.headers['Session-Vary'] = ','.join(session_cookies)
 
+        # exempting redoc & blog from content security policies except frame and XSS
+        if bypass_content_security_policy():
+            return response
+
+        response.headers['Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
+
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
         return response
 
 
