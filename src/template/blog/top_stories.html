@@ -123,7 +123,7 @@
             </div>
             <div class="card-body">
                 <h2>Published By : {{ story.publisher }}</h2>
-                <p>Date Published: {{ story.datetime_published }}</p>
+        {#                <p>Date Published: {{ story.datetime_published }}</p>#}
                 <p>Related Tickers: {{ story.related_tickers|join(', ') }}</p>
                 <a href="{{ story.link }}" target="_blank" rel="nofollow">
                     <img
@@ -135,13 +135,16 @@
                     >
                 </a>
 
-                {% if story.sentiment and story.sentiment.article_tldr %}
-                    <p>{{ story.sentiment.article_tldr }}</p>
-                {% elif story.sentiment and story.sentiment.article %}
-                    <p class="font-weight-bold text-info">{{ story.sentiment.article[:250] }}</p>
-                {% endif %}
 
                 {# TODO - Consider adding a summary of the article here #}
+            </div>
+            <div class="card-footer">
+                {% if story.sentiment and story.sentiment.article_tldr %}
+                    <p class="text-body">{{ story.sentiment.article_tldr }}</p>
+                {% elif story.sentiment and story.sentiment.article %}
+                    <p class="text-body">{{ story.sentiment.article[:250] }}</p>
+                {% endif %}
+
             </div>
         </div>
         {% endfor %}
