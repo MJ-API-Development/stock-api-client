@@ -89,10 +89,10 @@
         {% for story in stories[:5] %}
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"> {{ story.title }}</h3>
+                <h2 class="card-title"> {{ story.title }}</h2>
             </div>
             <div class="card-body">
-                <h2>Published By : {{ story.publisher }}</h2>
+                <h3 class="card-title">Published By : {{ story.publisher }}</h3>
 {#                <p>Date Published: {{ story.datetime_published }}</p>#}
                 <p>Related Tickers: {{ story.related_tickers|join(', ') }}</p>
                 <a href="{{ story.link }}" target="_blank" rel="nofollow">
@@ -104,14 +104,13 @@
                         title="Read Article : {{ story.title }}"
                     >
                 </a>
-
+            </div>
+            <div class="card-footer">
                 {% if story.sentiment and story.sentiment.article_tldr %}
-                    <p>{{ story.sentiment.article_tldr }}</p>
+                    <p class="text-body">{{ story.sentiment.article_tldr }}</p>
                 {% elif story.sentiment and story.sentiment.article %}
-                    <p class="font-weight-bold text-info">{{ story.sentiment.article[:250] }}</p>
+                    <p class="text-body">{{ story.sentiment.article[:250] }}</p>
                 {% endif %}
-
-                {# TODO - Consider adding a summary of the article here #}
             </div>
         </div>
         {% endfor %}
