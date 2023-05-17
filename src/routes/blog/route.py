@@ -1,6 +1,9 @@
 import os
-import pprint
+
 import random
+
+import re
+import unicodedata
 
 import markdown
 import requests
@@ -24,6 +27,7 @@ blog_logger = init_logger('blog_logger')
 CACHE_TIMEOUT = 60 * 60 * 3
 
 blog_requests_session = requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT)
+stories = dict()
 
 
 @github_blog_route.route('/blog', methods={"GET"})
@@ -72,8 +76,10 @@ def load_top_stories(user_data: dict):
         # Use a uuid to identify each story and avoid duplicates
         uuid = story.get('uuid')
         if uuid not in uuids:
+            _slug = slugify(story.get('title'))
             new_story = {
                 'uuid': uuid,
+                'slug': _slug,
                 'title': story.get('title', '').title(),
                 'publisher': story.get('publisher', '').title(),
                 'datetime_published': story.get('datetime_published'),
@@ -84,7 +90,7 @@ def load_top_stories(user_data: dict):
             }
             created_stories.append(new_story)
             uuids.add(uuid)
-
+            stories[_slug] = uuid
     # created_stories.sort(key=lambda _story: _story['datetime_published'])
 
     context = dict(stories=created_stories,
@@ -120,7 +126,7 @@ def financial_news(user_data: dict, country: str):
                         so you never miss a beat. 
                         <p>Keep reading for the latest top stock news from our API.</p>
                         
-                        <p><strong><a href="https://eod-stock-api.site/#subscription_plans"> If you want to <strong>Integrate our Financial News API</strong> into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>
+                        <p><strong><a href="https://eod-stock-api.site/plan-descriptions/basic"> If you want to <strong>Integrate our Financial News API</strong> into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>
                     </div>
                     </div>         
                     """
@@ -153,9 +159,10 @@ def financial_news(user_data: dict, country: str):
         # Use a uuid to identify each story and avoid duplicates
         uuid = story.get('uuid')
         if uuid not in uuids:
-
+            _slug = slugify(story.get('title'))
             new_story = {
                 'uuid': uuid,
+                'slug': _slug,
                 'title': story.get('title', '').title(),
                 'publisher': story.get('publisher', '').title(),
                 'datetime_published': story.get('datetime_published'),
@@ -164,9 +171,10 @@ def financial_news(user_data: dict, country: str):
                 'sentiment': story.get('sentiment', {}),
                 'thumbnail_url': good_image_url,
             }
-            pprint.pprint(new_story)
+
             created_stories.append(new_story)
             uuids.add(uuid)
+            stories[_slug] = uuid
 
     # created_stories.sort(key=lambda _story: _story['datetime_published'])
 
@@ -179,16 +187,21 @@ def financial_news(user_data: dict, country: str):
     return render_template('blog/top_stories.html', **context)
 
 
-@github_blog_route.route('/blog/financial-news/article/<path:title>', methods=['GET'])
+@github_blog_route.route('/blog/financial-news/article/<path:slug>', methods=['GET'])
 @user_details
-def financial_news_article(user_data: dict, title: str):
+def financial_news_article(user_data: dict, slug: str):
     """
+    **financial_news_article**
 
     :param user_data:
-    :param title:
+    :param slug:
     :return:
     """
-    pass
+    uuid = stories[slug]
+    payload = get_story_with_uuid(uuid=uuid)
+    story = payload.get('payload')
+    context = dict(story=story)
+    return render_template("/blog/article.html", **context)
 
 
 # noinspection PyUnusedLocal
@@ -326,6 +339,30 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     return response_data.get('payload', [])
 
 
+def get_story_with_uuid(uuid: str):
+    url = f'https://gateway.eod-stock-api.site/api/v1/news/article/{uuid}'
+    headers = {'Content-Type': 'application/json'}
+    params = {'api_key': config_instance().EOD_STOCK_API_KEY}
+
+    with requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT) as session:
+        try:
+            blog_logger.info(f"get financial searching article with uuid : {uuid}")
+            response = session.get(url, headers=headers, params=params)
+            response.raise_for_status()
+        except requests.exceptions.ConnectionError:
+            return []
+        except requests.exceptions.Timeout:
+            return []
+        except requests.exceptions.HTTPError:
+            return []
+
+    if response.headers['Content-Type'] != 'application/json':
+        return []
+
+    response_data: dict[str, str | dict] = response.json()
+    return response_data
+
+
 @cached
 def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
     # Access the resolutions of the thumbnail image
@@ -342,3 +379,20 @@ def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
         highest_resolution_url = highest_resolution['url']
         return highest_resolution_url
     return None
+
+
+def slugify(title):
+    # Convert the title to lowercase
+    slug = title.lower()
+
+    # Remove non-alphanumeric characters and replace them with dashes
+    slug = re.sub(r'[^a-z0-9]+', '-', slug)
+
+    # Remove leading and trailing dashes
+    slug = slug.strip('-')
+
+    # Normalize the slug to remove any diacritical marks or special characters
+    slug = unicodedata.normalize('NFKD', slug).encode('ascii', 'ignore').decode('utf-8')
+
+    # Return the final slug
+    return slug

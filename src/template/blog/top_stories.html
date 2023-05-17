@@ -95,7 +95,7 @@
                 <h3 class="text text-info">Published By : {{ story.publisher }}</h3>
 {#                <p>Date Published: {{ story.datetime_published }}</p>#}
                 <p class="text text-info">Related Tickers: {{ story.related_tickers|join(', ') }}</p>
-                <a href="{{ story.link }}" target="_blank" rel="nofollow">
+                <a href="{{ url_for('blog.financial_news_article', slug='{{story.slug}}') }}">
                     <img
                         src="{{ story.thumbnail_url }}"
                         alt="{{ story.title }} thumbnail"
@@ -124,7 +124,7 @@
             <div class="card-body">
                 <h3 class="text text-info">Published By : {{ story.publisher }}</h3>
                 <p class="text text-info">Related Tickers: {{ story.related_tickers|join(', ') }}</p>
-                <a href="{{ story.link }}" target="_blank" rel="nofollow">
+                <a href="{{ url_for('blog.financial_news_article', slug='{{story.slug}}') }}">
                     <img
                         src="{{ story.thumbnail_url }}"
                         alt="{{ story.title }} thumbnail"
