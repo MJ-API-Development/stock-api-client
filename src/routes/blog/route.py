@@ -1,4 +1,5 @@
 import os
+import pprint
 
 import random
 
@@ -199,8 +200,9 @@ def financial_news_article(user_data: dict, slug: str):
     """
     uuid = stories[slug]
     payload = get_story_with_uuid(uuid=uuid)
-    story = payload.get('payload')
-    context = dict(story=story)
+    pprint.pprint(payload)
+
+    context = dict(story=payload)
     return render_template("/blog/article.html", **context)
 
 
