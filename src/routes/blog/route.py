@@ -199,9 +199,9 @@ def financial_news_article(user_data: dict, slug: str):
     :return:
     """
     uuid = stories[slug]
+    blog_logger.info(f'Article UUID: {uuid}')
     payload = get_story_with_uuid(uuid=uuid)
-    pprint.pprint(payload)
-
+    blog_logger.info(payload)
     context = dict(story=payload)
     return render_template("/blog/article.html", **context)
 
