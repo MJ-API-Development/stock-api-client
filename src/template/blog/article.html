@@ -56,12 +56,12 @@
             </div>
             <div class="card-footer">
                 {% if story.sentiment and story.sentiment.article_tldr %}
-                    <p class="text-body">{{ story.sentiment.article_tldr }}</p>
+                    <p class="text-body">{{ story.sentiment.article_tldr | safe}}</p>
                 {% endif %}
             </div>
             <div class="card-footer">
-                {% if story.sentiment and story.sentiment.article %}
-                    <p class="text-body">{{ story.sentiment.article}}</p>
+                {% if html_body  %}
+                    <p class="text-body">{{ html_body | safe}}</p>
                 {% endif %}
             </div>
 

@@ -200,10 +200,36 @@ def financial_news_article(user_data: dict, slug: str):
     """
     uuid = stories[slug]
     blog_logger.info(f'Article UUID: {uuid}')
-    payload = get_story_with_uuid(uuid=uuid)
+    response = get_story_with_uuid(uuid=uuid)
+    payload = response.get('payload', {})
     blog_logger.info(payload)
-    context = dict(story=payload)
+    DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
+    good_image_url = select_resolution(payload.get('thumbnail', [])) or DEFAULT_IMAGE_URL
+    new_story = {
+        'uuid': uuid,
+        'title': payload.get('title', '').title(),
+        'publisher': payload.get('publisher', '').title(),
+        'datetime_published': payload.get('datetime_published'),
+        'link': payload.get('link', ''),
+        'related_tickers': payload.get('tickers', []),
+        'sentiment': payload.get('sentiment', {}),
+        'thumbnail_url': good_image_url,
+    }
+    body_text =  payload.get('sentiment', {}).get('article')
+    if body_text:
+        html_body = format_to_html(text=body_text)
+    context = dict(story=new_story, html_body=html_body)
     return render_template("/blog/article.html", **context)
+
+
+def format_to_html(text):
+    paragraphs = text.split(". ")
+
+    html = ""
+    for paragraph in paragraphs:
+        html += f'<p class="text-body">{paragraph}</p>'
+
+    return html
 
 
 # noinspection PyUnusedLocal
