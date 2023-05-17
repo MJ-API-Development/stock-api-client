@@ -350,6 +350,7 @@ def get_story_with_uuid(uuid: str):
         try:
             blog_logger.info(f"get financial searching article with uuid : {uuid}")
             response = session.get(url, headers=headers, params=params)
+            blog_logger.info("response : {}".format(response.json()))
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
             return []
