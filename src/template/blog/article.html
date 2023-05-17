@@ -60,7 +60,7 @@
                 {% emdif %}
             </div>
             <div class="card-footer">
-                {% elif story.sentiment and story.sentiment.article %}
+                {% if story.sentiment and story.sentiment.article %}
                     <p class="text-body">{{ story.sentiment.article}}</p>
                 {% endif %}
             </div>
