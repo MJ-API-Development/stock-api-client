@@ -215,7 +215,8 @@ def financial_news_article(user_data: dict, slug: str):
         'sentiment': payload.get('sentiment', {}),
         'thumbnail_url': good_image_url,
     }
-    body_text =  payload.get('sentiment', {}).get('article')
+    body_text = payload.get('sentiment', {}).get('article')
+    html_body = None
     if body_text:
         html_body = format_to_html(text=body_text)
     context = dict(story=new_story, html_body=html_body)
