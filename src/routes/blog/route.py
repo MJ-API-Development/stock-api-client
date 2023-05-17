@@ -55,9 +55,7 @@ def load_top_stories(user_data: dict):
     """
 
     DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
-
     meme_tickers = [symbol for symbol in get_meme_tickers().keys()]
-
     # If the form has been submitted, get the selected ticker symbol
     selected_ticker = request.args.get('ticker', False)
 
@@ -87,7 +85,7 @@ def load_top_stories(user_data: dict):
             created_stories.append(new_story)
             uuids.add(uuid)
 
-    created_stories.sort(key=lambda _story: _story['datetime_published'])
+    # created_stories.sort(key=lambda _story: _story['datetime_published'])
 
     context = dict(stories=created_stories,
                    tickers=get_meme_tickers_us(),
@@ -97,7 +95,7 @@ def load_top_stories(user_data: dict):
 
 
 # noinspection DuplicatedCode
-@github_blog_route.route('/blog/financial-news/<country>', methods=['GET', 'POST'])
+@github_blog_route.route('/blog/financial-news/<path:country>', methods=['GET', 'POST'])
 @user_details
 def financial_news(user_data: dict, country: str):
     """
@@ -106,19 +104,25 @@ def financial_news(user_data: dict, country: str):
     DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
 
     _introduction = """
-                        <h2>Introducing our Financial News API</h2> 
-                        <p><strong>Your go-to source for the latest news on the top stocks from around the world.</strong></p> 
+                <div class="card">
+                <div class="card-header">
+                        <h2 class="card-title">Introducing our Financial News API</h2>
+                </div>
+                 <div class="card-body">
+                        <p class="text text-body"><strong>Your go-to source for the latest news on the top stocks from around the world.</strong></p> 
 
-                        <p>Whether you're interested in <strong>US Stocks News, Canadian Stock News, Brazil or beyond,</strong> we've got you covered.</p> 
+                        <p class="text text-body">Whether you're interested in <strong>US Stocks News, Canadian Stock News, Brazil or beyond,</strong> we've got you covered.</p> 
 
-                        <p>With our extensive coverage of the most popular stocks in each country,</p> 
+                        <p class="text text-body">With our extensive coverage of the most popular stocks in each country,</p> 
                         you can stay up-to-date on the latest market trends and make informed investment decisions. 
 
-                        <p><strong>Our API delivers Breaking News,</strong> <strong>in-depth analysis,</strong> and <strong>real-time market data,</strong> 
+                        <p class="text text-body"><strong>Our API delivers Breaking News,</strong> <strong>in-depth analysis,</strong> and <strong>real-time market data,</strong> 
                         so you never miss a beat. 
                         <p>Keep reading for the latest top stock news from our API.</p>
                         
-                        <p><strong><a href="https://eod-stock-api.site/#subscription_plans"> If you want to Intergrate our Financial News API into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>         
+                        <p><strong><a href="https://eod-stock-api.site/#subscription_plans"> If you want to <strong>Integrate our Financial News API</strong> into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>
+                    </div>
+                    </div>         
                     """
 
     if country.casefold() == "us":
@@ -164,7 +168,7 @@ def financial_news(user_data: dict, country: str):
             created_stories.append(new_story)
             uuids.add(uuid)
 
-    created_stories.sort(key=lambda _story: _story['datetime_published'])
+    # created_stories.sort(key=lambda _story: _story['datetime_published'])
 
     context = dict(stories=created_stories,
                    tickers=country_tickers,
@@ -173,6 +177,18 @@ def financial_news(user_data: dict, country: str):
                    selected_ticker=selected_ticker, user_data=user_data)
 
     return render_template('blog/top_stories.html', **context)
+
+
+@github_blog_route.route('/blog/financial-news/article/<path:title>', methods=['GET'])
+@user_details
+def financial_news_article(user_data: dict, title: str):
+    """
+
+    :param user_data:
+    :param title:
+    :return:
+    """
+    pass
 
 
 # noinspection PyUnusedLocal
@@ -223,7 +239,7 @@ def sitemap():
     return sitemap_content
 
 
-@github_blog_route.route('/blog/financial-news/<country>/sitemap.xml', methods=['GET'])
+@github_blog_route.route('/blog/financial-news/<path:country>/sitemap.xml', methods=['GET'])
 def financial_news_sitemap(country: str):
     """
     Creates a sitemap for financial news articles.
