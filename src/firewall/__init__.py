@@ -138,19 +138,16 @@ class Firewall:
         """
         # Check request for malicious patterns
         headers: dict[str, str] = request.headers
-        body = request.data
 
-        if 'Content-Length' in headers and int(headers['Content-Length']) > self._max_payload_size:
+        if 'Content-Length' in headers and (int(headers['Content-Length']) > self._max_payload_size):
             # Request payload is too large,
             self._logger.info("payload too long")
             abort(401, 'Payload is too big, unfortunately we cannot process this request')
 
-        if body:
+        if body := request.data:
             # Set default regex pattern for string-like request bodies
             #  StackOverflow attacks
-            payload_regex = "^[A-Za-z0-9+/]{1024,}={0,2}$"
-            _body = body.decode('utf-8')
-            if body_contains_malicious_patterns(_input=_body):
+            if body_contains_malicious_patterns(_input=body.decode('utf-8')):
                 self._logger.info("Payload regex failure")
                 abort(401, 'Payload is suspicious')
 
@@ -167,7 +164,6 @@ class Firewall:
         """
         if client_secret_token := request.headers.get('X-CLIENT-SECRET-TOKEN') is None:
             abort(401, 'Request not Authenticated - Token missing')
-
         if expected_secret_token := config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN is None:
             abort(401, 'Request not Authenticated')
 
@@ -180,19 +176,18 @@ class Firewall:
         **get_client_ip**
             will return the actual client ip address of the client making the request
         """
-        ip = request.headers.get('cf-connecting-ip')
-        return ip.split(',')[0]
+        ip: str = request.headers.get('cf-connecting-ip')
+        return ip.split(',')[0] if ip is not None else None
 
     @staticmethod
-    def get_edge_server_ip(headers) -> str:
+    def get_edge_server_ip(headers) -> str | None:
         """
         **get_edge_server_ip**
             obtains cloudflare edge server the request is being routed through
         """
-        return headers.get("x-real-ip")
+        return headers.get("x-real-ip", None)
 
-    @staticmethod
-    def get_ip_ranges() -> tuple[list[str], list[str]]:
+    def get_ip_ranges(self) -> tuple[list[str], list[str]]:
         """
         **get_ip_ranges**
             obtains a list of ip addresses from cloudflare edge servers
@@ -202,13 +197,14 @@ class Firewall:
         _headers = {'Accept': 'application/json', 'X-Auth-Email': EMAIL}
         try:
             with requests.Session() as send_request:
-                response = send_request.get(url=_uri, headers=_headers)
+                response: requests.Response = send_request.get(url=_uri, headers=_headers)
+                response.raise_for_status()
                 response_data: dict[str, dict[str, str] | list[str]] = response.json()
                 ipv4_cidrs = response_data.get('result', {}).get('ipv4_cidrs', DEFAULT_IPV4)
                 ipv6_cidrs = response_data.get('result', {}).get('ipv6_cidrs', [])
                 return ipv4_cidrs, ipv6_cidrs
-
         except CloudFlareAPIError:
+            self._logger.info("Cloud Flare API Error")
             return [], []
 
     @staticmethod
@@ -231,8 +227,12 @@ class Firewall:
         if bypass_content_security_policy():
             return response
 
-        response.headers[
-            'Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
+        csp = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com " \
+              "https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com " \
+              "https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' " \
+              "https://www.paypalobjects.com;"
+
+        response.headers['Content-Security-Policy'] = csp
 
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
