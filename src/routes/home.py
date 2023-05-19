@@ -36,21 +36,23 @@ def get_plan_models_dicts() -> dict[str, dict[str, str | float]]:
 @user_details
 def home(user_data: dict[str, str]):
     plans_models_dict = get_plan_models_dicts()
-    context = dict(user_data=user_data, total_exchanges=75, BASE_URL="https://eod-stock-api.site", plans=plans_models_dict)
+    context: dict[str, str] = dict(user_data=user_data, total_exchanges=75, BASE_URL="https://eod-stock-api.site",
+                                   plans=plans_models_dict)
+
     return render_template('index.html', **context)
 
 
 @home_route.route('/status')
 @user_details
 def status(user_data: dict[str, str]):
-    context = dict(user_data=user_data, BASE_URL="eod-stock-api.site")
+    context: dict[str, str] = dict(user_data=user_data, BASE_URL="eod-stock-api.site")
     return render_template('dashboard/status.html', **context)
 
 
 @home_route.route('/pricing')
 @user_details
 def pricing(user_data: dict[str, str]):
-    context = dict(user_data=user_data, BASE_URL="eod-stock-api.site")
+    context: dict[str, str] = dict(user_data=user_data, BASE_URL="eod-stock-api.site")
     return render_template('index.html', **context)
 
 
@@ -67,7 +69,7 @@ def _robots():
 @home_route.route('/terms')
 @user_details
 def terms_of_use(user_data: dict[str, str]):
-    context = dict(user_data=user_data, BASE_URL="eod-stock-api.site")
+    context: dict[str, str] = dict(user_data=user_data, BASE_URL="eod-stock-api.site")
     return render_template('terms.html', **context)
 
 

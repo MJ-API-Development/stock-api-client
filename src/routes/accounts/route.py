@@ -1,7 +1,7 @@
 import hmac
 import requests
 
-from flask import request, render_template, Blueprint, abort, jsonify
+from flask import request, render_template, Blueprint, abort, jsonify, make_response
 
 from src.config import config_instance
 from src.databases.models.schemas.account import AccountModel, AccountResponseSchema
@@ -39,13 +39,10 @@ def get_account(user_data: dict[str, str], uuid: str):
         _header: dict[str, str] = get_headers(user_data=user_data)
         with requests.Session() as request_session:
             try:
-                response = request_session.get(url=_url, json=user_data, headers=_header)
+                response: requests.Response = request_session.get(url=_url, json=user_data, headers=_header)
                 response.raise_for_status()
-            except requests.exceptions.ConnectionError:
+            except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
                 raise UnresponsiveServer()
-            except requests.exceptions.Timeout:
-                raise UnresponsiveServer()
-            # TODO try catching HTTP Errors
 
         if response.status_code not in [200, 401]:
             raise UnresponsiveServer()
@@ -55,10 +52,10 @@ def get_account(user_data: dict[str, str], uuid: str):
 
         if response.status_code == 200:
             response_data = response.json()
-            user_session.update({f"{uuid}": response_data.get('payload', {})})
+            user_session[uuid] = response_data.get('payload', {})
             return jsonify(response_data)
 
-        user_session.update({f"{uuid}": {}})
+        user_session[uuid] = {}
         message: str = "Sorry cannot load account"
         new_response = dict(status=False, message=message, payload={})
         return jsonify(new_response)
@@ -81,11 +78,9 @@ def update_account(user_data: dict[str, str], uuid: str):
     _url = f"{_base}/_admin/user"
     with requests.Session() as request_session:
         try:
-            response = request_session.put(url=_url, json=user_data, headers=_headers)
+            response: requests.Response = request_session.put(url=_url, json=user_data, headers=_headers)
             response.raise_for_status()
-        except requests.exceptions.ConnectionError:
-            raise UnresponsiveServer()
-        except requests.exceptions.Timeout:
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             raise UnresponsiveServer()
 
     if response.status_code not in [200, 201, 401]:
@@ -96,12 +91,11 @@ def update_account(user_data: dict[str, str], uuid: str):
 
     if response.status_code == 201:
         response_data = AccountResponseSchema(**response.json())
-        user_session.update({f"{uuid}": response_data.dict().get('payload', {})})
+        user_session[uuid] = response_data.dict().get('payload', {})
 
         return jsonify(response_data.dict())
 
-    user_session.update({f"{uuid}": {}})
-
+    user_session[uuid] = {}
     message: str = "Unable to update your account"
     new_response = dict(status=False, message=message, payload={})
 
