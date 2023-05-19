@@ -28,7 +28,7 @@ blog_logger = init_logger('blog_logger')
 CACHE_TIMEOUT = 60 * 60 * 3
 
 blog_requests_session = requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT)
-stories = dict()
+stories_slug_uid_pair = dict()
 
 
 @github_blog_route.route('/blog', methods={"GET"})
@@ -91,7 +91,7 @@ def load_top_stories(user_data: dict):
             }
             created_stories.append(new_story)
             uuids.add(uuid)
-            stories[_slug] = uuid
+            stories_slug_uid_pair[_slug] = uuid
     # created_stories.sort(key=lambda _story: _story['datetime_published'])
 
     context = dict(stories=created_stories,
@@ -175,7 +175,7 @@ def financial_news(user_data: dict, country: str):
 
             created_stories.append(new_story)
             uuids.add(uuid)
-            stories[_slug] = uuid
+            stories_slug_uid_pair[_slug] = uuid
 
     # created_stories.sort(key=lambda _story: _story['datetime_published'])
 
@@ -198,7 +198,7 @@ def financial_news_article(user_data: dict, slug: str):
     :param slug:
     :return:
     """
-    uuid = stories[slug]
+    uuid = stories_slug_uid_pair[slug]
     blog_logger.info(f'Article UUID: {uuid}')
     response = get_story_with_uuid(uuid=uuid)
     payload = response.get('payload', {})
@@ -220,17 +220,13 @@ def financial_news_article(user_data: dict, slug: str):
     if body_text:
         html_body = format_to_html(text=body_text)
     context = dict(story=new_story, html_body=html_body)
+    # noinspection PyUnresolvedReferences
     return render_template("/blog/article.html", **context)
 
 
-def format_to_html(text):
-    paragraphs = text.split(". ")
-
-    html = ""
-    for paragraph in paragraphs:
-        html += f'<p class="text-body">{paragraph}</p>'
-
-    return html
+def format_to_html(text: str) -> str:
+    """takes text and convert the text html formatting it with paragraphs"""
+    return ["".join(f'<p class="text-body">{paragraph}</p>') for paragraph in text.split(". ")][0]
 
 
 # noinspection PyUnusedLocal
@@ -411,18 +407,12 @@ def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
     return None
 
 
-def slugify(title):
-    # Convert the title to lowercase
+def slugify(title: str) -> str:
+    """create a slug from title"""
     slug = title.lower()
-
     # Remove non-alphanumeric characters and replace them with dashes
     slug = re.sub(r'[^a-z0-9]+', '-', slug)
-
     # Remove leading and trailing dashes
     slug = slug.strip('-')
-
     # Normalize the slug to remove any diacritical marks or special characters
-    slug = unicodedata.normalize('NFKD', slug).encode('ascii', 'ignore').decode('utf-8')
-
-    # Return the final slug
-    return slug
+    return unicodedata.normalize('NFKD', slug).encode('ascii', 'ignore').decode('utf-8')
