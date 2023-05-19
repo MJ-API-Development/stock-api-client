@@ -31,6 +31,11 @@ blog_requests_session = requests_cache.CachedSession(cache_name='blog_requests_c
 stories_slug_uid_pair = dict()
 
 
+def format_to_html(text: str) -> str:
+    """takes text and convert the text html formatting it with paragraphs"""
+    return ["".join(f'<p class="text-body">{paragraph}</p>') for paragraph in text.split(". ")][0]
+
+
 @github_blog_route.route('/blog', methods={"GET"})
 @user_details
 @cached
@@ -136,7 +141,6 @@ def financial_news(user_data: dict, country: str):
         country_tickers = get_meme_tickers_us()
     elif country.casefold() == "canada":
         country_tickers = get_meme_tickers_canada()
-
     elif country.casefold() == "brazil":
         country_tickers = get_meme_tickers_brazil()
     else:
@@ -198,13 +202,17 @@ def financial_news_article(user_data: dict, slug: str):
     :param slug:
     :return:
     """
-    uuid = stories_slug_uid_pair[slug]
-    blog_logger.info(f'Article UUID: {uuid}')
+    try:
+        uuid = stories_slug_uid_pair[slug]
+    except KeyError:
+        # Article not found
+        return render_template('/blog/404.html')
+
     response = get_story_with_uuid(uuid=uuid)
     payload = response.get('payload', {})
-    blog_logger.info(payload)
     DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
     good_image_url = select_resolution(payload.get('thumbnail', [])) or DEFAULT_IMAGE_URL
+
     new_story = {
         'uuid': uuid,
         'title': payload.get('title', '').title(),
@@ -215,18 +223,28 @@ def financial_news_article(user_data: dict, slug: str):
         'sentiment': payload.get('sentiment', {}),
         'thumbnail_url': good_image_url,
     }
-    body_text = payload.get('sentiment', {}).get('article')
     html_body = None
-    if body_text:
+    # will retrieve body_text and test if the text exist
+    if body_text := payload.get('sentiment', {}).get('article'):
         html_body = format_to_html(text=body_text)
     context = dict(story=new_story, html_body=html_body)
     # noinspection PyUnresolvedReferences
     return render_template("/blog/article.html", **context)
 
 
-def format_to_html(text: str) -> str:
-    """takes text and convert the text html formatting it with paragraphs"""
-    return ["".join(f'<p class="text-body">{paragraph}</p>') for paragraph in text.split(". ")][0]
+def create_blog_url():
+    """
+    **create_blog_url**
+        will create an internal blog URL
+    :return:
+    """
+    server_url = config_instance().SERVER_NAME
+    scheme = "http://" if "local" in server_url else "https://"
+    _path = request.path
+    if _path.endswith(".html"):
+        _path = _path.replace(".html", ".md")
+    _url = f"{scheme}{request.host}{_path}"
+    return _url
 
 
 # noinspection PyUnusedLocal
@@ -235,21 +253,13 @@ def format_to_html(text: str) -> str:
 @cached
 def blog_post(user_data: str, blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
-    server_url = config_instance().SERVER_NAME
-    scheme = "http://" if "local" in server_url else "https://"
-    _path = request.path
-    if _path.endswith(".html"):
-        _path = _path.replace(".html", ".md")
+    _url: str = create_blog_url()
 
-    _url = f"{scheme}{request.host}{_path}"
-
-    # get the content of the blog post
-    content = github_blog.get_blog_file(url=_url)
-    if content is None:
+    # get the content of the blog post and assign to content then test if its None
+    if content := github_blog.get_blog_file(url=_url) is None:
         return render_template('blog/404.html', message=_url), 404
+    # convert the markdown content into html
     html_content = markdown.markdown(content)
-    # process the content to replace any links to images and other resources with links to the static directory
-    # content = process_content(content)
 
     # render the content as HTML and return it
     context = dict(user_data=user_data, document=html_content)
