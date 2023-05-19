@@ -26,15 +26,17 @@ def inject_specifications() -> dict[str, str]:
 @cached
 def documentations_routes(params: dict[str, str]) -> dict:
     """
+    **documentations_routes**
         will return a map of paths
     :param params:
     :return:
     """
     user_data = params.get('user_data')
-    path = params.get('path')
-    context = dict(user_data=user_data, BASE_URL="https://client.eod-stock-api.site")
+    path = params.get('path', "docs")
+    context: dict[str, str] = dict(user_data=user_data, BASE_URL="https://eod-stock-api.site")
     _index = render_template('docs/docs.html', **context)
     _routes = {
+        'docs': render_template('docs/docs.html', **context),
         'eod': render_template('docs/eod.html', **context),
         'exchanges': render_template('docs/exchanges.html', **context),
         'fundamentals': render_template('docs/fundamentals.html', **context),
@@ -55,9 +57,10 @@ def redoc():
     :return:
     """
     # Replace "https://gateway.eod-stock-api.site" with the URL of your subdomain
-    url = "https://gateway.eod-stock-api.site/redoc"
+    url: str = "https://gateway.eod-stock-api.site/redoc"
     with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
-        response = session.get(url)
+        response: requests.Response = session.get(url)
+        response.raise_for_status()
         content = response.content.decode('utf-8')
         content = content.replace("https://gateway.eod-stock-api.site/static/redoc.standalone.js", "/redoc.standalone.js")
     return content
@@ -81,9 +84,10 @@ def openapi_json():
      :return:
     """
     # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
-    url = "https://gateway.eod-stock-api.site/open-api"
+    url: str = "https://gateway.eod-stock-api.site/open-api"
     with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
-        openapi_data = session.get(url)
+        openapi_data: requests.Response = session.get(url)
+        openapi_data.raise_for_status()
         response = make_response(openapi_data.json(), 200)
     response.headers["Content-Type"] = "application/json"
     return response
@@ -96,11 +100,11 @@ def openapi_html(user_data: dict[str, str]):
     """
     **openapi_html**
         display openapi json documentation in an html document
-
     :return:
     """
-    # Replace "http://gateway.eod-stock-api.site" with the URL of your subdomain
-    context = dict(**inject_specifications(), user_data=user_data, BASE_URL="https://client.eod-stock-api.site")
+    context: dict[str, str] = dict(**inject_specifications(), user_data=user_data,
+                                   BASE_URL="https://eod-stock-api.site")
+
     return render_template('docs/docs-openapi.html', **context)
 
 
@@ -113,12 +117,14 @@ def github_docs(user_data: dict[str, str]):
             github documentations this endpoint fetches the documentation directly from github
     :return:
     """
-    url = "https://raw.githubusercontent.com/MJ-API-Development/Intelligent-EOD-Stock-Financial-News-API/main/README.md"
+    url: str = "https://raw.githubusercontent.com/MJ-API-Development/Intelligent-EOD-Stock-Financial-News-API/main/README.md"
     with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
-        response = session.get(url)
+        response: requests.Response = session.get(url)
         html_content = markdown.markdown(response.content.decode('utf-8'))
 
-    context = dict(user_data=user_data, document=html_content, BASE_URL="https://client.eod-stock-api.site")
+    context: dict[str, str] = dict(user_data=user_data, document=html_content,
+                                   BASE_URL="https://eod-stock-api.site")
+
     return render_template('docs/github-docs.html', **context)
 
 
@@ -131,7 +137,7 @@ def sdk_docs(user_data: dict[str, str]):
 
         documentation python and node sdk
     """
-    context = dict(user_data=user_data, BASE_URL="https://client.eod-stock-api.site")
+    context = dict(user_data=user_data, BASE_URL="https://eod-stock-api.site")
     return render_template('docs/sdk.html', **context)
 
 
@@ -146,13 +152,15 @@ def python_sdk_docs(user_data: dict[str, str], path: str):
         document from GitHub
     """
     if path.casefold() == "python":
-        url = 'https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/README.md'
+        url: str = 'https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/README.md'
 
         with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
-            response = session.get(url)
-            html_content = markdown.markdown(response.content.decode('utf-8'))
+            response: requests.Response = session.get(url)
+            response.raise_for_status()
+            html_content: str = markdown.markdown(response.content.decode('utf-8'))
 
-        context = dict(user_data=user_data, github_documentation=html_content, BASE_URL="https://client.eod-stock-api.site")
+        context: dict[str, str] = dict(user_data=user_data, github_documentation=html_content,
+                                       BASE_URL="https://eod-stock-api.site")
         return render_template('docs/python-docs.html', **context)
 
     return render_template('blog/404.html')
@@ -170,10 +178,11 @@ def github_links(user_data: dict[str, str], path: str):
     :param path:
     :return:
     """
-    url = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
+    url: str = f"https://raw.githubusercontent.com/MJ-API-Development/stock-api-pythonsdk/main/src/docs/{path.split('/')[-1]}"
     with requests_cache.CachedSession(cache_name='docs_requests_cache', expire_after=CACHE_TIMEOUT) as session:
         try:
-            response = session.get(url)
+            response: requests.Response = session.get(url)
+            response.raise_for_status()
         except requests.ConnectionError:
             return render_template("docs/error/docs.html")
 

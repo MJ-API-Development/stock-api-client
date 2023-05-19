@@ -160,26 +160,26 @@ def plan_subscription(user_data: dict[str, str], plan_id: str) -> flask.Response
     :return:
     """
     if user_data:
-        uuid = user_data.get('uuid')
+        uuid: str | None = user_data.get('uuid')
     else:
-        uuid = create_id()
+        uuid: str = create_id()
 
-    if request.method.casefold() == "get":
-        if not plan_id:
-            return redirect('/')
+    if not plan_id:
+        return redirect('/')
 
+    if _paypal_settings := cache_get_paypal_settings('settings', None) is None:
+        _paypal_settings = get_paypal_settings(uuid=uuid)
+        paypal_settings_cache['settings'] = _paypal_settings
+
+    if _paypal_settings:
         plan: dict[str, str | int] = get_plan_details(plan_id)
-
-        _paypal_settings: dict[str, dict[str, str | int]] = cache_get_paypal_settings('settings', None)
-        if _paypal_settings is None:
-            _paypal_settings = get_paypal_settings(uuid=uuid)
-            paypal_settings_cache['settings'] = _paypal_settings
-
         context: dict[str, dict[str, str]] = dict(plan=plan.get("payload", {}),
                                                   user_data=user_data,
                                                   paypal_settings=_paypal_settings)
 
         return render_template('dashboard/plan_subscriptions.html', **context)
+
+    return redirect('/')
 
 
 # noinspection PyUnusedLocal
@@ -217,16 +217,19 @@ def subscribe(user_data: dict[str, str]) -> flask.Response:
 
     with requests.Session() as request_session:
         try:
-            response: requests.Response = request_session.post(endpoint, json=paypal_subscription.dict(), headers=_headers)
+            response: requests.Response = request_session.post(endpoint, json=paypal_subscription.dict(),
+                                                               headers=_headers)
             response.raise_for_status()
             json_data: dict[str, str | int] = response.json()
 
         except (RequestException, ConnectionError) as e:
-            raise UnresponsiveServer() from e
+            mes: str = 'Server failed to respond while creating subscription please try again later'
+            raise UnresponsiveServer(description=mes) from e
 
         except JSONDecodeError as e:
             plan_logger.exception("Error decoding paypal settings")
-            raise ServerInternalError() from e
+            mes: str = "Error Decoding Server response , please report this error or try again"
+            raise ServerInternalError(description=mes) from e
 
     if not verify_signature(response=response):
         abort(401)
@@ -238,35 +241,50 @@ def subscribe(user_data: dict[str, str]) -> flask.Response:
 @cached
 def plans_all() -> flask.Response:
     """
+    **plans_all**
         this endpoint will be called by the front page to get details
-        about the subscription plan
+        about the subscription plans
     :return:
     """
     return jsonify(get_all_plans())
 
 
 def select_plan_by_name(plans_models: list[PlanModels], plan_name: str) -> str:
-    for plan in plans_models:
-        if plan.plan_name.casefold() == plan_name.casefold():
-            return plan
-    return ''
+    """
+    **select_plan_by_name**
+        will select any matching plan by its plan name
+    """
+    plan = [plan for plan in plans_models if plan.plan_name.casefold() == plan_name.casefold()]
+    return plan[0] if any(plan) else ""
 
 
 @plan_routes.route('/plan-descriptions/<string:plan_name>', methods=['GET'])
 @user_details
 def plan_by_name(user_data: dict[str, str], plan_name: str):
+    """
+    **plan_by_name**
+        will list details of plans and their descriptions -
+        this is reachable by search engines
+    :param user_data:
+    :param plan_name:
+    :return:
+    """
+
+    if not plan_name:
+        redirect("/")
 
     _plans_models: dict[str, str | dict[str, str]] = get_all_plans()
     plans_models = [PlanModels.parse_obj(plan_dict) for plan_dict in _plans_models.get('payload')]
 
     plan: PlanModels = select_plan_by_name(plans_models=plans_models, plan_name=plan_name)
-
     uuid: str = user_data.get('uuid', create_id())
-
-    _paypal_settings: dict[str, dict[str, str | int]] = cache_get_paypal_settings('settings', None)
-    if _paypal_settings is None:
+    # obtains cached paypal settings assign to PayPal settings and test if None
+    if _paypal_settings := cache_get_paypal_settings('settings', None) is None:
         _paypal_settings = get_paypal_settings(uuid=uuid)
         paypal_settings_cache['settings'] = _paypal_settings
+
+    if _paypal_settings is None:
+        redirect("/")
 
     context: dict[str, dict[str, str]] = dict(plan=plan.dict(),
                                               user_data=user_data,

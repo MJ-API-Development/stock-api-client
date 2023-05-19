@@ -8,7 +8,6 @@ import requests
 import requests_cache
 from flask import render_template, request, send_from_directory, Blueprint, url_for, Response
 
-from src.cache import cached
 from src.config import config_instance
 from src.logger import init_logger
 from src.main import github_blog
@@ -224,7 +223,7 @@ def financial_news_article(user_data: dict, slug: str):
     # will retrieve body_text and test if the text exist
     if body_text := payload.get('sentiment', {}).get('article'):
         html_body = format_to_html(text=body_text)
-    context = dict(story=new_story, html_body=html_body)
+    context = dict(story=new_story, html_body=html_body, user_data=user_data)
     # noinspection PyUnresolvedReferences
     return render_template("/blog/article.html", **context)
 
@@ -247,7 +246,6 @@ def create_blog_url():
 # noinspection PyUnusedLocal
 @github_blog_route.route('/blog/<path:blog_path>', methods=["GET"])
 @user_details
-@cached
 def blog_post(user_data: str, blog_path: str):
     # convert the blog URL to the corresponding GitHub URL
     _url: str = create_blog_url()
@@ -265,7 +263,6 @@ def blog_post(user_data: str, blog_path: str):
 
 # route to serve static files (e.g., images) from the blog
 @github_blog_route.route('/blog/static/<path:file_path>')
-@cached
 def blog_static(file_path: str):
     """static files will only be images """
     # get the content of the file from GitHub

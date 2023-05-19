@@ -46,5 +46,3 @@ def regenerate_api_key(user_data: dict[str, str]):
         raise InvalidSignatureError("Unable to verify the identity of our remote server cannot continue - please inform admin")
 
     return jsonify(response_data)
-
-
