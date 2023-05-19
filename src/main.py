@@ -43,11 +43,11 @@ def create_app(config=config_instance()) -> Flask:
     with app.app_context():
         # Sets up sitemap
         sitemap.init_app(app=app)
-
+        #  Sets Up Cors
         cors.init_app(app=app)
         # Setting up Github Blog
         github_blog.update_blog()
-        # Sets Up Firewall
+        # Sets Up Firewall - increases Web Application Security
         firewall.init_app(app=app)
 
         from src.routes.home import home_route

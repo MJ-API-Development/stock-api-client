@@ -1,8 +1,8 @@
 import hmac
-import ipaddress
 import re
 
 import requests
+import ipaddress
 from CloudFlare import CloudFlare
 from CloudFlare.exceptions import CloudFlareAPIError
 from flask import Flask, request, abort, Response
@@ -12,10 +12,10 @@ from src.config.config import is_development
 from src.logger import init_logger
 from src.utils import camel_to_snake
 
-DEFAULT_IPV4 = ['173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22', '141.101.64.0/18',
-                '108.162.192.0/18', '190.93.240.0/20', '188.114.96.0/20', '197.234.240.0/22',
-                '198.41.128.0/17',
-                '162.158.0.0/15', '104.16.0.0/13', '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22']
+DEFAULT_IPV4 = [
+    '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22', '141.101.64.0/18', '108.162.192.0/18',
+    '190.93.240.0/20', '188.114.96.0/20', '197.234.240.0/22', '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
+    '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22']
 
 # Define dictionary of malicious patterns
 malicious_patterns = {
@@ -54,7 +54,7 @@ malicious_patterns = {
 }
 
 
-def contains_malicious_patterns(_input: str) -> bool:
+def body_contains_malicious_patterns(_input: str) -> bool:
     """
     **contains_malicious_patterns**
         will return true if the string matches any of the attack patterns
@@ -71,23 +71,24 @@ TOKEN: str = config_instance().CLOUDFLARE_SETTINGS.TOKEN
 
 class Firewall:
     """
+    **Firewall**
         used in conjunction with cloudflare to secure requests to this web application
         by using several methods including IP White listing
-
     """
+
     def __init__(self):
+        self._logger = init_logger(camel_to_snake(self.__class__.__name__))
         self.allowed_hosts = config_instance().HOST_ADDRESSES.split(",")
         self._max_payload_size: int = 8 * 256
 
         try:
             self.cloud_flare = CloudFlare(email=EMAIL, token=TOKEN)
-        except CloudFlareAPIError:
-            pass
+        except CloudFlareAPIError as e:
+            self._logger.error(str(e))
 
         self.ip_ranges = []
         self.bad_addresses = set()
         self.compiled_bad_patterns = [re.compile(pattern) for pattern in malicious_patterns.values()]
-        self._logger = init_logger(camel_to_snake(self.__class__.__name__))
 
     def init_app(self, app: Flask):
         # Setting Up Incoming Request Security Checks
@@ -149,12 +150,11 @@ class Firewall:
             #  StackOverflow attacks
             payload_regex = "^[A-Za-z0-9+/]{1024,}={0,2}$"
             _body = body.decode('utf-8')
-            if contains_malicious_patterns(_input=_body):
+            if body_contains_malicious_patterns(_input=_body):
                 self._logger.info("Payload regex failure")
                 abort(401, 'Payload is suspicious')
 
-        path = str(request.path)
-        if any((pattern.match(path) for pattern in self.compiled_bad_patterns)):
+        if any([pattern.match(str(request.path)) for pattern in self.compiled_bad_patterns]):
             self._logger.info("Attack patterns regex failure on path")
             abort(401, 'Request path is malformed')
 
@@ -233,7 +233,8 @@ class Firewall:
         if bypass_content_security_policy():
             return response
 
-        response.headers['Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
+        response.headers[
+            'Content-Security-Policy'] = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
 
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
