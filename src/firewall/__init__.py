@@ -165,12 +165,10 @@ class Firewall:
             check if cloud_flare signed the request with a secret token
         :return:
         """
-        client_secret_token = request.headers.get('X-CLIENT-SECRET-TOKEN')
-        if not client_secret_token:
+        if client_secret_token := request.headers.get('X-CLIENT-SECRET-TOKEN') is None:
             abort(401, 'Request not Authenticated - Token missing')
 
-        expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN
-        if not expected_secret_token:
+        if expected_secret_token := config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN is None:
             abort(401, 'Request not Authenticated')
 
         if not hmac.compare_digest(client_secret_token, expected_secret_token):
