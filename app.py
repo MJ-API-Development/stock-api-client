@@ -8,13 +8,10 @@ from src.main import create_app
 
 app: Flask = create_app(config=config_instance())
 
-app.config['MIME_TYPES'] = {
-    'js': 'application/javascript',
-    'css': 'text/css',
-    'woff': 'font/woff',
-    'woff2': 'font/woff2'
-}
-_origin = config_instance().SERVER_NAME
+app.config['MIME_TYPES'] = {'js': 'application/javascript', 'css': 'text/css', 'woff': 'font/woff',
+                            'woff2': 'font/woff2', 'html': 'text/html'}
+
+_origin: str = config_instance().SERVER_NAME
 CORS(app, resources={r"/*": {"origins": _origin}})
 
 
