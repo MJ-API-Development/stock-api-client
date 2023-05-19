@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, send_from_directory
 
+from src.cache import cached
 from src.databases.models.schemas.subscriptions import PlanModels
 from src.routes.authentication.routes import user_details
 from src.routes.subscriptions.plan import get_all_plans
@@ -8,12 +9,12 @@ home_route = Blueprint('home', __name__)
 
 
 def select_plan_by_name(plans_models: list[PlanModels], plan_name: str) -> str:
-    for plan in plans_models:
-        if plan.plan_name.casefold() == plan_name.casefold():
-            return plan
-    return ''
+    """**select_plan_by_name** selects plan by name"""
+    selected_plan = [plan for plan in plans_models if plan.plan_name.casefold() == plan_name.casefold()]
+    return selected_plan[0] if any(selected_plan) else ""
 
 
+@cached
 def get_plan_models_dicts() -> dict[str, dict[str, str | float]]:
     """
         **get_plan_models_dicts**
@@ -34,9 +35,8 @@ def get_plan_models_dicts() -> dict[str, dict[str, str | float]]:
 @home_route.route('/')
 @user_details
 def home(user_data: dict[str, str]):
-
     plans_models_dict = get_plan_models_dicts()
-    context = dict(user_data=user_data, total_exchanges=75, BASE_URL="eod-stock-api.site", plans=plans_models_dict)
+    context = dict(user_data=user_data, total_exchanges=75, BASE_URL="https://eod-stock-api.site", plans=plans_models_dict)
     return render_template('index.html', **context)
 
 
