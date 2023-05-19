@@ -1,8 +1,5 @@
 import os
-import pprint
-
 import random
-
 import re
 import unicodedata
 
@@ -18,8 +15,8 @@ from src.main import github_blog
 from src.routes.authentication.routes import user_details
 from src.routes.blog.github import submit_sitemap_to_google_search_console
 from src.routes.blog.sitemaps import create_financial_news_sitemap
-from src.routes.blog.tickers import get_meme_tickers, get_meme_tickers_brazil, get_meme_tickers_canada, \
-    get_meme_tickers_us
+from src.routes.blog.tickers import (get_meme_tickers, get_meme_tickers_brazil, get_meme_tickers_canada,
+                                     get_meme_tickers_us)
 
 github_blog_route = Blueprint('blog', __name__)
 blog_logger = init_logger('blog_logger')
@@ -38,7 +35,6 @@ def format_to_html(text: str) -> str:
 
 @github_blog_route.route('/blog', methods={"GET"})
 @user_details
-@cached
 def blog(user_data: dict[str, str]):
     # convert the blog URL to the corresponding GitHub URL
     server_url = config_instance().SERVER_NAME
@@ -61,6 +57,7 @@ def blog(user_data: dict[str, str]):
 @user_details
 def load_top_stories(user_data: dict):
     """
+    **load_top_stories**
     Using our financial news API to display a list of top stories
     """
 
@@ -205,7 +202,7 @@ def financial_news_article(user_data: dict, slug: str):
     try:
         uuid = stories_slug_uid_pair[slug]
     except KeyError:
-        # Article not found
+        # noinspection PyUnresolvedReferences
         return render_template('/blog/404.html')
 
     response = get_story_with_uuid(uuid=uuid)
@@ -259,7 +256,7 @@ def blog_post(user_data: str, blog_path: str):
     if content := github_blog.get_blog_file(url=_url) is None:
         return render_template('blog/404.html', message=_url), 404
     # convert the markdown content into html
-    html_content = markdown.markdown(content)
+    html_content: str = markdown.markdown(content)
 
     # render the content as HTML and return it
     context = dict(user_data=user_data, document=html_content)
@@ -269,10 +266,10 @@ def blog_post(user_data: str, blog_path: str):
 # route to serve static files (e.g., images) from the blog
 @github_blog_route.route('/blog/static/<path:file_path>')
 @cached
-def blog_static(file_path):
+def blog_static(file_path: str):
     """static files will only be images """
     # get the content of the file from GitHub
-    content = github_blog.get_blog_file(file_path)
+    content: str = github_blog.get_blog_file(file_path)
     # return the file content with appropriate headers
     return send_from_directory(os.path.dirname(file_path), content, as_attachment=False)
 
@@ -341,7 +338,6 @@ def create_sidebar():
     return 'OK', 200
 
 
-@cached
 def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     """
        ** get_financial_news_by_ticker**
@@ -353,7 +349,7 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
 
     with requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT) as session:
         try:
-            blog_logger.info(f"get financial searching related articles for symbol : {stock_code}")
+            blog_logger.info(f"Get financial searching related articles for symbol : {stock_code}")
             response = session.get(url, headers=headers, params=params)
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
@@ -374,20 +370,24 @@ def get_financial_news_by_ticker(stock_code: str) -> list[dict[str, str]]:
     return response_data.get('payload', [])
 
 
-def get_story_with_uuid(uuid: str):
-    url = f'https://gateway.eod-stock-api.site/api/v1/news/article/{uuid}'
-    headers = {'Content-Type': 'application/json'}
-    params = {'api_key': config_instance().EOD_STOCK_API_KEY}
+def get_story_with_uuid(uuid: str) -> dict[str, str | dict[str, str | int]]:
+    """
+    **get_story_with_uuid**
+        get story with a particular uuid
+    :param uuid:
+    :return:
+    """
+    url: str = f'https://gateway.eod-stock-api.site/api/v1/news/article/{uuid}'
+    headers: dict[str, str] = {'Content-Type': 'application/json'}
+    params: dict[str, str] = {'api_key': config_instance().EOD_STOCK_API_KEY}
 
     with requests_cache.CachedSession(cache_name='blog_requests_cache', expire_after=CACHE_TIMEOUT) as session:
         try:
             blog_logger.info(f"get financial searching article with uuid : {uuid}")
-            response = session.get(url, headers=headers, params=params)
+            response: requests.Response = session.get(url, headers=headers, params=params)
             blog_logger.info("response : {}".format(response.json()))
             response.raise_for_status()
-        except requests.exceptions.ConnectionError:
-            return []
-        except requests.exceptions.Timeout:
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             return []
         except requests.exceptions.HTTPError:
             return []
@@ -395,22 +395,18 @@ def get_story_with_uuid(uuid: str):
     if response.headers['Content-Type'] != 'application/json':
         return []
 
-    response_data: dict[str, str | dict] = response.json()
+    response_data: dict[str, str | dict[str, str | int]] = response.json()
     return response_data
 
 
-@cached
 def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
     # Access the resolutions of the thumbnail image
     thumbnail_resolutions = thumbnails['resolutions']
-
     # Sort the resolutions by height in descending order
     sorted_resolutions = sorted(thumbnail_resolutions, key=lambda x: x['height'], reverse=True)
-
     # Select the resolution with the highest height (which is the first element after sorting)
     if sorted_resolutions:
         highest_resolution = sorted_resolutions[0]
-
         # Access the URL of the image with the highest resolution
         highest_resolution_url = highest_resolution['url']
         return highest_resolution_url
