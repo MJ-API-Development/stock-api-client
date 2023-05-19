@@ -17,6 +17,24 @@ class AppLogger:
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
+    def read_logfile(self):
+        """
+        **read_logfile**
+            read the contents of the logfile and read the file one line at a time as a generator
+        :return:
+        """
+        pass
+
+    def get_logs(self, page_num: int = 1, page_size: int = 60):
+        """
+        **get_logs**
+            will obtain system logs through the front end
+        :param page_num
+        :param page_size
+        :return:
+        """
+        pass
+
 
 @functools.lru_cache
 def init_logger(name: str = "eod-stock-api"):

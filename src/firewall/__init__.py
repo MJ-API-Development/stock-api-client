@@ -75,14 +75,15 @@ class Firewall:
         by using several methods including IP White listing
 
     """
-
     def __init__(self):
         self.allowed_hosts = config_instance().HOST_ADDRESSES.split(",")
-        self._max_payload_size: int = 8 * 64
+        self._max_payload_size: int = 8 * 256
+
         try:
             self.cloud_flare = CloudFlare(email=EMAIL, token=TOKEN)
         except CloudFlareAPIError:
             pass
+
         self.ip_ranges = []
         self.bad_addresses = set()
         self.compiled_bad_patterns = [re.compile(pattern) for pattern in malicious_patterns.values()]
@@ -141,7 +142,7 @@ class Firewall:
         if 'Content-Length' in headers and int(headers['Content-Length']) > self._max_payload_size:
             # Request payload is too large,
             self._logger.info("payload too long")
-            abort(401, 'Payload is suspicious')
+            abort(401, 'Payload is too big, unfortunately we cannot process this request')
 
         if body:
             # Set default regex pattern for string-like request bodies
@@ -166,7 +167,7 @@ class Firewall:
         """
         client_secret_token = request.headers.get('X-CLIENT-SECRET-TOKEN')
         if not client_secret_token:
-            abort(401, 'Request not Authenticated - token missing')
+            abort(401, 'Request not Authenticated - Token missing')
 
         expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN
         if not expected_secret_token:
@@ -220,7 +221,7 @@ class Firewall:
         :param response:
         :return:
         """
-
+        response.headers['Content-Encoding'] = 'gzip'
         response.headers['X-XSS-Protection'] = '1; mode=block'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         session_cookies = [request.cookies.get('session'), request.headers.get('uuid')]
@@ -240,6 +241,9 @@ class Firewall:
 
 
 def bypass_content_security_policy() -> bool:
+    """**bypass_content_security_policy**
+    check if request meet the conditions to bypass CSP
+    """
     if request.url.casefold() == 'https://eod-stock-api.site/redoc':
         return True
     if request.url.casefold().startswith('https://eod-stock-api.site/blog'):
