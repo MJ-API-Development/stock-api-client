@@ -259,6 +259,7 @@ def financial_news_article(user_data: dict, slug: str):
 
 def create_blog_url():
     """
+
     **create_blog_url**
         will create an internal blog URL
     :return:
