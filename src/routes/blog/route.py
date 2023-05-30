@@ -155,7 +155,7 @@ def financial_news(user_data: dict, country: str):
         <p class="text text-body"><strong>Our API delivers Breaking News,</strong> <strong>in-depth analysis,</strong> and <strong>real-time market data,</strong> 
         so you never miss a beat. 
         <p>Keep reading for the latest top stock news from our API.</p>
-        
+
         <p><strong><a href="https://eod-stock-api.site/plan-descriptions/basic"> If you want to <strong>Integrate our Financial News API</strong> into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>
     </div>
     </div>         
@@ -259,7 +259,6 @@ def financial_news_article(user_data: dict, slug: str):
 
 def create_blog_url():
     """
-
     **create_blog_url**
         will create an internal blog URL
     :return:

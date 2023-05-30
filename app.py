@@ -15,7 +15,7 @@ app.config['MIME_TYPES'] = {
     'woff2': 'font/woff2'
 }
 _origin: str = config_instance().SERVER_NAME
-CORS(app, resources={r"/*": {"origins": _origin}})
+CORS(app, resources={r"*": {"origins": "*"}})
 
 
 @app.route('/sw.js', methods=['GET'])
