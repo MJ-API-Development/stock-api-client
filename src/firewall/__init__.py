@@ -163,6 +163,7 @@ class Firewall:
         :return:
         """
         client_secret_token = request.headers.get('X-CLIENT-SECRET-TOKEN')
+
         if client_secret_token is None:
             abort(401, 'Request not Authenticated - Token missing')
         expected_secret_token = config_instance().CLOUDFLARE_SETTINGS.X_CLIENT_SECRET_TOKEN
@@ -229,10 +230,7 @@ class Firewall:
         if bypass_content_security_policy():
             return response
 
-        csp = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com " \
-              "https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com " \
-              "https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' " \
-              "https://www.paypalobjects.com;"
+        csp = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' https://www.paypalobjects.com;"
 
         response.headers['Content-Security-Policy'] = csp
 
