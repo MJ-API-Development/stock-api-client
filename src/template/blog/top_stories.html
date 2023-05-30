@@ -89,13 +89,13 @@
         {% for story in stories[:5] %}
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"> {{ story.title }}</h3>
+                <h2 class="card-title"> {{ story.title }}</h2>
             </div>
             <div class="card-body">
-                <h2>Published By : {{ story.publisher }}</h2>
-                <p>Date Published: {{ story.datetime_published }}</p>
-                <p>Related Tickers: {{ story.related_tickers|join(', ') }}</p>
-                <a href="{{ story.link }}" target="_blank" rel="nofollow">
+                <h3 class="text text-info">Published By : {{ story.publisher }}</h3>
+{#                <p>Date Published: {{ story.datetime_published }}</p>#}
+                <p class="text text-info">Related Tickers: {{ story.related_tickers|join(', ') }}</p>
+                <a href="{{ url_for('blog.financial_news_article', slug=story.slug) }}">
                     <img
                         src="{{ story.thumbnail_url }}"
                         alt="{{ story.title }} thumbnail"
@@ -104,14 +104,13 @@
                         title="Read Article : {{ story.title }}"
                     >
                 </a>
-
+            </div>
+            <div class="card-footer">
                 {% if story.sentiment and story.sentiment.article_tldr %}
-                    <p>{{ story.sentiment.article_tldr }}</p>
+                    <p class="text-body">{{ story.sentiment.article_tldr }}</p>
                 {% elif story.sentiment and story.sentiment.article %}
-                    <p class="font-weight-bold text-info">{{ story.sentiment.article[:250] }}</p>
+                    <p class="text-body">{{ story.sentiment.article[:250] }}</p>
                 {% endif %}
-
-                {# TODO - Consider adding a summary of the article here #}
             </div>
         </div>
         {% endfor %}
@@ -120,13 +119,12 @@
         {% for story in stories[5:10] %}
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"> {{ story.title }}</h3>
+                <h2 class="card-title"> {{ story.title }}</h2>
             </div>
             <div class="card-body">
-                <h2>Published By : {{ story.publisher }}</h2>
-                <p>Date Published: {{ story.datetime_published }}</p>
-                <p>Related Tickers: {{ story.related_tickers|join(', ') }}</p>
-                <a href="{{ story.link }}" target="_blank" rel="nofollow">
+                <h3 class="text text-info">Published By : {{ story.publisher }}</h3>
+                <p class="text text-info">Related Tickers: {{ story.related_tickers|join(', ') }}</p>
+                <a href="{{ url_for('blog.financial_news_article', slug=story.slug) }}">
                     <img
                         src="{{ story.thumbnail_url }}"
                         alt="{{ story.title }} thumbnail"
@@ -135,14 +133,14 @@
                         title="Read Article : {{ story.title }}"
                     >
                 </a>
+            </div>
 
+            <div class="card-footer">
                 {% if story.sentiment and story.sentiment.article_tldr %}
-                    <p>{{ story.sentiment.article_tldr }}</p>
+                    <p class="text text-body">{{ story.sentiment.article_tldr }}</p>
                 {% elif story.sentiment and story.sentiment.article %}
-                    <p class="font-weight-bold text-info">{{ story.sentiment.article[:250] }}</p>
+                    <p class="text text-body">{{ story.sentiment.article[:250] }}</p>
                 {% endif %}
-
-                {# TODO - Consider adding a summary of the article here #}
             </div>
         </div>
         {% endfor %}
