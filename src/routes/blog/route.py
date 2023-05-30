@@ -101,6 +101,31 @@ def load_top_stories(user_data: dict):
 
     return render_template('blog/top_stories.html', **context)
 
+@github_blog_route.route('/blog/financial-news/tweets/<path:uuid>', methods=['GET'])
+def get_article_by_uuid(uuid: str):
+
+    response = get_story_with_uuid(uuid=uuid)
+    payload = response.get('payload', {})
+    DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
+    good_image_url = select_resolution(payload.get('thumbnail', [])) or DEFAULT_IMAGE_URL
+
+    new_story = {
+        'uuid': uuid,
+        'title': payload.get('title', '').title(),
+        'publisher': payload.get('publisher', '').title(),
+        'datetime_published': payload.get('datetime_published'),
+        'link': payload.get('link', ''),
+        'related_tickers': payload.get('tickers', []),
+        'sentiment': payload.get('sentiment', {}),
+        'thumbnail_url': good_image_url,
+    }
+    html_body = None
+    # will retrieve body_text and test if the text exist
+    if body_text := payload.get('sentiment', {}).get('article'):
+        html_body = format_to_html(text=body_text)
+    context = dict(story=new_story, html_body=html_body, user_data=user_data)
+    # noinspection PyUnresolvedReferences
+    return render_template("/blog/article.html", **context)
 
 # noinspection DuplicatedCode
 @github_blog_route.route('/blog/financial-news/<path:country>', methods=['GET', 'POST'])
@@ -385,12 +410,12 @@ def get_story_with_uuid(uuid: str) -> dict[str, str | dict[str, str | int]]:
             blog_logger.info("response : {}".format(response.json()))
             response.raise_for_status()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            return []
+            return {}
         except requests.exceptions.HTTPError:
-            return []
+            return {}
 
     if response.headers['Content-Type'] != 'application/json':
-        return []
+        return {}
 
     response_data: dict[str, str | dict[str, str | int]] = response.json()
     return response_data
