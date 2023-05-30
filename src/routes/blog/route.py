@@ -101,9 +101,10 @@ def load_top_stories(user_data: dict):
 
     return render_template('blog/top_stories.html', **context)
 
-@github_blog_route.route('/blog/financial-news/tweets/<path:uuid>', methods=['GET'])
-def get_article_by_uuid(uuid: str):
 
+@github_blog_route.route('/blog/financial-news/tweets/<path:uuid>', methods=['GET'])
+@user_details
+def get_article_by_uuid(user_data: dict, uuid: str):
     response = get_story_with_uuid(uuid=uuid)
     payload = response.get('payload', {})
     DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
@@ -126,6 +127,7 @@ def get_article_by_uuid(uuid: str):
     context = dict(story=new_story, html_body=html_body, user_data=user_data)
     # noinspection PyUnresolvedReferences
     return render_template("/blog/article.html", **context)
+
 
 # noinspection DuplicatedCode
 @github_blog_route.route('/blog/financial-news/<path:country>', methods=['GET', 'POST'])
