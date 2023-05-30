@@ -436,7 +436,6 @@ def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
         # Access the URL of the image with the highest resolution
         highest_resolution_url = highest_resolution['url']
         return highest_resolution_url
-
     return None
 
 
