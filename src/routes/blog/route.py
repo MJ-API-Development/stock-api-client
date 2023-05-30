@@ -102,13 +102,14 @@ def load_top_stories(user_data: dict):
     return render_template('blog/top_stories.html', **context)
 
 
+# noinspection DuplicatedCode
 @github_blog_route.route('/blog/financial-news/tweets/<path:uuid>', methods=['GET'])
 @user_details
 def get_article_by_uuid(user_data: dict, uuid: str):
     response = get_story_with_uuid(uuid=uuid)
     payload = response.get('payload', {})
-    DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
-    good_image_url = select_resolution(payload.get('thumbnail', [])) or DEFAULT_IMAGE_URL
+    default_image_url = url_for('static', filename='images/placeholder.png')
+    good_image_url = select_resolution(payload.get('thumbnail', [])) or default_image_url
 
     new_story = {
         'uuid': uuid,
@@ -136,29 +137,29 @@ def financial_news(user_data: dict, country: str):
     """
     Using our financial news API to display a list of top stories
     """
-    DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
+    default_image_url = url_for('static', filename='images/placeholder.png')
 
     _introduction = """
-                <div class="card">
-                <div class="card-header">
-                        <h2 class="card-title">Introducing our Financial News API</h2>
-                </div>
-                 <div class="card-body">
-                        <p class="text text-body"><strong>Your go-to source for the latest news on the top stocks from around the world.</strong></p> 
+<div class="card">
+<div class="card-header">
+        <h2 class="card-title">Introducing our Financial News API</h2>
+</div>
+ <div class="card-body">
+        <p class="text text-body"><strong>Your go-to source for the latest news on the top stocks from around the world.</strong></p> 
 
-                        <p class="text text-body">Whether you're interested in <strong>US Stocks News, Canadian Stock News, Brazil or beyond,</strong> we've got you covered.</p> 
+        <p class="text text-body">Whether you're interested in <strong>US Stocks News, Canadian Stock News, Brazil or beyond,</strong> we've got you covered.</p> 
 
-                        <p class="text text-body">With our extensive coverage of the most popular stocks in each country,</p> 
-                        you can stay up-to-date on the latest market trends and make informed investment decisions. 
+        <p class="text text-body">With our extensive coverage of the most popular stocks in each country,</p> 
+        you can stay up-to-date on the latest market trends and make informed investment decisions. 
 
-                        <p class="text text-body"><strong>Our API delivers Breaking News,</strong> <strong>in-depth analysis,</strong> and <strong>real-time market data,</strong> 
-                        so you never miss a beat. 
-                        <p>Keep reading for the latest top stock news from our API.</p>
-                        
-                        <p><strong><a href="https://eod-stock-api.site/plan-descriptions/basic"> If you want to <strong>Integrate our Financial News API</strong> into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>
-                    </div>
-                    </div>         
-                    """
+        <p class="text text-body"><strong>Our API delivers Breaking News,</strong> <strong>in-depth analysis,</strong> and <strong>real-time market data,</strong> 
+        so you never miss a beat. 
+        <p>Keep reading for the latest top stock news from our API.</p>
+        
+        <p><strong><a href="https://eod-stock-api.site/plan-descriptions/basic"> If you want to <strong>Integrate our Financial News API</strong> into your website or blog please subscribe to obtain your API Key and get started</a></strong></p>
+    </div>
+    </div>         
+"""
 
     if country.casefold() == "us":
         country_tickers = get_meme_tickers_us()
@@ -183,7 +184,7 @@ def financial_news(user_data: dict, country: str):
     for story in get_financial_news_by_ticker(stock_code=selected_ticker):
         # Use dict.get() method with a default value to avoid errors if a key is missing
         # Use a named constant for default image url to improve code readability and usability
-        good_image_url = select_resolution(story.get('thumbnail', [])) or DEFAULT_IMAGE_URL
+        good_image_url = select_resolution(story.get('thumbnail', [])) or default_image_url
         # Use a uuid to identify each story and avoid duplicates
         uuid = story.get('uuid')
         if uuid not in uuids:
@@ -215,6 +216,7 @@ def financial_news(user_data: dict, country: str):
     return render_template('blog/top_stories.html', **context)
 
 
+# noinspection DuplicatedCode
 @github_blog_route.route('/blog/financial-news/article/<path:slug>', methods=['GET'])
 @user_details
 def financial_news_article(user_data: dict, slug: str):
@@ -233,8 +235,8 @@ def financial_news_article(user_data: dict, slug: str):
 
     response = get_story_with_uuid(uuid=uuid)
     payload = response.get('payload', {})
-    DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
-    good_image_url = select_resolution(payload.get('thumbnail', [])) or DEFAULT_IMAGE_URL
+    default_image_url = url_for('static', filename='images/placeholder.png')
+    good_image_url = select_resolution(payload.get('thumbnail', [])) or default_image_url
 
     new_story = {
         'uuid': uuid,
