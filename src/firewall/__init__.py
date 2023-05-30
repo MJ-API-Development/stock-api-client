@@ -229,12 +229,12 @@ class Firewall:
         if bypass_content_security_policy():
             return response
 
-        csp = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com " \
-              "https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com " \
-              "https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' " \
-              "https://www.paypalobjects.com;"
-
-        response.headers['Content-Security-Policy'] = csp
+        # csp = "default-src 'self' https://static.cloudflareinsights.com https://fonts.googleapis.com " \
+        #       "https://www.googletagmanager.com https://netdna.bootstrapcdn.com https://t.paypal.com " \
+        #       "https://www.paypal.com https://www.cloudflare.com https://www.google-analytics.com; img-src 'self' " \
+        #       "https://www.paypalobjects.com;"
+        #
+        # response.headers['Content-Security-Policy'] = csp
 
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
