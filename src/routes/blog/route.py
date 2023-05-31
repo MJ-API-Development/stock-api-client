@@ -427,15 +427,19 @@ def get_story_with_uuid(uuid: str) -> dict[str, str | dict[str, str | int]]:
 
 def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
     # Access the resolutions of the thumbnail image
-    thumbnail_resolutions = thumbnails['resolutions']
-    # Sort the resolutions by height in descending order
-    sorted_resolutions = sorted(thumbnail_resolutions, key=lambda x: x['height'], reverse=True)
-    # Select the resolution with the highest height (which is the first element after sorting)
-    if sorted_resolutions:
-        highest_resolution = sorted_resolutions[0]
-        # Access the URL of the image with the highest resolution
-        highest_resolution_url = highest_resolution['url']
-        return highest_resolution_url
+    try:
+        thumbnail_resolutions = thumbnails['resolutions']
+
+        # Sort the resolutions by height in descending order
+        sorted_resolutions = sorted(thumbnail_resolutions, key=lambda x: x['height'], reverse=True)
+        # Select the resolution with the highest height (which is the first element after sorting)
+        if sorted_resolutions:
+            highest_resolution = sorted_resolutions[0]
+            # Access the URL of the image with the highest resolution
+            highest_resolution_url = highest_resolution['url']
+            return highest_resolution_url
+    except Exception:
+        pass
     return None
 
 
