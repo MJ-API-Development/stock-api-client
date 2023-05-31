@@ -60,7 +60,7 @@ def load_top_stories(user_data: dict):
     Using our financial news API to display a list of top stories
     """
 
-    DEFAULT_IMAGE_URL = url_for('static', filename='images/placeholder.png')
+    default_image_url = url_for('static', filename='images/placeholder.png')
     meme_tickers = [symbol for symbol in get_meme_tickers().keys()]
     # If the form has been submitted, get the selected ticker symbol
     selected_ticker = request.args.get('ticker', False)
@@ -74,7 +74,7 @@ def load_top_stories(user_data: dict):
     for story in get_financial_news_by_ticker(stock_code=selected_ticker):
         # Use dict.get() method with a default value to avoid errors if a key is missing
         # Use a named constant for default image url to improve code readability and usability
-        good_image_url = select_resolution(story.get('thumbnail', [])) or DEFAULT_IMAGE_URL
+        good_image_url = select_resolution(story.get('thumbnail', {})) or default_image_url
         # Use a uuid to identify each story and avoid duplicates
         uuid = story.get('uuid')
         if uuid not in uuids:
@@ -109,7 +109,7 @@ def get_article_by_uuid(user_data: dict, uuid: str):
     response = get_story_with_uuid(uuid=uuid)
     payload = response.get('payload', {})
     default_image_url = url_for('static', filename='images/placeholder.png')
-    good_image_url = select_resolution(payload.get('thumbnail', [])) or default_image_url
+    good_image_url = select_resolution(payload.get('thumbnail', {})) or default_image_url
 
     new_story = {
         'uuid': uuid,
@@ -184,7 +184,7 @@ def financial_news(user_data: dict, country: str):
     for story in get_financial_news_by_ticker(stock_code=selected_ticker):
         # Use dict.get() method with a default value to avoid errors if a key is missing
         # Use a named constant for default image url to improve code readability and usability
-        good_image_url = select_resolution(story.get('thumbnail', [])) or default_image_url
+        good_image_url = select_resolution(story.get('thumbnail', {})) or default_image_url
         # Use a uuid to identify each story and avoid duplicates
         uuid = story.get('uuid')
         if uuid not in uuids:
@@ -236,7 +236,7 @@ def financial_news_article(user_data: dict, slug: str):
     response = get_story_with_uuid(uuid=uuid)
     payload = response.get('payload', {})
     default_image_url = url_for('static', filename='images/placeholder.png')
-    good_image_url = select_resolution(payload.get('thumbnail', [])) or default_image_url
+    good_image_url = select_resolution(payload.get('thumbnail', {})) or default_image_url
 
     new_story = {
         'uuid': uuid,
@@ -425,7 +425,7 @@ def get_story_with_uuid(uuid: str) -> dict[str, str | dict[str, str | int]]:
     return response_data
 
 
-def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
+def select_resolution(thumbnails: dict[str, list[dict[str, int | str]]]) -> str | None:
     # Access the resolutions of the thumbnail image
     try:
         thumbnail_resolutions = thumbnails['resolutions']
@@ -438,8 +438,10 @@ def select_resolution(thumbnails: list[dict[str, int | str]]) -> str:
             # Access the URL of the image with the highest resolution
             highest_resolution_url = highest_resolution['url']
             return highest_resolution_url
-    except Exception:
+    except Exception as e:
+        print(str(e))
         pass
+
     return None
 
 
