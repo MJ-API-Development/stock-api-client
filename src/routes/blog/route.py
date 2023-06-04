@@ -123,7 +123,8 @@ def get_article_by_uuid(user_data: dict, uuid: str):
     }
     html_body = None
     # will retrieve body_text and test if the text exist
-    if body_text := payload.get('sentiment', {}).get('article'):
+    body_text = payload.get('sentiment', {}).get('article')
+    if body_text:
         html_body = format_to_html(text=body_text)
     context = dict(story=new_story, html_body=html_body, user_data=user_data)
     # noinspection PyUnresolvedReferences
@@ -250,7 +251,8 @@ def financial_news_article(user_data: dict, slug: str):
     }
     html_body = None
     # will retrieve body_text and test if the text exist
-    if body_text := payload.get('sentiment', {}).get('article'):
+    body_text = payload.get('sentiment', {}).get('article')
+    if body_text:
         html_body = format_to_html(text=body_text)
     context = dict(story=new_story, html_body=html_body, user_data=user_data)
     # noinspection PyUnresolvedReferences
@@ -280,7 +282,8 @@ def blog_post(user_data: str, blog_path: str):
     _url: str = create_blog_url()
 
     # get the content of the blog post and assign to content then test if its None
-    if content := github_blog.get_blog_file(url=_url) is None:
+    content = github_blog.get_blog_file(url=_url)
+    if content  is None:
         return render_template('blog/404.html', message=_url), 404
     # convert the markdown content into html
     html_content: str = markdown.markdown(content)

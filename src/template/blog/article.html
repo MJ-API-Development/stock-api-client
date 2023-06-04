@@ -43,7 +43,9 @@
             <div class="card-body">
                 <h3 class="text text-info">Published By : {{ story.publisher }}</h3>
 {#                <p>Date Published: {{ story.datetime_published }}</p>#}
+
                 <p class="text text-info">Related Tickers: {{ story.related_tickers|join(', ') }}</p>
+
                 <a href="{{ story.link }}" target="_blank" rel="nofollow">
                     <img
                         src="{{ story.thumbnail_url }}"
@@ -53,6 +55,7 @@
                         title="Read Article : {{ story.title }}"
                     >
                 </a>
+
             </div>
             <div class="card-footer">
                 {% if story.sentiment and story.sentiment.article_tldr %}
